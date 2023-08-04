@@ -1,0 +1,28 @@
+# .NET 6
+*.dll
+*.exe
+*.pdb
+*.user
+*.vscode
+**/bin/
+**/obj/
+/.vscode/
+/packages/
+/nupkg/
+/Debug/
+/Release/
+*.suo
+*.cache
+*.log
+.vs/
+
+# React
+build/
+/dist/
+.cache/
+*.log
+devcert.pfx
+
+# Node.js / npm
+node_modules/
+package-lock.json
