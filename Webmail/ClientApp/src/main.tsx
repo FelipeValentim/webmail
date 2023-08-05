@@ -1,10 +1,13 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './index.css'
+import React, { Suspense } from "react";
+import ReactDOM from "react-dom/client";
+import "./assets/css/styles.css";
+// const App = React.lazy(() => import(/* webpackChunkName: "App" */ "./App"));
+const Login = React.lazy(() => import(/* webpackChunkName: "App" */ "./Login"));
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <Suspense fallback={<div className="loading" />}>
+      <Login />
+    </Suspense>
   </React.StrictMode>
-)
+);
