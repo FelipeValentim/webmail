@@ -1,6 +1,8 @@
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./assets/css/styles.css";
+import "./assets/css/common.css";
+
 // const App = React.lazy(() => import(/* webpackChunkName: "App" */ "./App"));
 const Login = React.lazy(() => import(/* webpackChunkName: "App" */ "./Login"));
 
