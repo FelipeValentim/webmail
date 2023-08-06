@@ -5,6 +5,9 @@ import logomarca from "./assets/logo/logomarca.svg";
 import Errors from "./interfaces/Erros";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import api from "./api";
+import ResponseData from "./interfaces/ResponseData";
+import { AxiosError } from "axios";
 
 function Login() {
   const [email, setEmail] = React.useState<string>("");
@@ -12,6 +15,7 @@ function Login() {
   const [errors, setErrors] = React.useState<Errors>({
     email: undefined,
     password: undefined,
+    invalidCredentials: undefined,
   });
 
   const [passwordHide, setPasswordHide] = React.useState<boolean>(true);
@@ -37,29 +41,60 @@ function Login() {
     }
   };
 
-  const logIn = () => {
-    if (!email) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        email: "E-mail é obrigatório",
-      }));
-    } else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        email: undefined,
-      }));
-    }
+  const logIn = async () => {
+    if (!email || !password) {
+      if (!email) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: "E-mail é obrigatório",
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: undefined,
+        }));
+      }
 
-    if (!password) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        password: "Senha é obrigatório",
-      }));
+      if (!password) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          password: "Senha é obrigatório",
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          password: undefined,
+        }));
+      }
     } else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        password: undefined,
-      }));
+      try {
+        const response = await api.post("/user/login", {
+          Email: email,
+          Password: password,
+        });
+        const data: ResponseData = response.data;
+        if (data.succeeded) {
+          console.log(data.payload);
+        } else {
+          setErrors({ ...errors, invalidCredentials: data.payload.message });
+        }
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          setErrors({
+            ...errors,
+            invalidCredentials: error.response?.data.payload.message,
+          });
+        }
+      }
+
+      setTimeout(
+        () =>
+          setErrors({
+            ...errors,
+            invalidCredentials: undefined,
+          }),
+        5000
+      );
     }
   };
 
@@ -115,6 +150,11 @@ function Login() {
                   className="passowrd-hide"
                   icon={passwordHide ? faEye : faEyeSlash}
                 />
+                {errors.invalidCredentials && (
+                  <div className="invalid-credentials">
+                    {errors.invalidCredentials}
+                  </div>
+                )}
               </div>
               {errors.password && (
                 <div className="invalid-feedback d-block">

@@ -1,5 +1,8 @@
-﻿using MailKit.Search;
+﻿using MailKit;
+using MailKit.Search;
+using MailKit.Security;
 using MimeKit;
+using Webmail.Models;
 
 namespace Webmail.Helpers
 {
@@ -7,6 +10,49 @@ namespace Webmail.Helpers
     {
         public static string Domain => "http://localhost:50012";
 
+        private static ServiceType IdentifyProvider(string emailAddress)
+        {
+            if (string.IsNullOrWhiteSpace(emailAddress))
+            {
+                return ServiceType.Unknown;
+            }
+
+            string[] googleDomains = { "gmail.com" };
+            string[] microsoftDomains = { "outlook.com", "hotmail.com" };
+
+            string domain = emailAddress.Split('@')[1].ToLower();
+
+            if (Array.Exists(googleDomains, d => d == domain))
+            {
+                return ServiceType.Google;
+            }
+            else if (Array.Exists(microsoftDomains, d => d == domain))
+            {
+                return ServiceType.Microsoft;
+            }
+            else
+            {
+                return ServiceType.Unknown;
+            }
+        }
+
+        public static (Provider, ServiceType) GetProvider(string emailAddress)
+        {
+            Dictionary<ServiceType, Provider> providers = new Dictionary<ServiceType, Provider> {
+            { ServiceType.Google, new Provider("imap.gmail.com", 993, SecureSocketOptions.Auto) },
+            { ServiceType.Microsoft, new Provider("outlook.office365.com", 993, SecureSocketOptions.StartTls) },
+            // Add other provider configurations here
+             };
+    
+            ServiceType serviceType = IdentifyProvider(emailAddress);
+
+            if (providers.TryGetValue(serviceType, out var provider))
+            {
+                return (provider, serviceType);
+            }
+
+            return (null, serviceType);
+        }
 
         /// <summary>
         /// Retorna a Query selecionada como um objeto.

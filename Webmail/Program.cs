@@ -10,6 +10,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(5);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 // In production, the Vite files will be served from this directory
 builder.Services.AddSpaStaticFiles(configuration =>
@@ -27,14 +35,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
+
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseSpaStaticFiles();
 
-
 app.UseRouting();
 app.UseAuthorization();
+app.UseSession();
+
 app.UseEndpoints(endpoints => endpoints.MapControllers());
 
 app.UseSpa(spa =>
