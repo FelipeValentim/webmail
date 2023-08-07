@@ -92,7 +92,7 @@ const Login = () => {
   };
 
   return (
-    <div className="container mr-10 ">
+    <div className="user-container mr-10">
       <div className="info">
         <img src={auth} className="logo react" alt="React logo" />
         <div className="container-inner">
