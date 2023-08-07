@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Suspense, lazy } from "react";
-import { ProtectedRoute } from "./helpers/authHelper";
+import { ProtectedRoute, UnprotectedRoute } from "./helpers/authHelper";
 
 const Home = lazy(() => import("./views/app/home/index"));
 const Login = lazy(() => import("./views/user/login"));
@@ -28,7 +28,14 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/user/login" element={<Login />} />
+          <Route
+            path="/login"
+            element={
+              <UnprotectedRoute>
+                <Login />
+              </UnprotectedRoute>
+            }
+          />
         </Routes>
       </Suspense>
     </BrowserRouter>
