@@ -1,3 +1,7 @@
+:root {
+  --primary-color: #a06df2;
+}
+
 * {
   margin: 0;
   box-sizing: border-box;
@@ -202,3 +206,58 @@ label {
     transform: rotate(360deg);
   }
 }
+
+/* Header - Start */
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+}
+
+.app-header .logos img {
+  height: 40px;
+}
+
+.app-header .logos {
+  display: flex;
+  gap: 1rem;
+}
+.search-bar {
+  position: relative;
+}
+
+.search-bar input {
+  border: 0;
+  background-color: #a06df220;
+  border-radius: 2rem;
+  padding: 1rem 3rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.search-bar input::placeholder {
+  color: #acacac;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.search-bar input:focus {
+  outline: none;
+  background-color: #fff;
+  box-shadow: 0 1px 15px #00000005, 0 1px 6px #00000020;
+}
+
+.search-bar :is(.search, .settings) {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.search-bar .search {
+  left: 20px;
+}
+
+.search-bar .settings {
+  right: 20px;
+}
+/* Header - End */

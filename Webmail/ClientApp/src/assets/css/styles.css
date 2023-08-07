@@ -1,4 +1,4 @@
-.container {
+.user-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
@@ -6,7 +6,7 @@
   align-items: center;
 }
 
-.container-inner {
+.user-container .container-inner {
   width: 75%;
   position: absolute;
   background-color: #000000aa;
@@ -20,7 +20,7 @@
   transform: translate(-50%, -50%);
 }
 
-.container-inner .texts {
+.user-container .container-inner .texts {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -30,87 +30,85 @@
   font-weight: lighter;
 }
 
-.logos img {
+.user-container .logos img {
   height: 40px;
 }
 
-.logos {
+.user-container .logos {
   display: flex;
   gap: 1rem;
   align-items: center;
 }
 
-.container-inner :is(h1, h2, h3, h4) {
+.user-container .container-inner :is(h1, h2, h3, h4) {
   color: #fff;
 }
 
-.titles {
+.user-container .titles {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.container > div {
+.user-container > div {
   flex: 1;
 }
 
-.info {
+.user-container .info {
   background-color: #a06df2;
   border-radius: 0 3rem 3rem 0;
   height: 100vh;
   position: relative;
 }
 
-.info > img {
+.user-container .info > img {
   max-height: 100%;
 }
 
-.btn-google {
+.user-container .btn-google {
   background-color: #cc3333;
   color: #fff;
   transition: all 0.2s ease-in-out;
 }
 
-.btn-google:hover {
+.user-container .btn-google:hover {
   background-color: #aa2222;
 }
 
 @media (max-width: 1150px) {
-  .logos img {
+  .user-container .logos img {
     height: 30px;
   }
 }
 
 @media (max-width: 950px) {
-  div.container {
+  div.user-container {
     display: block;
     margin: 0;
   }
-  .info {
+  .user-container .info {
     height: 80%;
     border-radius: 0 0 3rem 3rem;
   }
 
-  .container-inner {
+  .user-container .container-inner {
     gap: 0px;
     height: 80%;
     justify-content: space-between;
     padding: 1.5rem;
   }
 
-  .login {
+  .user-container .login {
     padding: 1.5rem;
   }
 }
 
 @media (max-width: 600px) {
-  .logos img {
+  .user-container .logos img {
     height: 20px;
   }
-  h1,
-  h2,
-  h3,
-  h4 {
+
+  .user-container :is(h1, h2, h3, h4) {
     font-size: 1rem;
   }
 }
