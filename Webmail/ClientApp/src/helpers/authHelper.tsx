@@ -41,8 +41,7 @@ export const ProtectedRoute = ({ children }) => {
   if (loading) {
     return null;
   }
-
-  return authenticated ? children : <Navigate to="/user/login" />;
+  return authenticated ? children : <Navigate to="/login" />;
 };
 
 export const UnprotectedRoute = ({ children }) => {
@@ -52,7 +51,7 @@ export const UnprotectedRoute = ({ children }) => {
 
   React.useEffect(() => {
     const isLoggedIn = async () => {
-      const accessToken = getAccessToken; // Chamada da função para obter o token
+      const accessToken = getAccessToken;
 
       if (accessToken) {
         try {
@@ -83,6 +82,5 @@ export const UnprotectedRoute = ({ children }) => {
   if (loading) {
     return null;
   }
-
-  return authenticated ? children : <Navigate to="/user/login" />;
+  return authenticated ? <Navigate to="/" /> : children;
 };
