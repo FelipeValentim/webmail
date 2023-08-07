@@ -13,29 +13,6 @@ namespace Webmail.Helpers
     public static class ExtensionMethods
     {
 
-        public static void SetUser(this ISession session, string email, string password, ServiceType serviceType)
-        {
-            var instance = new LoginUser();
-            instance.Email = email;
-            instance.Password = password;
-            instance.Service = serviceType;
-            session.Set("User", instance);
-        }
-
-        public static LoginUser GetUser(this ISession session)
-        {
-            var user = session.Get<LoginUser>("User");
-
-            return user;
-        }
-
-        public static void ClearUser(this ISession session)
-        {
-            session.Remove("User");
-
-            session.Clear();
-        }
-
         public static void Set<T>(this ISession session, string key, T value)
         {
             session.SetString(key, JsonSerializer.Serialize(value));

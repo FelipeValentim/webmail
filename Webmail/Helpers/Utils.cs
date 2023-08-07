@@ -1,7 +1,11 @@
 ﻿using MailKit;
 using MailKit.Search;
 using MailKit.Security;
+using Microsoft.IdentityModel.Tokens;
 using MimeKit;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Webmail.Models;
 
 namespace Webmail.Helpers
