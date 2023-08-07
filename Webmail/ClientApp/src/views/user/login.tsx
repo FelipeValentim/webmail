@@ -1,16 +1,20 @@
 import React from "react";
-import auth from "./assets/auth.svg";
-import logo from "./assets/logo/logo.svg";
-import logomarca from "./assets/logo/logomarca.svg";
-import Errors from "./interfaces/Erros";
+import auth from "assets/auth.svg";
+import logo from "assets/logo/logo.svg";
+import logomarca from "assets/logo/logomarca.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import api from "./api";
-import ResponseData from "./interfaces/ResponseData";
+import Errors from "../../interfaces/Erros";
+import api from "../../api";
+import ResponseData from "../../interfaces/ResponseData";
 import { AxiosError } from "axios";
+import { setAccessToken } from "../../helpers/storage";
+import { useNavigate } from "react-router-dom";
 
-function Login() {
+const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = React.useState<string>("");
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [password, setPassword] = React.useState<string>("");
   const [errors, setErrors] = React.useState<Errors>({
     email: undefined,
@@ -42,39 +46,26 @@ function Login() {
   };
 
   const logIn = async () => {
-    if (!email || !password) {
-      if (!email) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          email: "E-mail é obrigatório",
-        }));
-      } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          email: undefined,
-        }));
-      }
+    if (loading) return;
 
-      if (!password) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          password: "Senha é obrigatório",
-        }));
-      } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          password: undefined,
-        }));
-      }
+    if (!email || !password) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: !email ? "E-mail é obrigatório" : undefined,
+        password: !password ? "Senha é obrigatória" : undefined,
+      }));
     } else {
+      setLoading(true);
+
       try {
         const response = await api.post("/user/login", {
-          Email: email,
+          Username: email,
           Password: password,
         });
         const data: ResponseData = response.data;
         if (data.succeeded) {
-          console.log(data.payload);
+          setAccessToken(data.payload);
+          navigate("/");
         } else {
           setErrors({ ...errors, invalidCredentials: data.payload.message });
         }
@@ -85,6 +76,8 @@ function Login() {
             invalidCredentials: error.response?.data.payload.message,
           });
         }
+      } finally {
+        setLoading(false);
       }
 
       setTimeout(
@@ -166,11 +159,13 @@ function Login() {
 
           <button
             type="button"
-            className="btn btn-primary mt-2 mb-2"
+            className="btn btn-primary mt-2 mb-2 position-relative"
             onClick={logIn}
           >
             Login
+            {loading && <div className="loading-button"></div>}
           </button>
+
           <h4 className="mb-2 text-align-center lines-around">OU</h4>
           <button type="button" className="btn btn-google">
             Autenticar com Google
@@ -179,6 +174,6 @@ function Login() {
       </div>
     </div>
   );
-}
+};
 
 export default Login;
