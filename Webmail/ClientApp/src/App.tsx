@@ -4,11 +4,12 @@ import { ProtectedRoute, UnprotectedRoute } from "./helpers/authHelper";
 
 const ViewApp = lazy(() => import("./views/app/index"));
 const Login = lazy(() => import("./views/user/login"));
-
+const Message = lazy(() => import("./views/app/message/index"));
+const Home = lazy(() => import("./views/app/home/index"));
 function App() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div className="loading" />}>
         <Routes>
           {/* Definindo as rotas com os componentes carregados de forma assíncrona */}
           <Route
@@ -18,7 +19,10 @@ function App() {
                 <ViewApp />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="" element={<Home />} />
+            <Route path="message" element={<Message />} />
+          </Route>
           <Route
             path="/login"
             element={
