@@ -1,5 +1,9 @@
 :root {
   --primary-color: #a06df2;
+  --primary-color-darker: #7b4dc4;
+  --primary-color-lighter: #a06df220;
+  --secondary-color: #acacac;
+  --primary-color-bg: #e9e8f650;
 }
 
 * {
@@ -8,6 +12,15 @@
   padding: 0;
 }
 
+body {
+  background-color: var(--primary-color-bg);
+}
+
+li {
+  list-style: none;
+}
+
+/* Margin - Start */
 .mr-10 {
   margin-right: 10rem;
 }
@@ -27,6 +40,7 @@
 .mb-1 {
   margin-bottom: 1rem;
 }
+/* Margin - End */
 
 h1,
 h2,
@@ -137,12 +151,27 @@ label {
 
 .btn-primary {
   color: #fff;
-  background-color: #a06df2;
+  background-color: var(--primary-color);
   transition: all 0.2s ease-in-out;
 }
 
+.btn-icon {
+  background-color: var(--primary-color);
+  display: inline-flex;
+  border-radius: 0.5rem;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-icon:hover {
+  background-color: var(--primary-color-darker);
+}
+
 .btn-primary:hover {
-  background-color: #7b4dc4;
+  background-color: var(--primary-color-darker);
 }
 
 .invalid-feedback {
@@ -207,12 +236,21 @@ label {
   }
 }
 
+.app-container {
+  position: relative;
+}
+
 /* Header - Start */
 
 .app-header {
+  position: fixed;
   display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100px;
   justify-content: space-between;
-  margin: 1rem;
+  padding: 1.5rem;
+  /* box-shadow: 0 1px 15px #00000005, 0 1px 6px #00000010; */
 }
 
 .app-header .logos img {
@@ -229,7 +267,7 @@ label {
 
 .search-bar input {
   border: 0;
-  background-color: #a06df220;
+  background-color: var(--primary-color-lighter);
   border-radius: 2rem;
   padding: 1rem 3rem;
   transition: all 0.3s ease-in-out;
@@ -261,3 +299,49 @@ label {
   right: 20px;
 }
 /* Header - End */
+
+/* Sidebar - Start */
+.app-sidebar {
+  position: fixed;
+  top: 100px;
+  padding: 1.5rem;
+  /* box-shadow: 0 1px 15px #00000005, 0 1px 6px #00000020; */
+  width: 25%;
+  height: calc(100% - 100px);
+}
+
+.folders ul {
+  display: flex;
+  flex-direction: column;
+  margin-left: -1.5rem;
+}
+
+.folders li {
+  color: #333;
+  border-radius: 0 1rem 1rem 0;
+  padding: 0.5rem;
+  padding-left: 2rem;
+  cursor: pointer;
+}
+.folders li:hover {
+  background-color: #ccc;
+}
+
+.folders li.active {
+  background-color: var(--primary-color-lighter);
+}
+
+/* Sidebar - End */
+
+/* Main - Start */
+.main-container {
+  position: absolute;
+  left: 25%;
+  top: 100px;
+  width: 75%;
+  height: calc(100vh - 100px);
+  padding: 1.5rem;
+  border-radius: 2rem;
+  background-color: #fff;
+}
+/* Sidebar - End */
