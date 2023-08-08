@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "assets/logo/logo_app.svg";
 import logomarca from "assets/logo/logomarca_app.svg";
-import { faSearch, faGear } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faSliders } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Header = () => {
   return (
@@ -13,10 +13,12 @@ const Header = () => {
       <div className="search-bar">
         <FontAwesomeIcon className="search" icon={faSearch} />
         <input placeholder="Pesquisar" type="text"></input>
-        <FontAwesomeIcon className="settings" icon={faGear} />
+        <FontAwesomeIcon className="settings" icon={faSliders} />
       </div>
       <div>
-        <div>switch</div>
+        <span>switch </span>
+        <span>user </span>
+        <span>config</span>
       </div>
     </header>
   );

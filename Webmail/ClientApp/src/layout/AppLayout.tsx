@@ -8,10 +8,8 @@ const AppLayout = ({ children }) => {
     <div className="app-container">
       <Header />
       <Sidebar />
-      <main>
-        <div className="container-fluid">{children}</div>
-      </main>
-      <Footer />
+      <main className="main-container">{children}</main>
+      {/* <Footer /> */}
     </div>
   );
 };
