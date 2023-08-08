@@ -1,17 +1,14 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { Suspense } from "react";
+import { Outlet } from "react-router-dom";
 import AppLayout from "../../layout/AppLayout";
-const Message = React.lazy(() => import("./message/index"));
-const Home = React.lazy(() => import("./home/index"));
 
 const index = () => {
   return (
     <React.Fragment>
       <AppLayout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/message" element={<Message />} />
-        </Routes>
+        <Suspense fallback={<div className="loading" />}>
+          <Outlet />
+        </Suspense>
       </AppLayout>
     </React.Fragment>
   );

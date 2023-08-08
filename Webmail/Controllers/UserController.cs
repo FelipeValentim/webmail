@@ -68,6 +68,8 @@ namespace Net6_Controller_And_VIte.Controllers
         [HttpGet("IsLoggedIn")]
         public IActionResult IsLoggedIn()
         {
+            //Thread.Sleep(5000);
+
             return new JsonResult(new { succeeded = true, status = (int)HttpStatusCode.OK, payload = new { message = "Usuário logado" } });
         }
     }
