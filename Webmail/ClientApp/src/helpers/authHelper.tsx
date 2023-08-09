@@ -3,20 +3,21 @@ import { getAccessToken, removeAccessToken } from "./storage";
 import api from "../api";
 import { AxiosError } from "axios";
 import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const ProtectedRoute = ({ children }) => {
   const [authenticated, setAuthenticated] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
+  const { user } = useSelector((state) => state);
 
   React.useEffect(() => {
     const isLoggedIn = async () => {
-      const accessToken = getAccessToken; // Chamada da função para obter o token
-
-      if (accessToken) {
+      console.log("user", user);
+      if (user) {
         try {
           const response = await api.get("user/isloggedin", {
             headers: {
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: `Bearer ${user.token}`,
             },
           });
 
@@ -48,16 +49,15 @@ export const UnprotectedRoute = ({ children }) => {
   //TODO
   const [authenticated, setAuthenticated] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
+  const { user } = useSelector((state) => state);
 
   React.useEffect(() => {
     const isLoggedIn = async () => {
-      const accessToken = getAccessToken;
-
-      if (accessToken) {
+      if (user) {
         try {
           const response = await api.get("user/isloggedin", {
             headers: {
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: `Bearer ${user.token}`,
             },
           });
 
