@@ -20,6 +20,37 @@ li {
   list-style: none;
 }
 
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+/* Gap - Start */
+.gap-1 {
+  gap: 1rem;
+}
+
+.gap-2 {
+  gap: 2rem;
+}
+
+.gap-3 {
+  gap: 3rem;
+}
+
+.gap-4 {
+  gap: 4rem;
+}
+/* Gap - End */
+
+.d-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Margin - Start */
 .mr-10 {
   margin-right: 10rem;

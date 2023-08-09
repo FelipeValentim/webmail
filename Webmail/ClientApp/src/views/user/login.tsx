@@ -10,8 +10,12 @@ import ResponseData from "../../interfaces/ResponseData";
 import { AxiosError } from "axios";
 import { setAccessToken } from "../../helpers/storage";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../redux/user";
 
 const Login = () => {
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const [email, setEmail] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -21,7 +25,6 @@ const Login = () => {
     password: undefined,
     invalidCredentials: undefined,
   });
-
   const [passwordHide, setPasswordHide] = React.useState<boolean>(true);
 
   const checkEmail = (value: string) => {
@@ -65,6 +68,7 @@ const Login = () => {
         const data: ResponseData = response.data;
         if (data.succeeded) {
           setAccessToken(data.payload);
+          dispatch(loginUser(data.payload));
           navigate("/");
         } else {
           setErrors({ ...errors, invalidCredentials: data.payload.message });

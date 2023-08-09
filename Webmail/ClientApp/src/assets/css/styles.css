@@ -183,5 +183,18 @@
   width: 0;
   height: 0;
 }
-
 /* Dark Switch */
+
+/* LogOut */
+.logout {
+  font-size: 1.5rem;
+  padding: 0.8rem;
+  border-radius: 25%;
+  transition: all 0.3s ease-in-out;
+}
+
+.logout:hover {
+  background-color: var(--secondary-color);
+}
+
+/* LogOut */
