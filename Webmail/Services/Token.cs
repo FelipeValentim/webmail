@@ -9,7 +9,7 @@ namespace Webmail.Services
 {
     public class Token
     {
-        public static string GenerateToken(User user)
+        public static string GenerateToken(User user, Provider provider)
         {
             var key = Encoding.UTF8.GetBytes(Settings.SecretKey);
 
@@ -25,6 +25,10 @@ namespace Webmail.Services
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim("Password", user.Password),
                     new Claim("Service", ((int)user.Service).ToString()),
+                    new Claim("Host", provider.Host.ToString()),
+                    new Claim("Port", provider.Port.ToString()),
+                    new Claim("Security", ((int)provider.SecureSocketOptions).ToString()),
+
                     // Adicione outras claims necessárias aqui.
                 }),
             };

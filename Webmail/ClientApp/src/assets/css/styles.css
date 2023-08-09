@@ -1,3 +1,11 @@
+:root {
+  --primary-color: #a06df2;
+  --primary-color-darker: #7b4dc4;
+  --primary-color-lighter: #a06df220;
+  --secondary-color: #acacac;
+  --primary-light-color-bg: #e9e8f650;
+}
+
 .user-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -112,3 +120,68 @@
     font-size: 1rem;
   }
 }
+
+/* Dark Switch */
+.dark-mode-switch label {
+  width: 80px;
+  height: 32px;
+  position: relative;
+  display: block;
+  background: #ebebeb;
+  border-radius: 200px;
+  cursor: pointer;
+}
+
+.dark-mode-switch label:after {
+  content: "";
+  width: 28px;
+  height: 28px;
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--primary-color);
+  border-radius: 50%;
+}
+.dark-mode-switch input {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+.dark-mode-switch input:checked ~ label {
+  background: #444746;
+}
+.dark-mode-switch input:checked ~ label:after {
+  left: 60%;
+}
+.dark-mode-switch label,
+.dark-mode-switch label:after {
+  transition: all 0.4s ease-in-out;
+}
+
+.dark-mode-switch label svg {
+  position: absolute;
+  width: 120px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+}
+.dark-mode-switch label svg.sun {
+  right: 2px;
+  transition: all 0.4s ease-in-out;
+}
+.dark-mode-switch label svg.moon {
+  left: 2px;
+  transition: all 0.4s ease-in-out;
+}
+.dark-mode-switch input:checked + label svg.sun {
+  width: 0;
+  height: 0;
+}
+.dark-mode-switch input:not(:checked) + label svg.moon {
+  width: 0;
+  height: 0;
+}
+
+/* Dark Switch */

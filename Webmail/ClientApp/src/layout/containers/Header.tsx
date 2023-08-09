@@ -3,6 +3,7 @@ import logo from "assets/logo/logo_app.svg";
 import logomarca from "assets/logo/logomarca_app.svg";
 import { faSearch, faSliders } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import HeaderSwitch from "./HeaderSwitch";
 const Header = () => {
   return (
     <header className="app-header">
@@ -16,7 +17,7 @@ const Header = () => {
         <FontAwesomeIcon className="settings" icon={faSliders} />
       </div>
       <div>
-        <span>switch </span>
+        <HeaderSwitch />
         <span>user </span>
         <span>config</span>
       </div>
