@@ -18,6 +18,10 @@
   padding: 0;
 }
 
+a {
+  text-decoration: none;
+}
+
 body {
   background-color: var(--primary-light-color-bg);
   transition: background-color 0.4s ease-in-out;
@@ -367,7 +371,7 @@ label {
   background-color: var(--hover-light-bg-color);
 }
 
-.folders li.active {
+.folders a.active li {
   background-color: var(--primary-color-lighter);
   font-weight: bold;
 }
@@ -437,7 +441,7 @@ body.dark-theme li:hover {
   background-color: var(--secondary-dark-bg-color);
 }
 
-body.dark-theme li.active {
+body.dark-theme a.active li {
   background-color: var(--primary-color);
 }
 .search-bar input:focus {

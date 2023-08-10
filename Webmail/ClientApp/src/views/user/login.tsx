@@ -12,6 +12,7 @@ import { setAccessToken } from "../../helpers/storage";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/user";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -172,7 +173,7 @@ const Login = () => {
 
           <h4 className="mb-2 text-align-center lines-around">OU</h4>
           <button type="button" className="btn btn-google">
-            Autenticar com Google
+            <FontAwesomeIcon icon={faGoogle} /> Autenticar com Google
           </button>
         </form>
       </div>

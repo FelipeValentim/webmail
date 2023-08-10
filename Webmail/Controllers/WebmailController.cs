@@ -2,6 +2,7 @@ using MailKit;
 using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
 using MailKit.Search;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using MimeKit.Text;
@@ -10,33 +11,35 @@ using System.IO.Compression;
 using System.Net;
 using System.Text.RegularExpressions;
 using Webmail.Helpers;
+using Webmail.Services;
 using static Webmail.Models.WebMailModels;
 
 namespace Net6_Controller_And_VIte.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class WebmailController : ControllerBase
     {
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public WebmailController(ILogger<WeatherForecastController> logger)
+        public WebmailController(IHttpContextAccessor httpContextAccessor)
         {
-            _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        private EmailOptions Email = new EmailOptions();
         private ServerOptions IMAP = new ServerOptions();
-        private ServerOptions SMTP = new ServerOptions();
         private ImapClient ImapClient;
         private readonly List<string> spamNames = new List<string> { "Spam", "Lixo Eletrônico" };
         private readonly List<string> trashNames = new List<string> { "Lixo", "Lixeira", "Trash" };
 
 
-        [HttpGet("GetFolders")]
-        public IActionResult GetFolders() // TODO - Pastas aninhadas (nested)
+        [HttpGet("Folders")]
+        public IActionResult Folders() // TODO - Pastas aninhadas (nested)
         {
+            var user = UserService.GetUser(_httpContextAccessor);
+
             List<FolderInfo> folders = new List<FolderInfo>();
 
             try
@@ -44,32 +47,47 @@ namespace Net6_Controller_And_VIte.Controllers
                 using (var cancel = new CancellationTokenSource())
                 {
                     ////ImapClient = MailKitImapClient.Instance;
-
-                    var personal = ImapClient.GetFolders(ImapClient.PersonalNamespaces[0]);
-
-                    // Sempre pega a pasta Inbox primeiro
-                    var inbox = ImapClient.Inbox;
-
-                    inbox.Open(FolderAccess.ReadOnly, cancel.Token);
-                    folders.Add(new FolderInfo()
+                    using (var client = new ImapClient())
                     {
-                        Name = "Caixa de entrada",
-                        Path = inbox.GetPath(),
-                        Unread = inbox.Search(SearchQuery.NotSeen).Count,
-                        TotalEmails = inbox.Count,
-                    });
+                        client.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
 
-                    // Pega as outras pastas, sempre checando se ela existe ou se é diferente da pasta inbox
-                    foreach (var folder in personal)
-                    {
-                        if (folder.Exists && folder != inbox)
+                        client.AuthenticationMechanisms.Remove("XOAUTH");
+                        client.AuthenticationMechanisms.Remove("XOAUTH2");
+                        client.AuthenticationMechanisms.Remove("PLAIN");
+                        client.AuthenticationMechanisms.Remove("PLAIN-CLIENTTOKEN");
+                        client.AuthenticationMechanisms.Remove("OAUTHBEARER");
+
+
+                        client.Authenticate(user.Username, user.Password);
+
+                        var personal = client.GetFolders(client.PersonalNamespaces[0]);
+
+                        // Sempre pega a pasta Inbox primeiro
+                        var inbox = client.Inbox;
+
+                        inbox.Open(FolderAccess.ReadOnly, cancel.Token);
+
+                        folders.Add(new FolderInfo()
                         {
-                            folder.Open(FolderAccess.ReadOnly, cancel.Token);
-                            var folderInfo = folder.GetFolderInfo();
-                            folders.Add(folderInfo);
+                            Name = "Caixa de entrada",
+                            Path = inbox.GetPath(),
+                            Unread = inbox.Search(SearchQuery.NotSeen).Count,
+                            TotalEmails = inbox.Count,
+                        });
+
+                        // Pega as outras pastas, sempre checando se ela existe ou se é diferente da pasta inbox
+                        foreach (var folder in personal)
+                        {
+                            if (folder.Exists && folder != inbox)
+                            {
+                                folder.Open(FolderAccess.ReadOnly, cancel.Token);
+                                var folderInfo = folder.GetFolderInfo();
+                                folders.Add(folderInfo);
+                            }
                         }
                     }
                 }
+
             }
             catch (ImapProtocolException)
             {
@@ -87,7 +105,7 @@ namespace Net6_Controller_And_VIte.Controllers
                 }
 
                 // Se for sucedido, então apenas tente novamente
-                return GetFolders();
+                return Folders();
             }
             catch (Exception ex)
             {
