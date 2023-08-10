@@ -10,17 +10,15 @@
 
 <body>
   <script>
-    var theme = "lightmode";
+    var theme = "light-theme";
     try {
-      if (localStorage.getItem("theme_selected_mode")) {
-        theme = localStorage.getItem("theme_selected_mode");
+      if (localStorage.getItem("mailbox_theme")) {
+        theme = localStorage.getItem("mailbox_theme");
       }
     } catch (error) {
-      theme = "lightmode"
+      theme = "light-theme"
     }
-    if (theme === "darkmode") {
-      document.documentElement.style.background = "#1b191b";
-    }
+    document.body.classList.add(theme);
   </script>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>

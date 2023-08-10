@@ -4,6 +4,12 @@
   --primary-color-lighter: #a06df220;
   --secondary-color: #acacac;
   --primary-light-color-bg: #e9e8f650;
+  --hover-light-bg-color: #ccc;
+
+  /* Dark-Mode */
+  --primary-dark-bg-color: #1a1a1a;
+  --secondary-dark-bg-color: #333333;
+  --text-dark-color: #fff;
 }
 
 * {
@@ -14,6 +20,7 @@
 
 body {
   background-color: var(--primary-light-color-bg);
+  transition: background-color 0.4s ease-in-out;
 }
 
 li {
@@ -258,6 +265,7 @@ label {
   border-color: #000 transparent #000 transparent;
   animation: loading 1.2s linear infinite;
 }
+
 @keyframes loading {
   0% {
     transform: rotate(0deg);
@@ -269,6 +277,7 @@ label {
 
 .app-container {
   position: relative;
+  transition: background-color 0.4s ease-in-out;
 }
 
 /* Header - Start */
@@ -355,11 +364,12 @@ label {
   cursor: pointer;
 }
 .folders li:hover {
-  background-color: #ccc;
+  background-color: var(--hover-light-bg-color);
 }
 
 .folders li.active {
   background-color: var(--primary-color-lighter);
+  font-weight: bold;
 }
 
 /* Sidebar - End */
@@ -409,3 +419,33 @@ label {
   }
 }
 /* Loading - End */
+
+/* Tema Dark */
+body.dark-theme {
+  background-color: var(--primary-dark-bg-color);
+}
+
+body.dark-theme *:not(input) {
+  color: var(--text-dark-color);
+}
+
+body.dark-theme .main-container {
+  background-color: var(--secondary-dark-bg-color);
+}
+
+body.dark-theme li:hover {
+  background-color: var(--secondary-dark-bg-color);
+}
+
+body.dark-theme li.active {
+  background-color: var(--primary-color);
+}
+.search-bar input:focus {
+  background-color: var(--secondary-dark-bg-color);
+}
+
+body.dark-theme .loading-button:after {
+  border-color: var(--text-dark-color) transparent var(--text-dark-color)
+    transparent;
+}
+/* Tema Dark */
