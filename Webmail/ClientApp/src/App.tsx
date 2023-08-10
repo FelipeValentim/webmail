@@ -1,5 +1,5 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import React, { Suspense, lazy } from "react";
 import { ProtectedRoute, UnprotectedRoute } from "./helpers/authHelper";
 
 const ViewApp = lazy(() => import("./views/app/index"));
@@ -21,6 +21,7 @@ function App() {
             }
           >
             <Route path="" element={<Home />} />
+
             <Route path="message" element={<Message />} />
           </Route>
           <Route

@@ -37,7 +37,7 @@ namespace Net6_Controller_And_VIte.Controllers
 
                     client.Authenticate(user.Username, user.Password);
 
-                    var token = Token.GenerateToken(user, provider);
+                    var token = UserService.GenerateToken(user, provider);
 
                     return new JsonResult(new { succeeded = true, status = (int)HttpStatusCode.OK, payload = token });
                 }

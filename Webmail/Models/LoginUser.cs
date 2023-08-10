@@ -7,6 +7,8 @@ namespace Webmail.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public ServiceType Service { get; set; }
+        public Provider Provider { get; set; }
+
     }
 
     public enum ServiceType

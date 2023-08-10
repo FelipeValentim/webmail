@@ -1,8 +1,17 @@
 import React, { Suspense } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import AppLayout from "../../layout/AppLayout";
 
-const index = () => {
+const Index = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!location.hash) {
+      navigate("/#inbox");
+    }
+  }, [location, navigate]);
+
   return (
     <React.Fragment>
       <AppLayout>
@@ -14,4 +23,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
