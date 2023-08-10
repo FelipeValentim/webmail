@@ -4,6 +4,12 @@
   --primary-color-lighter: #a06df220;
   --secondary-color: #acacac;
   --primary-light-color-bg: #e9e8f650;
+  --hover-light-bg-color: #ccc;
+
+  /* Dark-Mode */
+  --primary-dark-bg-color: #1a1a1a;
+  --secondary-dark-bg-color: #333333;
+  --text-dark-color: #fff;
 }
 
 .user-container {
@@ -194,7 +200,14 @@
 }
 
 .logout:hover {
-  background-color: var(--secondary-color);
+  background-color: var(--hover-light-bg-color);
 }
 
 /* LogOut */
+
+/* Tema Dark */
+body.dark-theme .logout:hover {
+  background-color: var(--secondary-dark-bg-color);
+}
+
+/* Tema Dark */
