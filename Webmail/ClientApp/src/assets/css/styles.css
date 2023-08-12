@@ -211,3 +211,56 @@ body.dark-theme .logout:hover {
 }
 
 /* Tema Dark */
+
+/* Messages */
+
+.messages li {
+  display: grid;
+  padding: 0.8rem 1rem;
+  white-space: nowrap;
+  grid-template-columns: auto auto 100px auto 1fr auto;
+  gap: 0.8rem;
+  align-items: center;
+  justify-items: start;
+  color: #000;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  position: relative; /* Adicione essa linha para habilitar o z-index */
+}
+
+.messages li.read {
+  background-color: #f7f5fc;
+}
+
+.messages input[type="checkbox"] {
+  border: #5f6368 solid 0.15em;
+}
+
+.messages .favorite {
+  color: #5f6368;
+}
+
+.messages li:hover {
+  box-shadow: 0 1px 15px #00000005, 0 1px 6px #00000020;
+  z-index: 1;
+}
+
+.messages li:not(.read) {
+  font-weight: bold;
+}
+
+.messages li :is(.content, .time) {
+  color: #5f6368;
+  font-size: 0.9rem;
+}
+
+.messages li .content {
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: var(--secondary-color);
+  font-weight: normal;
+}
+/* Messages */

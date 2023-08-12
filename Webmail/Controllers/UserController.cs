@@ -1,14 +1,9 @@
 using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Authentication;
-using System.Security.Claims;
-using System.Text;
 using Webmail.Helpers;
 using Webmail.Models;
 using Webmail.Services;
