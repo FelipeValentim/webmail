@@ -10,6 +10,7 @@
   --primary-dark-bg-color: #1a1a1a;
   --secondary-dark-bg-color: #333333;
   --text-dark-color: #fff;
+  --box-shadow-dark: 0 1px 15px #a06df220, 0 1px 6px #a06df240;
 }
 
 * {
@@ -371,9 +372,14 @@ label {
   background-color: var(--hover-light-bg-color);
 }
 
-.folders .active {
+.app-sidebar .folders .active {
   background-color: var(--primary-color-lighter);
   font-weight: bold;
+}
+
+.app-sidebar .folders li {
+  display: flex;
+  justify-content: space-between;
 }
 
 /* Sidebar - End */
@@ -463,7 +469,7 @@ body.dark-theme {
   background-color: var(--primary-dark-bg-color);
 }
 
-body.dark-theme *:not(input) {
+body.dark-theme *:not(input, path) {
   color: var(--text-dark-color);
 }
 
@@ -481,6 +487,7 @@ body.dark-theme a.active {
 
 body.dark-theme .search-bar input:focus {
   background-color: var(--secondary-dark-bg-color);
+  box-shadow: var(--box-shadow-dark);
 }
 
 body.dark-theme .search-bar input {
