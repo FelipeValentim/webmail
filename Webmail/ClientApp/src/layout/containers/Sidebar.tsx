@@ -46,7 +46,7 @@ const Sidebar = () => {
                 <Link
                   className={
                     path.toLowerCase() ===
-                    decodeURIComponent(location.hash.substring(1).toLowerCase())
+                    decodeURIComponent(location.hash).substring(1).toLowerCase()
                       ? "active"
                       : ""
                   }

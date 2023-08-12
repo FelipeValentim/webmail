@@ -23,16 +23,15 @@ const Index = () => {
   React.useEffect(() => {
     if (folders) {
       const folder = folders.find(
-        (x) => x.path.toLowerCase() === location.hash.substring(1).toLowerCase()
+        (x) =>
+          x.path.toLowerCase() ===
+          decodeURIComponent(location.hash).substring(1).toLowerCase()
       );
+
       dispatch(setSelectedFolder(folder));
     }
     // dispatch(setSelectedFolder());
-  }, [location, folders, selectedFolder, dispatch]);
-
-  React.useEffect(() => {
-    console.log(selectedFolder);
-  }, [selectedFolder]);
+  }, [location, folders]);
 
   return (
     <React.Fragment>

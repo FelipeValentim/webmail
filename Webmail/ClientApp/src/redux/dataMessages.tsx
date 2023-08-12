@@ -1,13 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import Message from "../interfaces/Message";
+import DataMessages from "../interfaces/DataMessages";
 
-const initialState: Array<Message> | null = null;
+const initialState: DataMessages | null = null;
 
 const slice = createSlice({
-  name: "messages",
+  name: "dataMessages",
   initialState,
   reducers: {
-    setMessages: (state, action: PayloadAction<Array<Message> | null>) => {
+    setMessages: (state, action: PayloadAction<DataMessages | null>) => {
       return action.payload;
     },
   },

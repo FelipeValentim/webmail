@@ -7,14 +7,14 @@ import logger from "./middlewares/logger";
 import user from "./user";
 import themeSwitch from "./themeSwitch";
 import folders from "./folders";
-import messages from "./messages";
+import dataMessages from "./dataMessages";
 import selectedFolder from "./selectedFolder";
 
 const reducer = combineReducers({
   user,
   themeSwitch,
   folders,
-  messages,
+  dataMessages,
   selectedFolder,
 });
 // Existem middlewares já configurados por padrão na store

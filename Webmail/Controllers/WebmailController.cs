@@ -228,7 +228,7 @@ namespace Net6_Controller_And_VIte.Controllers
                 return BadRequest(new { message = ex.Message });
             }
 
-            return Ok(new { emails = emails, totalEmails = queryUID.Count });
+            return Ok(new { messages = emails, countMessages = queryUID.Count });
         }
 
         [HttpGet("GetEmail")]

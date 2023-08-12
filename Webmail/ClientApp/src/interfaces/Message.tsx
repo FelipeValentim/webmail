@@ -1,7 +1,7 @@
 import Address from "./Address";
 
 interface Message {
-  uniqueId: string;
+  uniqueId: { id: number; isValid: boolean; validity: number };
   content: string;
   subject: string;
   date: string;

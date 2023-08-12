@@ -3,7 +3,7 @@
   --primary-color-darker: #7b4dc4;
   --primary-color-lighter: #a06df220;
   --secondary-color: #acacac;
-  --primary-light-color-bg: #e9e8f650;
+  --primary-light-color-bg: #f8f7fc;
   --hover-light-bg-color: #ccc;
 
   /* Dark-Mode */
@@ -385,7 +385,7 @@ label {
   top: 100px;
   width: 75%;
   height: calc(100vh - 100px);
-  padding: 1.5rem;
+  padding: 1.5rem 0;
   border-radius: 2rem;
   background-color: #fff;
 }
@@ -479,8 +479,12 @@ body.dark-theme a.active {
   background-color: var(--primary-color);
 }
 
-.search-bar input:focus {
-  background-color: var(--primary-light-color-bg);
+body.dark-theme .search-bar input:focus {
+  background-color: var(--secondary-dark-bg-color);
+}
+
+body.dark-theme .search-bar input {
+  color: var(--text-dark-color);
 }
 
 body.dark-theme .loading-button:after {
