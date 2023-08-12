@@ -3,7 +3,7 @@
   --primary-color-darker: #7b4dc4;
   --primary-color-lighter: #a06df220;
   --secondary-color: #acacac;
-  --primary-light-color-bg: #e9e8f650;
+  --primary-light-color-bg: #f8f7fc;
   --hover-light-bg-color: #ccc;
 
   /* Dark-Mode */
@@ -189,6 +189,7 @@
   width: 0;
   height: 0;
 }
+
 /* Dark Switch */
 
 /* LogOut */
@@ -210,6 +211,10 @@ body.dark-theme .logout:hover {
   background-color: var(--secondary-dark-bg-color);
 }
 
+body.dark-theme .messages li.read {
+  background: var(--primary-dark-bg-color);
+}
+
 /* Tema Dark */
 
 /* Messages */
@@ -218,7 +223,7 @@ body.dark-theme .logout:hover {
   display: grid;
   padding: 0.8rem 1rem;
   white-space: nowrap;
-  grid-template-columns: auto auto 100px auto 1fr auto;
+  grid-template-columns: auto auto 200px auto 1fr auto;
   gap: 0.8rem;
   align-items: center;
   justify-items: start;
@@ -230,17 +235,36 @@ body.dark-theme .logout:hover {
 }
 
 .messages li.read {
-  background-color: #f7f5fc;
+  background-color: var(--primary-light-color-bg);
 }
 
 .messages input[type="checkbox"] {
   border: #5f6368 solid 0.15em;
 }
 
-.messages .favorite {
+.messages :has(input[type="checkbox"]:checked) {
+  background-color: var(--primary-color-lighter);
+}
+
+.messages input[type="checkbox"]:hover {
+  border: var(--primary-color) solid 0.15em;
+}
+
+.messages .flag {
   color: #5f6368;
 }
 
+.messages .flagged {
+  color: var(--primary-color);
+}
+
+.messages .flag:hover {
+  color: var(--primary-color);
+}
+
+.messages .flagged:hover {
+  color: #5f6368;
+}
 .messages li:hover {
   box-shadow: 0 1px 15px #00000005, 0 1px 6px #00000020;
   z-index: 1;
@@ -262,5 +286,12 @@ body.dark-theme .logout:hover {
   overflow: hidden;
   color: var(--secondary-color);
   font-weight: normal;
+}
+
+.messages li .addresses {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 /* Messages */
