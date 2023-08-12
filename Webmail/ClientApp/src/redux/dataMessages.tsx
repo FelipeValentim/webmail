@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import DataMessages from "../interfaces/DataMessages";
+import { logoutUser } from "./user";
 
 const initialState: DataMessages | null = null;
 
@@ -10,6 +11,11 @@ const slice = createSlice({
     setMessages: (state, action: PayloadAction<DataMessages | null>) => {
       return action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logoutUser, () => {
+      return initialState;
+    });
   },
 });
 

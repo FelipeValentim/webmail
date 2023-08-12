@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import Folder from "../interfaces/Folder";
+import { logoutUser } from "./user";
 
 const initialState: Array<Folder> | null = null;
 
@@ -10,6 +11,11 @@ const slice = createSlice({
     setFolders: (state, action: PayloadAction<Array<Folder> | null>) => {
       return action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(logoutUser, () => {
+      return initialState;
+    });
   },
 });
 

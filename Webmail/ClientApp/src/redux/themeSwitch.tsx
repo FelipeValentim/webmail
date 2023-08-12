@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getTheme } from "../helpers/storage";
 
+const initialState = getTheme;
+
 const slice = createSlice({
   name: "themeSwitch",
-  initialState: getTheme,
+  initialState: initialState,
   reducers: {
     lightMode: () => {
       return "light-theme";
