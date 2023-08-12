@@ -360,18 +360,18 @@ label {
   margin-left: -1.5rem;
 }
 
-.folders li {
+.folders a {
   color: #333;
-  border-radius: 0 1rem 1rem 0;
+  border-radius: 0 0.7rem 0.7rem 0;
   padding: 0.5rem;
   padding-left: 2rem;
   cursor: pointer;
 }
-.folders li:hover {
+.folders a:hover {
   background-color: var(--hover-light-bg-color);
 }
 
-.folders a.active li {
+.folders .active {
   background-color: var(--primary-color-lighter);
   font-weight: bold;
 }
@@ -424,6 +424,40 @@ label {
 }
 /* Loading - End */
 
+/* Checkbox */
+/* Create a custom checkbox */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  margin: 0;
+  font: inherit;
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid var(--secondary-color);
+  border-radius: 0.15em;
+  transform: translateY(-0.075em);
+}
+
+input[type="checkbox"] {
+  display: grid;
+  place-content: center;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  transform: scale(0);
+  background-color: var(--primary-color);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--form-control-color);
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
 /* Tema Dark */
 body.dark-theme {
   background-color: var(--primary-dark-bg-color);
@@ -437,15 +471,16 @@ body.dark-theme .main-container {
   background-color: var(--secondary-dark-bg-color);
 }
 
-body.dark-theme li:hover {
+body.dark-theme a:hover {
   background-color: var(--secondary-dark-bg-color);
 }
 
-body.dark-theme a.active li {
+body.dark-theme a.active {
   background-color: var(--primary-color);
 }
+
 .search-bar input:focus {
-  background-color: var(--secondary-dark-bg-color);
+  background-color: var(--primary-light-color-bg);
 }
 
 body.dark-theme .loading-button:after {

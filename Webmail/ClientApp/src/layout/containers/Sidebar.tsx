@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import api from "../../api";
 import RootState from "../../interfaces/RootState";
 import { setFolders } from "../../redux/folders";
-import Folders from "../../interfaces/Folders";
+import Folders from "../../interfaces/Folder";
 import { Link, NavLink } from "react-router-dom";
 
 const Sidebar = () => {

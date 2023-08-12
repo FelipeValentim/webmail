@@ -44,10 +44,10 @@ namespace Net6_Controller_And_VIte.Controllers
 
             try
             {
+                using (var client = new ImapClient())
                 using (var cancel = new CancellationTokenSource())
                 {
                     ////ImapClient = MailKitImapClient.Instance;
-                    using (var client = new ImapClient())
                     {
                         client.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
 
@@ -115,16 +115,18 @@ namespace Net6_Controller_And_VIte.Controllers
             return Ok(folders);
         }
 
-        [HttpGet("GetEmails")]
-        public IActionResult GetEmails(EmailFilter filter)
+        [HttpPost("Emails")]
+        public IActionResult Emails(EmailFilter filter)
         {
-            if (filter.FolderName == null) return null;
+            var user = UserService.GetUser(_httpContextAccessor);
+
             List<EmailMessage> emails = new List<EmailMessage>();
 
             IList<UniqueId> queryUID = null;
 
             try
             {
+                using (var client = new ImapClient())
                 using (var cancel = new CancellationTokenSource())
                 {
                     // Seta a query por padrão como All
@@ -144,14 +146,26 @@ namespace Net6_Controller_And_VIte.Controllers
 
                     ////ImapClient = MailKitImapClient.Instance;
 
+                    client.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
+
+                    client.AuthenticationMechanisms.Remove("XOAUTH");
+                    client.AuthenticationMechanisms.Remove("XOAUTH2");
+                    client.AuthenticationMechanisms.Remove("PLAIN");
+                    client.AuthenticationMechanisms.Remove("PLAIN-CLIENTTOKEN");
+                    client.AuthenticationMechanisms.Remove("OAUTHBEARER");
+
+                    client.Authenticate(user.Username, user.Password);
+
+                    var personal = client.GetFolders(client.PersonalNamespaces[0]);
+
                     IMailFolder folder = null;
 
-                    folder = ImapClient.GetFolder(filter.FolderName, FolderAccess.ReadOnly, cancel.Token);
+                    folder = client.GetFolder(filter.FolderName, FolderAccess.ReadOnly, cancel.Token);
 
                     List<UniqueId> uids = null;
 
                     // Checa se o servidor possui suporte para o uso de Sort, se não possuir apenas utilizar o Search
-                    if (ImapClient.Capabilities.HasFlag(ImapCapabilities.Sort))
+                    if (client.Capabilities.HasFlag(ImapCapabilities.Sort))
                     {
                         queryUID = folder.Sort(searchQuery, new[] { OrderBy.ReverseDate });
                         if (queryUID.Count <= filter.RowsPerPage * filter.Page)
@@ -200,8 +214,6 @@ namespace Net6_Controller_And_VIte.Controllers
             }
             catch (ImapProtocolException)
             {
-                //IMAP.SetIMAPServer();
-
                 var result = IMAP.Reconnect(ImapClient);
 
                 if (!result.Succeeded)
@@ -209,16 +221,14 @@ namespace Net6_Controller_And_VIte.Controllers
                     return BadRequest(new { message = result.Message });
                 }
 
-                return GetEmails(filter);
+                return Emails(filter);
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
 
-            var json = Ok(new { success = true, emails = emails, totalEmails = queryUID.Count });
-
-            return json;
+            return Ok(new { emails = emails, totalEmails = queryUID.Count });
         }
 
         [HttpGet("GetEmail")]

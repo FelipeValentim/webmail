@@ -1,4 +1,4 @@
-interface Folders {
+interface Folder {
   name: string;
   path: string;
   totalEmails: number;
@@ -8,4 +8,4 @@ interface Folders {
   subFolders: [] | null;
 }
 
-export default Folders;
+export default Folder;

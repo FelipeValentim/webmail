@@ -1,17 +1,17 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import Folder from "../interfaces/Folder";
 
-const initialState: Array<Folder> | null = null;
+const initialState: Folder | null = null;
 
 const slice = createSlice({
-  name: "folders",
+  name: "selectedFolder",
   initialState,
   reducers: {
-    setFolders: (state, action: PayloadAction<Array<Folder> | null>) => {
+    setSelectedFolder: (state, action: PayloadAction<Folder | null>) => {
       return action.payload;
     },
   },
 });
 
-export const { setFolders } = slice.actions;
+export const { setSelectedFolder } = slice.actions;
 export default slice.reducer;
