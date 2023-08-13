@@ -1,12 +1,12 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 import api from "../../api";
 import RootState from "../../interfaces/RootState";
 import { setFolders } from "../../redux/folders";
-import Folders from "../../interfaces/Folder";
-import { Link, NavLink } from "react-router-dom";
+import Folder from "../../interfaces/Folder";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const { token } = useSelector((state: RootState) => state.user);
@@ -21,7 +21,8 @@ const Sidebar = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        const data: Array<Folders> = response.data;
+        const data: Array<Folder> = response.data;
+        console.log(data);
         dispatch(setFolders(data));
       } catch (error) {
         console.error(error);

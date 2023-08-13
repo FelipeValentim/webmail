@@ -8,7 +8,7 @@ const slice = createSlice({
   name: "selectedFolder",
   initialState,
   reducers: {
-    setSelectedFolder: (state, action: PayloadAction<Folder | null>) => {
+    setSelectedFolder: (_, action: PayloadAction<Folder | null>) => {
       return action.payload;
     },
   },

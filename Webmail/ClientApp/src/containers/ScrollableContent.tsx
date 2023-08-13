@@ -30,7 +30,7 @@ const ScrollableContent: FC<ScrollableContentProps> = ({
   }
 
   const handleTrackClick = useCallback(
-    (e) => {
+    (e: React.MouseEvent<HTMLDivElement>) => {
       e.preventDefault();
       e.stopPropagation();
       const { current: trackCurrent } = scrollTrackRef;
@@ -72,13 +72,16 @@ const ScrollableContent: FC<ScrollableContentProps> = ({
     thumb.style.top = `${newTop}px`;
   }, []);
 
-  const handleThumbMousedown = useCallback((e: MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setScrollStartPosition(e.clientY);
-    if (contentRef.current) setInitialScrollTop(contentRef.current.scrollTop);
-    setIsDragging(true);
-  }, []);
+  const handleThumbMousedown = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setScrollStartPosition(e.clientY);
+      if (contentRef.current) setInitialScrollTop(contentRef.current.scrollTop);
+      setIsDragging(true);
+    },
+    []
+  );
 
   const handleThumbMouseup = useCallback(
     (e: MouseEvent) => {

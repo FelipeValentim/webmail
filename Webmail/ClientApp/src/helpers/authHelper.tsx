@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC, ReactNode } from "react";
 import { removeAccessToken } from "./storage";
 import api from "../api";
 import { AxiosError } from "axios";
@@ -6,7 +6,11 @@ import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import RootState from "../interfaces/RootState";
 
-export const ProtectedRoute = ({ children }) => {
+interface RouteProps {
+  children: ReactNode;
+}
+
+export const ProtectedRoute: FC<RouteProps> = ({ children }) => {
   const [authenticated, setAuthenticated] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const user = useSelector((state: RootState) => state.user);
@@ -45,7 +49,7 @@ export const ProtectedRoute = ({ children }) => {
   return authenticated ? children : <Navigate to="/login" />;
 };
 
-export const UnprotectedRoute = ({ children }) => {
+export const UnprotectedRoute: FC<RouteProps> = ({ children }) => {
   //TODO
   const [authenticated, setAuthenticated] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
