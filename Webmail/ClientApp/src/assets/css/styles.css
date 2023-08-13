@@ -203,7 +203,9 @@
 }
 
 .logout:hover {
-  background-color: var(--hover-light-bg-color);
+  /* background-color: var(--hover-light-bg-color); */
+  box-shadow: var(--box-shadow-light);
+  color: var(--primary-color);
 }
 
 /* LogOut */

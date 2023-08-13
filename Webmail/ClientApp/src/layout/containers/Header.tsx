@@ -1,4 +1,3 @@
-import React from "react";
 import logo from "assets/logo/logo_app.svg";
 import logomarca from "assets/logo/logomarca_app.svg";
 import { faSearch, faSliders } from "@fortawesome/free-solid-svg-icons";

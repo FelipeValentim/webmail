@@ -1,8 +1,7 @@
 import {
   faArrowsRotate,
-  faChevronLeft,
-  faChevronRight,
   faEllipsisVertical,
+  faFilter,
   faSortDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,6 +18,7 @@ interface HomeHeaderProps {
 }
 
 const HomeHeader: React.FC<HomeHeaderProps> = ({
+  setSelectedMessages,
   selectedMessages,
   page,
   rowsPerPage,
@@ -28,17 +28,45 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
     (state: RootState) => state.selectedFolder
   );
 
+  const dataMessages = useSelector((state: RootState) => state.dataMessages);
+
+  const setSelection = () => {
+    console.log(selectedMessages.length);
+    console.log(dataMessages?.messages.length);
+    if (
+      selectedMessages.length >= 0 &&
+      selectedMessages.length !== dataMessages?.messages.length
+    ) {
+      setSelectedMessages(dataMessages.messages.map((x) => x.uniqueId.id));
+    } else {
+      setSelectedMessages([]);
+    }
+  };
+
   return (
     <div className="home-header">
       <div className="options">
         <div className="select">
-          <input title="Selecionar" className="select" type="checkbox" />
+          <input
+            checked={selectedMessages.length > 0}
+            onClick={setSelection}
+            title="Selecionar"
+            className={
+              selectedMessages.length !== dataMessages?.messages.length
+                ? "select inderteminate"
+                : "select"
+            }
+            type="checkbox"
+          />
           <span>
             <FontAwesomeIcon icon={faSortDown} />
           </span>
         </div>
         <span>
           <FontAwesomeIcon icon={faArrowsRotate} />
+        </span>
+        <span>
+          <FontAwesomeIcon icon={faFilter} />
         </span>
         <span>
           <FontAwesomeIcon icon={faEllipsisVertical} />

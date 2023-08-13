@@ -5,6 +5,7 @@
   --secondary-color: #acacac;
   --primary-light-color-bg: #f8f7fc;
   --hover-light-bg-color: #ccc;
+  --box-shadow-light: 0 1px 15px #00000005, 0 1px 6px #00000020;
 
   /* Dark-Mode */
   --primary-dark-bg-color: #1a1a1a;
@@ -327,7 +328,7 @@ label {
 .search-bar input:focus {
   outline: none;
   background-color: #fff;
-  box-shadow: 0 1px 15px #00000005, 0 1px 6px #00000020;
+  box-shadow: var(--box-shadow-light);
 }
 
 .search-bar :is(.search, .settings) {
@@ -369,7 +370,16 @@ label {
   cursor: pointer;
 }
 .folders a:hover {
-  background-color: var(--hover-light-bg-color);
+  /* background-color: var(--hover-light-bg-color); */
+  box-shadow: var(--box-shadow-light);
+}
+
+.folders a span {
+  transition: all 0.2s ease-in-out;
+}
+
+.folders a:hover span {
+  color: var(--primary-color);
 }
 
 .app-sidebar .folders .active {
@@ -462,6 +472,10 @@ input[type="checkbox"]::before {
 
 input[type="checkbox"]:checked::before {
   transform: scale(1);
+}
+
+input[type="checkbox"].inderteminate:checked::before {
+  height: 0.3em;
 }
 
 /* Tema Dark */

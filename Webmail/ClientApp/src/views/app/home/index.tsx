@@ -1,7 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import api from "../../../api";
-import Message from "../../../interfaces/Message";
 import RootState from "../../../interfaces/RootState";
 import { setMessages } from "../../../redux/dataMessages";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,6 +9,7 @@ import { faStar as starSolid } from "@fortawesome/free-solid-svg-icons";
 import ScrollableContent from "../../../containers/ScrollableContent";
 import HomeHeader from "../../../components/home/HomeHeader";
 import axios, { CancelTokenSource } from "axios";
+import DataMessages from "../../../interfaces/DataMessages";
 
 const Index = () => {
   let cancelTokenSource: CancelTokenSource;
@@ -28,6 +28,15 @@ const Index = () => {
   const selectedFolder = useSelector(
     (state: RootState) => state.selectedFolder
   );
+
+  React.useEffect(() => {
+    setPage(0);
+    setSelectedMessages([]);
+  }, [selectedFolder]);
+
+  React.useEffect(() => {
+    setSelectedMessages([]);
+  }, [page]);
 
   React.useEffect(() => {
     const getFolders = async () => {
@@ -49,7 +58,7 @@ const Index = () => {
           }
         );
 
-        const data: Array<Message> = response.data;
+        const data: DataMessages = response.data;
         dispatch(setMessages(data));
 
         setLoading(false);
@@ -78,6 +87,7 @@ const Index = () => {
   return (
     <div className="home-messages">
       <HomeHeader
+        setSelectedMessages={setSelectedMessages}
         selectedMessages={selectedMessages}
         page={page}
         rowsPerPage={rowsPerPage}

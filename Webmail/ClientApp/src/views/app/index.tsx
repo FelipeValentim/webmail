@@ -8,9 +8,6 @@ import { setSelectedFolder } from "../../redux/selectedFolder";
 const Index = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const selectedFolder = useSelector(
-    (state: RootState) => state.selectedFolder
-  );
   const folders = useSelector((state: RootState) => state.folders);
   const dispatch = useDispatch();
 
@@ -28,7 +25,9 @@ const Index = () => {
           decodeURIComponent(location.hash).substring(1).toLowerCase()
       );
 
-      dispatch(setSelectedFolder(folder));
+      if (folder) {
+        dispatch(setSelectedFolder(folder));
+      }
     }
     // dispatch(setSelectedFolder());
   }, [location, folders]);
