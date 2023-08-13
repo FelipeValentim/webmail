@@ -7,8 +7,27 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import RootState from "../../interfaces/RootState";
+import { useSelector } from "react-redux";
+import Pagination from "../../containers/Pagination";
 
-const HomeHeader = ({ selectedMessages }) => {
+interface HomeHeaderProps {
+  selectedMessages: number[]; // O tipo correto para selectedMessages
+  page: number;
+  rowsPerPage: number;
+  setPage: (page: number) => void;
+}
+
+const HomeHeader: React.FC<HomeHeaderProps> = ({
+  selectedMessages,
+  page,
+  rowsPerPage,
+  setPage,
+}) => {
+  const selectedFolder = useSelector(
+    (state: RootState) => state.selectedFolder
+  );
+
   return (
     <div className="home-header">
       <div className="options">
@@ -25,15 +44,14 @@ const HomeHeader = ({ selectedMessages }) => {
           <FontAwesomeIcon icon={faEllipsisVertical} />
         </span>
       </div>
-      <div className="pagination">
-        <div>1-50</div>
-        <span>
-          <FontAwesomeIcon icon={faChevronLeft} />
-        </span>
-        <span>
-          <FontAwesomeIcon icon={faChevronRight} />
-        </span>
-      </div>
+      <Pagination
+        page={page}
+        rowsPerPage={rowsPerPage}
+        onPageChange={(newPage) => setPage(newPage)}
+        count={selectedFolder?.totalEmails ?? 0}
+        previousLabel="Anterior"
+        nextLabel="Próximo"
+      />
     </div>
   );
 };
