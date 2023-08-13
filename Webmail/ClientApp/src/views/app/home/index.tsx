@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import api from "../../../api";
 import Message from "../../../interfaces/Message";
@@ -9,13 +9,16 @@ import { faStar as starRegular } from "@fortawesome/free-regular-svg-icons";
 import { faStar as starSolid } from "@fortawesome/free-solid-svg-icons";
 import ScrollableContent from "../../../containers/ScrollableContent";
 import HomeHeader from "../../../components/home/HomeHeader";
+import axios, { CancelTokenSource } from "axios";
 
 const Index = () => {
+  let cancelTokenSource: CancelTokenSource;
+
   const [selectedMessages, setSelectedMessages] = React.useState<Array<number>>(
     []
   );
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(30);
+  const rowsPerPage = 30;
 
   const [loading, setLoading] = React.useState(false);
   const dispatch = useDispatch();
@@ -27,12 +30,10 @@ const Index = () => {
   );
 
   React.useEffect(() => {
-    console.log("teste");
-    if (loading) return;
-
     const getFolders = async () => {
       try {
         setLoading(true);
+
         const response = await api.post(
           "webmail/emails",
           {
@@ -44,19 +45,27 @@ const Index = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+            cancelToken: cancelTokenSource.token,
           }
         );
+
         const data: Array<Message> = response.data;
         dispatch(setMessages(data));
+
+        setLoading(false);
       } catch (error) {
         console.error(error);
-      } finally {
-        setLoading(false);
       }
     };
 
+    cancelTokenSource = axios.CancelToken.source();
+
     if (selectedFolder) getFolders();
-  }, [selectedFolder]);
+
+    return () => {
+      cancelTokenSource.cancel("Cancelled due to stale request");
+    };
+  }, [selectedFolder, page]);
 
   const onSelectedMessage = (id: number) => {
     if (selectedMessages.includes(id)) {
@@ -68,15 +77,18 @@ const Index = () => {
 
   return (
     <div className="home-messages">
-      <HomeHeader selectedMessages={selectedMessages} />
+      <HomeHeader
+        selectedMessages={selectedMessages}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        setPage={setPage}
+      />
       <ScrollableContent updater={[dataMessages]}>
         {dataMessages && !loading ? (
           dataMessages.messages.map(
             ({
               content,
               flagged,
-              isDraft,
-              isSent,
               date,
               seen,
               subject,

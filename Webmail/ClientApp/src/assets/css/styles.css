@@ -232,6 +232,8 @@ body.dark-theme .messages li:hover {
 
 .home-messages {
   height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 /* Messages */
@@ -357,6 +359,18 @@ body.dark-theme .messages li:hover {
 
 .home-header span:hover {
   box-shadow: var(--box-shadow-light);
+}
+
+.home-header .pagination .disabled:hover {
+  box-shadow: none;
+}
+
+.home-header .pagination .disabled {
+  color: #999;
+}
+
+.home-header .pagination .disabled:hover svg {
+  color: inherit;
 }
 
 .home-header span svg {
