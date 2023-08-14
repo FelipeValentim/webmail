@@ -185,6 +185,7 @@ label {
   padding: 0.8rem;
 }
 
+/* Button */
 .btn {
   padding: 1rem 1rem;
   font-size: 1rem;
@@ -197,6 +198,26 @@ label {
   color: #fff;
   background-color: var(--primary-color);
   transition: all 0.2s ease-in-out;
+}
+
+.btn-secondary {
+  color: #5f6368;
+  border-radius: 25%;
+  height: 2rem;
+  width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-secondary:hover {
+  box-shadow: var(--box-shadow-dark);
+  color: var(--primary-color);
+}
+
+.btn-secondary:hover svg {
+  color: var(--primary-color);
 }
 
 .btn-icon {
@@ -217,6 +238,7 @@ label {
 .btn-primary:hover {
   background-color: var(--primary-color-darker);
 }
+/* Button */
 
 .invalid-feedback {
   position: absolute;
@@ -364,7 +386,7 @@ label {
 
 .folders a {
   color: #333;
-  border-radius: 0 0.7rem 0.7rem 0;
+  border-radius: 0 0.4rem 0.4rem 0;
   padding: 0.5rem;
   padding-left: 2rem;
   cursor: pointer;
@@ -513,3 +535,41 @@ body.dark-theme .loading-button:after {
     transparent;
 }
 /* Tema Dark */
+
+/* Popup */
+.popup-container {
+  position: relative;
+}
+
+.popup {
+  position: absolute;
+  left: 0;
+  top: 2rem;
+  background-color: #fff;
+  z-index: 999;
+  box-shadow: var(--box-shadow-light);
+  width: max-content;
+}
+
+.popup ul li {
+  padding: 0.8rem 1.5rem;
+  cursor: pointer;
+}
+
+.popup ul li:hover {
+  color: var(--primary-color);
+  background-color: var(--primary-color-lighter);
+}
+
+/* Popup */
+
+/* Loading animation */
+.loading-animation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+/* Loading animation */
+
+/* Button */

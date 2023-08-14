@@ -348,21 +348,6 @@ body.dark-theme .messages li:hover {
   transform: translateY(-25%);
 }
 
-.home-header span {
-  color: #5f6368;
-  border-radius: 25%;
-  height: 2rem;
-  width: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease-in-out;
-}
-
-.home-header span:hover {
-  box-shadow: var(--box-shadow-light);
-}
-
 .home-header .pagination .disabled:hover {
   box-shadow: none;
 }
@@ -377,10 +362,6 @@ body.dark-theme .messages li:hover {
 
 .home-header span svg {
   transition: all 0.2s ease-in-out;
-}
-
-.home-header span:hover svg {
-  color: var(--primary-color);
 }
 
 .home-header .select input {

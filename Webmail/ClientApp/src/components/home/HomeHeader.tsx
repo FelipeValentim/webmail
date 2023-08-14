@@ -9,8 +9,10 @@ import React from "react";
 import RootState from "../../interfaces/RootState";
 import { useSelector } from "react-redux";
 import Pagination from "../../containers/Pagination";
+import DropDownButton from "../../containers/DropDownButton";
 
 interface HomeHeaderProps {
+  setSelectedMessages: (selectedMessages: number[]) => void;
   selectedMessages: number[]; // O tipo correto para selectedMessages
   page: number;
   rowsPerPage: number;
@@ -58,17 +60,72 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
             }
             type="checkbox"
           />
-          <span>
-            <FontAwesomeIcon icon={faSortDown} />
-          </span>
+          <DropDownButton className="btn-secondary" icon={faSortDown}>
+            <ul>
+              <li onClick={() => setSelectedMessages([])}>Nenhum</li>
+              <li
+                onClick={() =>
+                  setSelectedMessages(
+                    dataMessages.messages.map((x) => x.uniqueId.id)
+                  )
+                }
+              >
+                Todos
+              </li>
+              <li
+                onClick={() =>
+                  setSelectedMessages(
+                    dataMessages.messages
+                      .filter((x) => x.seen)
+                      .map((x) => x.uniqueId.id)
+                  )
+                }
+              >
+                Lidos
+              </li>
+              <li
+                onClick={() =>
+                  setSelectedMessages(
+                    dataMessages.messages
+                      .filter((x) => !x.seen)
+                      .map((x) => x.uniqueId.id)
+                  )
+                }
+              >
+                Não lidos
+              </li>
+              <li
+                onClick={() =>
+                  setSelectedMessages(
+                    dataMessages.messages
+                      .filter((x) => x.flagged)
+                      .map((x) => x.uniqueId.id)
+                  )
+                }
+              >
+                Favoritos
+              </li>
+              <li
+                onClick={() =>
+                  setSelectedMessages(
+                    dataMessages.messages
+                      .filter((x) => !x.flagged)
+                      .map((x) => x.uniqueId.id)
+                  )
+                }
+              >
+                Não favoritos
+              </li>
+            </ul>
+          </DropDownButton>
         </div>
-        <span>
+        <span className="btn-secondary">
           <FontAwesomeIcon icon={faArrowsRotate} />
         </span>
-        <span>
+        <span className="btn-secondary">
           <FontAwesomeIcon icon={faFilter} />
         </span>
-        <span>
+        <span className="btn-secondary">
           <FontAwesomeIcon icon={faEllipsisVertical} />
         </span>
       </div>

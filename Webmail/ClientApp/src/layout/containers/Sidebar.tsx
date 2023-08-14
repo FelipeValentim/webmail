@@ -1,37 +1,12 @@
 import React from "react";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useDispatch, useSelector } from "react-redux";
-import api from "../../api";
 import RootState from "../../interfaces/RootState";
-import { setFolders } from "../../redux/folders";
-import Folder from "../../interfaces/Folder";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
-  const { token } = useSelector((state: RootState) => state.user);
   const folders = useSelector((state: RootState) => state.folders);
-  const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    const getFolders = async () => {
-      try {
-        const response = await api.get("webmail/folders", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data: Array<Folder> = response.data;
-        console.log(data);
-        dispatch(setFolders(data));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    if (!folders) getFolders();
-  }, []);
-
   return (
     <nav className="app-sidebar">
       {folders ? (
