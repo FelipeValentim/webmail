@@ -18,6 +18,12 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(60); // Defina o tempo limite de inatividade da sessão
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services.AddAuthentication(options =>
 {
@@ -63,6 +69,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.UseEndpoints(endpoints => endpoints.MapControllers());
 

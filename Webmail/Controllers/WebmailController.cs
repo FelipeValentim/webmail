@@ -3,16 +3,20 @@ using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
 using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using MimeKit.Text;
 using MimeKit.Utils;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System.IO.Compression;
 using System.Net;
 using System.Text.RegularExpressions;
 using Webmail.Helpers;
 using Webmail.Services;
 using static Webmail.Models.WebMailModels;
+using Microsoft.AspNetCore.Http;
 
 namespace Net6_Controller_And_VIte.Controllers
 {

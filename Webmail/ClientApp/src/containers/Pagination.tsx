@@ -48,14 +48,16 @@ const Pagination: FC<PaginationProps> = ({
       <span
         title={previousLabel}
         onClick={previousPage}
-        className={page > 0 ? "active" : "disabled"}
+        className={page > 0 ? "active btn-secondary" : "disabled btn-secondary"}
       >
         <FontAwesomeIcon icon={faChevronLeft} />
       </span>
       <span
         title={nextLabel}
         onClick={nextPage}
-        className={activeNext ? "active" : "disabled"}
+        className={
+          activeNext ? "active btn-secondary" : "disabled btn-secondary"
+        }
       >
         <FontAwesomeIcon icon={faChevronRight} />
       </span>
