@@ -14,6 +14,15 @@ namespace Net6_Controller_And_VIte.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
+        private readonly ImapClient _imapClient;
+
+
+        public UserController(ImapClient imapClient)
+        {
+            _imapClient = imapClient;
+
+        }
+
         //private EmailOptions Email => new EmailOptions("Felipe", "valentimdeveloper@gmail.com", "mhsqewnmqlwwepwx");
 
         [HttpPost("LogIn")]
@@ -22,20 +31,18 @@ namespace Net6_Controller_And_VIte.Controllers
         {
             try
             {
-                using (var client = new ImapClient())
-                {
-                    var (provider, serviceType) = Utils.GetProvider(user.Username);
+                var (provider, serviceType) = Utils.GetProvider(user.Username);
 
-                    client.Connect(provider.Host, provider.Port, provider.SecureSocketOptions);
+                _imapClient.Connect(provider.Host, provider.Port, provider.SecureSocketOptions);
 
-                    client.AuthenticationMechanisms.Remove("XOAUTH");
+                _imapClient.AuthenticationMechanisms.Remove("XOAUTH");
 
-                    client.Authenticate(user.Username, user.Password);
+                _imapClient.Authenticate(user.Username, user.Password);
 
-                    var token = UserService.GenerateToken(user, provider);
+                var token = UserService.GenerateToken(user, provider);
 
-                    return new JsonResult(new { succeeded = true, status = (int)HttpStatusCode.OK, payload = token });
-                }
+                return new JsonResult(new { succeeded = true, status = (int)HttpStatusCode.OK, payload = token });
+
             }
             catch (ImapProtocolException)
             {

@@ -4,6 +4,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC } from "react";
+import Button from "./Button";
 
 interface PaginationProps {
   rowsPerPage: number;
@@ -14,7 +15,7 @@ interface PaginationProps {
   previousLabel: string;
 }
 
-const Pagination: FC<PaginationProps> = ({
+const PaginationContainer: FC<PaginationProps> = ({
   rowsPerPage,
   page,
   count,
@@ -45,24 +46,22 @@ const Pagination: FC<PaginationProps> = ({
         {activeNext ? currentPage : currentPage - (currentPage - count)} de{" "}
         {count}
       </div>
-      <span
+      <Button
         title={previousLabel}
         onClick={previousPage}
+        icon={faChevronLeft}
         className={page > 0 ? "active btn-secondary" : "disabled btn-secondary"}
-      >
-        <FontAwesomeIcon icon={faChevronLeft} />
-      </span>
-      <span
+      />
+      <Button
         title={nextLabel}
         onClick={nextPage}
+        icon={faChevronRight}
         className={
           activeNext ? "active btn-secondary" : "disabled btn-secondary"
         }
-      >
-        <FontAwesomeIcon icon={faChevronRight} />
-      </span>
+      />
     </div>
   );
 };
 
-export default Pagination;
+export default PaginationContainer;
