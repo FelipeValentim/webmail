@@ -1,3 +1,4 @@
+using MailKit.Net.Imap;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Net6_Controller_And_VIte;
@@ -24,6 +25,13 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+builder.Services.AddSingleton(provider =>
+{
+    var client = new ImapClient();
+    return client;
+});
+
 
 builder.Services.AddAuthentication(options =>
 {

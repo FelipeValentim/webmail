@@ -372,3 +372,20 @@ body.dark-theme .messages li:hover {
   border: 0.15em solid var(--primary-color);
 }
 /* Home Header */
+
+ul li {
+  position: relative;
+}
+
+ul li.active:before {
+  position: absolute;
+  content: "";
+  width: 10px;
+  height: 4px;
+  background-color: var(--primary-color);
+  display: inline-block;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 0.5rem;
+}

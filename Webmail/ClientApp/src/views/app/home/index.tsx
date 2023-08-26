@@ -10,6 +10,7 @@ import ScrollableContent from "../../../containers/ScrollableContent";
 import HomeHeader from "../../../components/home/HomeHeader";
 import axios, { CancelTokenSource } from "axios";
 import DataMessages from "../../../interfaces/DataMessages";
+import Pagination from "../../../interfaces/Pagination";
 
 const Index = () => {
   let cancelTokenSource: CancelTokenSource;
@@ -17,26 +18,29 @@ const Index = () => {
   const [selectedMessages, setSelectedMessages] = React.useState<Array<number>>(
     []
   );
-  const [page, setPage] = React.useState(0);
-  const rowsPerPage = 30;
+  const [pagination, setPagination] = React.useState<Pagination>({
+    page: 0,
+    rowsPerPage: 30,
+  });
 
   const [loading, setLoading] = React.useState(false);
   const dispatch = useDispatch();
   const { token } = useSelector((state: RootState) => state.user);
   const dataMessages = useSelector((state: RootState) => state.dataMessages);
+  const search = useSelector((state: RootState) => state.search);
 
   const selectedFolder = useSelector(
     (state: RootState) => state.selectedFolder
   );
 
   React.useEffect(() => {
-    setPage(0);
+    setPagination({ ...pagination, page: 0 });
     setSelectedMessages([]);
   }, [selectedFolder]);
 
   React.useEffect(() => {
     setSelectedMessages([]);
-  }, [page]);
+  }, [pagination]);
 
   React.useEffect(() => {
     const getFolders = async () => {
@@ -47,8 +51,11 @@ const Index = () => {
           "webmail/emails",
           {
             FolderName: selectedFolder.path,
-            Page: page,
-            RowsPerPage: rowsPerPage,
+            Page: pagination.page,
+            RowsPerPage: pagination.rowsPerPage,
+            SearchQuery: search.query,
+            SearchText: search.text,
+            SearchParams: search.params,
           },
           {
             headers: {
@@ -60,6 +67,7 @@ const Index = () => {
 
         const data: DataMessages = response.data;
         dispatch(setMessages(data));
+        // dispatch(setSelectedFolder({...selectedFolder, totalEmails: data.countMessages}));
 
         setLoading(false);
       } catch (error) {
@@ -74,7 +82,7 @@ const Index = () => {
     return () => {
       cancelTokenSource.cancel("Cancelled due to stale request");
     };
-  }, [selectedFolder, page]);
+  }, [selectedFolder, pagination, search.text, search.query]);
 
   const onSelectedMessage = (id: number) => {
     if (selectedMessages.includes(id)) {
@@ -89,9 +97,8 @@ const Index = () => {
       <HomeHeader
         setSelectedMessages={setSelectedMessages}
         selectedMessages={selectedMessages}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        setPage={setPage}
+        pagination={pagination}
+        setPagination={setPagination}
       />
       <ScrollableContent updater={[dataMessages]}>
         {dataMessages && !loading ? (

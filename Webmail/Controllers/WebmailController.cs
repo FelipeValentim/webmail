@@ -17,6 +17,7 @@ using Webmail.Helpers;
 using Webmail.Services;
 using static Webmail.Models.WebMailModels;
 using Microsoft.AspNetCore.Http;
+using Webmail.Models;
 
 namespace Net6_Controller_And_VIte.Controllers
 {
@@ -25,12 +26,15 @@ namespace Net6_Controller_And_VIte.Controllers
     [Route("[controller]")]
     public class WebmailController : ControllerBase
     {
+        private readonly ImapClient _imapClient;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public WebmailController(IHttpContextAccessor httpContextAccessor)
+        public WebmailController(IHttpContextAccessor httpContextAccessor, ImapClient imapClient)
         {
             _httpContextAccessor = httpContextAccessor;
+            _imapClient = imapClient;
+
         }
 
         private ServerOptions IMAP = new ServerOptions();
@@ -42,52 +46,47 @@ namespace Net6_Controller_And_VIte.Controllers
         [HttpGet("Folders")]
         public IActionResult Folders() // TODO - Pastas aninhadas (nested)
         {
-            var user = UserService.GetUser(_httpContextAccessor);
 
             List<FolderInfo> folders = new List<FolderInfo>();
 
             try
             {
-                using (var client = new ImapClient())
-                using (var cancel = new CancellationTokenSource())
+                using (var imapClient = new ImapClient())
                 {
-                    ////ImapClient = MailKitImapClient.Instance;
+
+                    //if (!_imapClient.IsConnected)
+                    //{
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    imapClient.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
+
+                    imapClient.Authenticate(user.Username, user.Password);
+                    //}
+
+
+                    var personal = imapClient.GetFolders(imapClient.PersonalNamespaces[0]);
+
+                    // Sempre pega a pasta Inbox primeiro
+                    var inbox = imapClient.Inbox;
+
+                    inbox.Open(FolderAccess.ReadOnly);
+
+                    folders.Add(new FolderInfo()
                     {
-                        client.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
+                        Name = "Caixa de entrada",
+                        Path = inbox.GetPath(),
+                        Unread = inbox.Search(SearchQuery.NotSeen).Count,
+                        TotalEmails = inbox.Count,
+                    });
 
-                        client.AuthenticationMechanisms.Remove("XOAUTH");
-                        client.AuthenticationMechanisms.Remove("XOAUTH2");
-                        client.AuthenticationMechanisms.Remove("PLAIN");
-                        client.AuthenticationMechanisms.Remove("PLAIN-CLIENTTOKEN");
-                        client.AuthenticationMechanisms.Remove("OAUTHBEARER");
-
-
-                        client.Authenticate(user.Username, user.Password);
-
-                        var personal = client.GetFolders(client.PersonalNamespaces[0]);
-
-                        // Sempre pega a pasta Inbox primeiro
-                        var inbox = client.Inbox;
-
-                        inbox.Open(FolderAccess.ReadOnly, cancel.Token);
-
-                        folders.Add(new FolderInfo()
+                    // Pega as outras pastas, sempre checando se ela existe ou se é diferente da pasta inbox
+                    foreach (var folder in personal)
+                    {
+                        if (folder.Exists && folder != inbox)
                         {
-                            Name = "Caixa de entrada",
-                            Path = inbox.GetPath(),
-                            Unread = inbox.Search(SearchQuery.NotSeen).Count,
-                            TotalEmails = inbox.Count,
-                        });
-
-                        // Pega as outras pastas, sempre checando se ela existe ou se é diferente da pasta inbox
-                        foreach (var folder in personal)
-                        {
-                            if (folder.Exists && folder != inbox)
-                            {
-                                folder.Open(FolderAccess.ReadOnly, cancel.Token);
-                                var folderInfo = folder.GetFolderInfo();
-                                folders.Add(folderInfo);
-                            }
+                            folder.Open(FolderAccess.ReadOnly);
+                            var folderInfo = folder.GetFolderInfo();
+                            folders.Add(folderInfo);
                         }
                     }
                 }
@@ -95,14 +94,10 @@ namespace Net6_Controller_And_VIte.Controllers
             }
             catch (ImapProtocolException)
             {
-                // Essa exceção ocorrerá quando for desconectado do servidor
-                // Primeiro seta as opções do IMAP ñovamente
-                //IMAP.SetIMAPServer();
+                var user = UserService.GetUser(_httpContextAccessor);
 
-                // Tenta reconectar
-                var result = IMAP.Reconnect(ImapClient);
+                var result = user.Reconnect(_imapClient);
 
-                // Se não for sucedido, então retorne uma mensagem de erro
                 if (!result.Succeeded)
                 {
                     return BadRequest(new { message = result.Message });
@@ -111,28 +106,34 @@ namespace Net6_Controller_And_VIte.Controllers
                 // Se for sucedido, então apenas tente novamente
                 return Folders();
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest(new { message = ex.Message });
-            }
+                var user = UserService.GetUser(_httpContextAccessor);
 
+                var result = user.Reconnect(_imapClient);
+
+                if (!result.Succeeded)
+                {
+                    return BadRequest(new { message = result.Message });
+                }
+
+                return Folders();
+            }
             return Ok(folders);
         }
 
         [HttpPost("Emails")]
         public IActionResult Emails(EmailFilter filter)
         {
-            var user = UserService.GetUser(_httpContextAccessor);
-
             List<EmailMessage> emails = new List<EmailMessage>();
 
             IList<UniqueId> queryUID = null;
 
             try
             {
-                using (var client = new ImapClient())
-                using (var cancel = new CancellationTokenSource())
+                using (var imapClient = new ImapClient())
                 {
+
                     // Seta a query por padrão como All
                     var searchQuery = SearchQuery.All;
 
@@ -150,26 +151,25 @@ namespace Net6_Controller_And_VIte.Controllers
 
                     ////ImapClient = MailKitImapClient.Instance;
 
-                    client.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
+                    //if (!_imapClient.IsConnected)
+                    //{
+                    var user = UserService.GetUser(_httpContextAccessor);
 
-                    client.AuthenticationMechanisms.Remove("XOAUTH");
-                    client.AuthenticationMechanisms.Remove("XOAUTH2");
-                    client.AuthenticationMechanisms.Remove("PLAIN");
-                    client.AuthenticationMechanisms.Remove("PLAIN-CLIENTTOKEN");
-                    client.AuthenticationMechanisms.Remove("OAUTHBEARER");
+                    imapClient.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
 
-                    client.Authenticate(user.Username, user.Password);
+                    imapClient.Authenticate(user.Username, user.Password);
+                    //}
 
-                    var personal = client.GetFolders(client.PersonalNamespaces[0]);
+                    var personal = imapClient.GetFolders(imapClient.PersonalNamespaces[0]);
 
                     IMailFolder folder = null;
 
-                    folder = client.GetFolder(filter.FolderName, FolderAccess.ReadOnly, cancel.Token);
+                    folder = imapClient.GetFolder(filter.FolderName, FolderAccess.ReadOnly);
 
                     List<UniqueId> uids = null;
 
                     // Checa se o servidor possui suporte para o uso de Sort, se não possuir apenas utilizar o Search
-                    if (client.Capabilities.HasFlag(ImapCapabilities.Sort))
+                    if (imapClient.Capabilities.HasFlag(ImapCapabilities.Sort))
                     {
                         queryUID = folder.Sort(searchQuery, new[] { OrderBy.ReverseDate });
                         if (queryUID.Count <= filter.RowsPerPage * filter.Page)
@@ -218,18 +218,30 @@ namespace Net6_Controller_And_VIte.Controllers
             }
             catch (ImapProtocolException)
             {
-                var result = IMAP.Reconnect(ImapClient);
+                var user = UserService.GetUser(_httpContextAccessor);
+
+                var result = user.Reconnect(_imapClient);
 
                 if (!result.Succeeded)
                 {
                     return BadRequest(new { message = result.Message });
                 }
 
-                return Emails(filter);
+                // Se for sucedido, então apenas tente novamente
+                return Folders();
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest(new { message = ex.Message });
+                var user = UserService.GetUser(_httpContextAccessor);
+
+                var result = user.Reconnect(_imapClient);
+
+                if (!result.Succeeded)
+                {
+                    return BadRequest(new { message = result.Message });
+                }
+
+                return Folders();
             }
 
             return Ok(new { messages = emails, countMessages = queryUID.Count });
@@ -312,7 +324,7 @@ namespace Net6_Controller_And_VIte.Controllers
                     email.Content = htmlText;
                     email.Subject = string.IsNullOrEmpty(item.Envelope.Subject) ? "(Sem assunto)" : item.Envelope.Subject;
                     email.Date = date;
-                    email.Attachments = item.Attachments.Select(x => new Attachment() { FileName = x.ContentDisposition.FileName, FolderName = folderName, UniqueId = uniqueId, ContentId = x.ContentId, Size = Convert.ToInt64(x.Octets - (x.Octets / 3.5)) }).ToList();
+                    email.Attachments = item.Attachments.Select(x => new Webmail.Models.WebMailModels.Attachment() { FileName = x.ContentDisposition.FileName, FolderName = folderName, UniqueId = uniqueId, ContentId = x.ContentId, Size = Convert.ToInt64(x.Octets - (x.Octets / 3.5)) }).ToList();
 
                     email.ToAddresses.AddRange(item.Envelope.To.Mailboxes.Select(x => new EmailAddress { Address = x.Address, Name = x.Name }));
                     email.FromAddresses.AddRange(item.Envelope.From.Mailboxes.Select(x => new EmailAddress { Address = x.Address, Name = x.Name }));

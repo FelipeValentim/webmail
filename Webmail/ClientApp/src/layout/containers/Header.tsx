@@ -1,9 +1,9 @@
 import logo from "assets/logo/logo_app.svg";
 import logomarca from "assets/logo/logomarca_app.svg";
-import { faSearch, faSliders } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import HeaderSwitch from "./HeaderSwitch";
 import LogOut from "./LogOut";
+import HeaderSearchBar from "./HeaderSearchBar";
 const Header = () => {
   return (
     <header className="app-header">
@@ -11,11 +11,8 @@ const Header = () => {
         <img src={logo} alt="" />
         <img src={logomarca} alt="" />
       </div>
-      <div className="search-bar">
-        <FontAwesomeIcon className="search" icon={faSearch} />
-        <input placeholder="Pesquisar" type="text"></input>
-        <FontAwesomeIcon className="settings" icon={faSliders} />
-      </div>
+      <HeaderSearchBar />
+
       <div className="d-flex align-items-center gap-3">
         <HeaderSwitch />
         <LogOut />

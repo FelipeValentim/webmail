@@ -70,7 +70,7 @@ const Login = () => {
         if (data.succeeded) {
           setAccessToken(data.payload);
           dispatch(loginUser(data.payload));
-          navigate("/");
+          navigate("/#inbox");
         } else {
           setErrors({ ...errors, invalidCredentials: data.payload.message });
         }

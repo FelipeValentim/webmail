@@ -27,7 +27,7 @@ const HeaderSwitch = () => {
   }, [themeSwitch]);
 
   return (
-    <div className="dark-mode-switch d-flex">
+    <div className="dark-mode-switch d-flex overflow-hidden">
       <input
         checked={themeSwitch !== defaultTheme}
         onChange={changeTheme}

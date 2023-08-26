@@ -40,7 +40,7 @@ const DropDownButton: FC<DropDownButtonProps> = ({
 
   return (
     <div
-      className={`popup-container ${className}`}
+      className={`btn popup-container ${className}`}
       onClick={() => setPopup(!popup)}
       ref={ref}
     >

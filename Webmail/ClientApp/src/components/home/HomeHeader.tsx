@@ -1,40 +1,47 @@
 import {
+  faArchive,
   faArrowsRotate,
   faEllipsisVertical,
+  faExclamationCircle,
   faFilter,
+  faFolder,
   faSortDown,
+  faTrash,
+  faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import RootState from "../../interfaces/RootState";
-import { useSelector } from "react-redux";
-import Pagination from "../../containers/Pagination";
+import { useDispatch, useSelector } from "react-redux";
+import PaginationContainer from "../../containers/PaginationContainer";
 import DropDownButton from "../../containers/DropDownButton";
+import { setSelectedFolder } from "../../redux/selectedFolder";
+import SearchQuery from "../../constants/default";
+import Pagination from "../../interfaces/Pagination";
+import { setSearch } from "../../redux/search";
+import Button from "../../containers/Button";
+import Separator from "../../containers/Separator";
 
 interface HomeHeaderProps {
   setSelectedMessages: (selectedMessages: number[]) => void;
   selectedMessages: number[]; // O tipo correto para selectedMessages
-  page: number;
-  rowsPerPage: number;
-  setPage: (page: number) => void;
+  pagination: Pagination;
+  setPagination: (pagination: Pagination) => void;
 }
 
 const HomeHeader: React.FC<HomeHeaderProps> = ({
   setSelectedMessages,
   selectedMessages,
-  page,
-  rowsPerPage,
-  setPage,
+  pagination,
+  setPagination,
 }) => {
+  const dispatch = useDispatch();
   const selectedFolder = useSelector(
     (state: RootState) => state.selectedFolder
   );
-
+  const search = useSelector((state: RootState) => state.search);
   const dataMessages = useSelector((state: RootState) => state.dataMessages);
 
   const setSelection = () => {
-    console.log(selectedMessages.length);
-    console.log(dataMessages?.messages.length);
     if (
       selectedMessages.length >= 0 &&
       selectedMessages.length !== dataMessages?.messages.length
@@ -119,20 +126,100 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
             </ul>
           </DropDownButton>
         </div>
-        <span className="btn-secondary">
-          <FontAwesomeIcon icon={faArrowsRotate} />
-        </span>
-        <span className="btn-secondary">
-          <FontAwesomeIcon icon={faFilter} />
-        </span>
-        <span className="btn-secondary">
-          <FontAwesomeIcon icon={faEllipsisVertical} />
-        </span>
+        <Button
+          className="btn-secondary"
+          onClick={() => dispatch(setSelectedFolder({ ...selectedFolder }))}
+          icon={faArrowsRotate}
+        />
+
+        <DropDownButton className="btn-secondary" icon={faFilter}>
+          <ul>
+            <li
+              className={
+                search.query === SearchQuery.All ? "active" : "desactive"
+              }
+              onClick={() =>
+                dispatch(setSearch({ ...search, query: SearchQuery.All }))
+              }
+            >
+              Todos
+            </li>
+            <li
+              className={
+                search.query === SearchQuery.Seen ? "active" : "desactive"
+              }
+              onClick={() =>
+                dispatch(setSearch({ ...search, query: SearchQuery.Seen }))
+              }
+            >
+              Lidos
+            </li>
+            <li
+              className={
+                search.query === SearchQuery.NotSeen ? "active" : "desactive"
+              }
+              onClick={() =>
+                dispatch(setSearch({ ...search, query: SearchQuery.NotSeen }))
+              }
+            >
+              Não lidos
+            </li>
+            <li
+              className={
+                search.query === SearchQuery.Flagged ? "active" : "desactive"
+              }
+              onClick={() =>
+                dispatch(setSearch({ ...search, query: SearchQuery.Flagged }))
+              }
+            >
+              Favoritos
+            </li>
+            <li
+              className={
+                search.query === SearchQuery.NotAnswered
+                  ? "active"
+                  : "desactive"
+              }
+              onClick={() =>
+                dispatch(
+                  setSearch({ ...search, query: SearchQuery.NotAnswered })
+                )
+              }
+            >
+              Não respondidos
+            </li>
+          </ul>
+        </DropDownButton>
+
+        <DropDownButton className="btn-secondary" icon={faEllipsisVertical}>
+          <ul>
+            <li>Mover para</li>
+          </ul>
+        </DropDownButton>
+        {selectedMessages.length > 0 && (
+          <>
+            <Separator height={18} />
+
+            <Button className="btn-secondary" icon={faTrash} title="Deletar" />
+            <Button
+              className="btn-secondary"
+              icon={faExclamationCircle}
+              title="Spam"
+            />
+            <Button
+              className="btn-secondary"
+              icon={faArchive}
+              title="Arquivar"
+            />
+          </>
+        )}
       </div>
-      <Pagination
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onPageChange={(newPage) => setPage(newPage)}
+      <PaginationContainer
+        page={pagination.page}
+        rowsPerPage={pagination.rowsPerPage}
+        onPageChange={(newPage) =>
+          setPagination({ ...pagination, page: newPage })
+        }
         count={selectedFolder?.totalEmails ?? 0}
         previousLabel="Anterior"
         nextLabel="Próximo"
