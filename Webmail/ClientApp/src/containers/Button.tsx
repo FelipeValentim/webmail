@@ -12,7 +12,6 @@ interface ButtonProps {
 
 const Button: FC<ButtonProps> = ({
   icon,
-  label,
   className = "",
   onClick,
   title,
@@ -20,13 +19,12 @@ const Button: FC<ButtonProps> = ({
 }) => {
   return (
     <div
-      className={`btn ${className}`}
+      className={`btn btn-icon ${className}`}
       onClick={onClick}
       {...props}
       title={title}
     >
       {icon && <FontAwesomeIcon icon={icon} />}
-      {label}
     </div>
   );
 };

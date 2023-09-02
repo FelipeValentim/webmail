@@ -144,6 +144,7 @@ namespace Net6_Controller_And_VIte.Controllers
                     }
 
                     // Se tiver texto para pesquisa, então configurar as Queries com os parametros selecionados 
+                    
                     if (!string.IsNullOrEmpty(filter.SearchText))
                     {
                         searchQuery = searchQuery.GetQueries(filter.SearchParams, filter.SearchText);

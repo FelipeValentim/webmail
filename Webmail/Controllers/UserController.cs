@@ -14,14 +14,7 @@ namespace Net6_Controller_And_VIte.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly ImapClient _imapClient;
 
-
-        public UserController(ImapClient imapClient)
-        {
-            _imapClient = imapClient;
-
-        }
 
         //private EmailOptions Email => new EmailOptions("Felipe", "valentimdeveloper@gmail.com", "mhsqewnmqlwwepwx");
 
@@ -33,11 +26,16 @@ namespace Net6_Controller_And_VIte.Controllers
             {
                 var (provider, serviceType) = Utils.GetProvider(user.Username);
 
-                _imapClient.Connect(provider.Host, provider.Port, provider.SecureSocketOptions);
+                using (var imapClient = new ImapClient())
+                {
+                    imapClient.Connect(provider.Host, provider.Port, provider.SecureSocketOptions);
 
-                _imapClient.AuthenticationMechanisms.Remove("XOAUTH");
+                    imapClient.AuthenticationMechanisms.Remove("XOAUTH");
 
-                _imapClient.Authenticate(user.Username, user.Password);
+                    imapClient.Authenticate(user.Username, user.Password);
+                }
+
+                    
 
                 var token = UserService.GenerateToken(user, provider);
 

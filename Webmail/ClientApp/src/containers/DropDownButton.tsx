@@ -5,14 +5,12 @@ import { useState, useEffect, useRef, ReactNode, FC } from "react";
 interface DropDownButtonProps {
   children: ReactNode;
   icon?: IconDefinition;
-  label?: string;
   className?: string;
 }
 
 const DropDownButton: FC<DropDownButtonProps> = ({
   children,
   icon,
-  label,
   className = "",
 }) => {
   const ref = useRef<HTMLDivElement | null>(null); // Criando uma ref para o elemento popup
@@ -40,12 +38,11 @@ const DropDownButton: FC<DropDownButtonProps> = ({
 
   return (
     <div
-      className={`btn popup-container ${className}`}
+      className={`btn btn-icon popup-container ${className}`}
       onClick={() => setPopup(!popup)}
       ref={ref}
     >
       {icon && <FontAwesomeIcon icon={icon} />}
-      {label}
       {popup && <div className="popup">{children}</div>}
     </div>
   );
