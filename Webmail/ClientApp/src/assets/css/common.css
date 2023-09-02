@@ -200,13 +200,16 @@ label {
   width: 100%;
   border-radius: 0.5rem;
   border: none;
-  border-radius: 25%;
-  height: 2rem;
-  width: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease-in-out;
+}
+
+.btn-icon {
+  border-radius: 25%;
+  height: 2rem;
+  width: 2rem;
 }
 
 .btn-primary {
@@ -227,7 +230,7 @@ label {
   color: var(--primary-color);
 }
 
-.btn-icon {
+.btn-main {
   background-color: var(--primary-color);
   display: inline-flex;
   border-radius: 0.5rem;
@@ -238,7 +241,7 @@ label {
   transition: all 0.3s ease-in-out;
 }
 
-.btn-icon:hover {
+.btn-main:hover {
   background-color: var(--primary-color-darker);
 }
 

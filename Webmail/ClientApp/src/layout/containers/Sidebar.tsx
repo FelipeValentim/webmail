@@ -11,7 +11,7 @@ const Sidebar = () => {
     <nav className="app-sidebar">
       {folders ? (
         <React.Fragment>
-          <div className="btn-icon">
+          <div className="btn-main">
             <FontAwesomeIcon icon={faPen} />
             Novo e-email
           </div>

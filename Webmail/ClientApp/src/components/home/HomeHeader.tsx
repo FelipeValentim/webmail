@@ -4,10 +4,8 @@ import {
   faEllipsisVertical,
   faExclamationCircle,
   faFilter,
-  faFolder,
   faSortDown,
   faTrash,
-  faTrashAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import RootState from "../../interfaces/RootState";
@@ -128,7 +126,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
         </div>
         <Button
           className="btn-secondary"
-          onClick={() => dispatch(setSelectedFolder({ ...selectedFolder }))}
+          onClick={() => setPagination({ ...pagination })}
           icon={faArrowsRotate}
         />
 

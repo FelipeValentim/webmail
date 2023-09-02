@@ -11,6 +11,7 @@ import HomeHeader from "../../../components/home/HomeHeader";
 import axios, { CancelTokenSource } from "axios";
 import DataMessages from "../../../interfaces/DataMessages";
 import Pagination from "../../../interfaces/Pagination";
+import { setSelectedFolder } from "../../../redux/selectedFolder";
 
 const Index = () => {
   let cancelTokenSource: CancelTokenSource;
@@ -36,7 +37,7 @@ const Index = () => {
   React.useEffect(() => {
     setPagination({ ...pagination, page: 0 });
     setSelectedMessages([]);
-  }, [selectedFolder]);
+  }, [selectedFolder.path, search.query, search.text]);
 
   React.useEffect(() => {
     setSelectedMessages([]);
@@ -67,7 +68,13 @@ const Index = () => {
 
         const data: DataMessages = response.data;
         dispatch(setMessages(data));
-        // dispatch(setSelectedFolder({...selectedFolder, totalEmails: data.countMessages}));
+
+        dispatch(
+          setSelectedFolder({
+            ...selectedFolder,
+            totalEmails: data.countMessages,
+          })
+        );
 
         setLoading(false);
       } catch (error) {
@@ -82,7 +89,7 @@ const Index = () => {
     return () => {
       cancelTokenSource.cancel("Cancelled due to stale request");
     };
-  }, [selectedFolder, pagination, search.text, search.query]);
+  }, [pagination]);
 
   const onSelectedMessage = (id: number) => {
     if (selectedMessages.includes(id)) {
