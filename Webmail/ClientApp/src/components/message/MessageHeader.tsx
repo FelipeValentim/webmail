@@ -7,12 +7,10 @@ import { useSelector } from "react-redux";
 
 const MessageHeader = () => {
   const navigate = useNavigate();
-  const selectedFolder = useSelector(
-    (state: RootState) => state.selectedFolder
-  );
+
   const goBack = () => {
-    console.log(selectedFolder);
-    navigate(`/#${encodeURIComponent(selectedFolder.path)}`);
+    // navigate(`/#${encodeURIComponent(selectedFolder.path)}`);
+    navigate(-1);
   };
 
   return (

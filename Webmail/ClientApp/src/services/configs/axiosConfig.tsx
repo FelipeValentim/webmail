@@ -28,7 +28,7 @@ const errorHandler = async (error: AxiosError) => {
         theme: "light",
       });
     }
-  } else {
+  } else if (statusCode && statusCode === httpStatus.unauthorized) {
     removeUser();
     store.dispatch(logoutUser());
   }

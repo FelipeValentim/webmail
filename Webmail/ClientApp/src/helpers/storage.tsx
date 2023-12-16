@@ -6,8 +6,6 @@ export const getUser = () => localStorage.getItem(mailboxUser);
 export const setUser = (user: string) => {
   if (user !== null) {
     localStorage.setItem(mailboxUser, user);
-  } else {
-    localStorage.removeItem(mailboxUser);
   }
 };
 

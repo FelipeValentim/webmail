@@ -36,7 +36,6 @@ const Index = () => {
   );
 
   React.useEffect(() => {
-    console.log("teste");
     if (!location.hash) {
       navigate("/#inbox");
     }
@@ -84,7 +83,11 @@ const Index = () => {
     if (selectedFolder) getFolders();
   }, [pagination]);
 
-  const onSelectedMessage = (id: number) => {
+  const onSelectedMessage = (
+    e: React.MouseEvent<HTMLInputElement, MouseEvent>,
+    id: number
+  ) => {
+    e.stopPropagation();
     if (selectedMessages.includes(id)) {
       setSelectedMessages(selectedMessages.filter((x) => x != id));
     } else {
@@ -93,7 +96,7 @@ const Index = () => {
   };
 
   return (
-    <div className="home-messages">
+    <div className="main-content">
       <HomeHeader
         setSelectedMessages={setSelectedMessages}
         selectedMessages={selectedMessages}
@@ -124,7 +127,7 @@ const Index = () => {
                     className="select"
                     type="checkbox"
                     checked={selectedMessages.includes(uniqueId.id)}
-                    onChange={() => onSelectedMessage(uniqueId.id)}
+                    onClick={(event) => onSelectedMessage(event, uniqueId.id)}
                   ></input>
                   {flagged ? (
                     <FontAwesomeIcon

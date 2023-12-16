@@ -6,6 +6,7 @@ import api from "../../../api";
 import { useSelector } from "react-redux";
 import RootState from "../../../interfaces/RootState";
 import Message from "../../../interfaces/Message";
+import { MessageAPI } from "../../../services/MessageAPI";
 
 type MessageParams = {
   folder: string;
@@ -14,7 +15,7 @@ type MessageParams = {
 
 const Index = () => {
   const [loading, setLoading] = React.useState(false);
-  const [message, setMessage] = React.useState<Message>();
+  const [message, setMessage] = React.useState<Message | null>(null);
 
   const selectedFolder = useSelector(
     (state: RootState) => state.selectedFolder
@@ -27,13 +28,18 @@ const Index = () => {
       try {
         setLoading(true);
 
-        // MessageAPI.get(selectedFolder.path, params.uniqueid);
+        if (params.uniqueid) {
+          const response = await MessageAPI.get(
+            selectedFolder.path,
+            params.uniqueid
+          );
+          console.log(response);
 
-        // const data: Message = response.data;
-        // setMessage(data);
+          const data: Message = response.data;
+          setMessage(data);
+        }
+      } finally {
         setLoading(false);
-      } catch (error) {
-        console.error(error);
       }
     };
 
@@ -44,9 +50,21 @@ const Index = () => {
 
   return (
     <Suspense fallback={<div className="loading" />}>
-      <MessageHeader />
-      {message && <>teste</>}
-      <NavLink to="/">Ir para homee</NavLink>
+      <div className="main-content">
+        <MessageHeader />
+        {message ? (
+          <div>
+            <iframe
+              className="w-100 h-100"
+              frameBorder="0"
+              title="message"
+              srcDoc={message.content}
+            ></iframe>
+          </div>
+        ) : (
+          <div className="loading" />
+        )}
+      </div>
     </Suspense>
   );
 };

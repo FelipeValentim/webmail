@@ -21,7 +21,7 @@ export const ProtectedRoute: FC<RouteProps> = ({ children }) => {
   }, [user]);
 
   if (loading) {
-    return <div className="loading" />;
+    return <div className="loading"></div>;
   }
   return authenticated ? children : <Navigate to="/login" />;
 };

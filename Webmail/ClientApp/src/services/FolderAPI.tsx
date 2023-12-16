@@ -1,8 +1,9 @@
+import { AxiosResponse } from "axios";
 import api from "./configs/axiosConfig";
 import { defineCancelApiObject } from "./configs/axiosUtils";
 
 export const FolderAPI = {
-  getAll: async function (cancel = false) {
+  getAll: async function (cancel = false): Promise<AxiosResponse> {
     return api.request({
       url: `/folder/get`,
       method: "GET",

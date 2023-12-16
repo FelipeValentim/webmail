@@ -232,7 +232,7 @@ body.dark-theme .messages li:hover {
 }
 /* Tema Dark */
 
-.home-messages {
+.main-content {
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
