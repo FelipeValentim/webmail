@@ -1,20 +1,15 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { getAccessToken } from "../helpers/storage";
-import User from "../interfaces/User";
-
-const initialState: User = {
-  token: getAccessToken, // Chame a função para obter o token de armazenamento
-};
+import { getUser } from "../helpers/storage";
 
 const slice = createSlice({
   name: "user",
-  initialState,
+  initialState: getUser(),
   reducers: {
-    loginUser: (state, action: PayloadAction<string>) => {
-      state.token = action.payload;
+    loginUser: (_, action: PayloadAction<string>) => {
+      return action.payload;
     },
-    logoutUser: (state) => {
-      state.token = null;
+    logoutUser: () => {
+      return null;
     },
   },
 });

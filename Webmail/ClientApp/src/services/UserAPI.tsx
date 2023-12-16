@@ -5,7 +5,7 @@ import { defineCancelApiObject } from "./configs/axiosUtils";
 export const UserAPI = {
   login: async function (user: User, cancel = false) {
     return api.request({
-      url: `/products`,
+      url: `/user/login`,
       method: "POST",
       data: { ...user },
       signal: cancel

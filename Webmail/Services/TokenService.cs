@@ -9,7 +9,7 @@ namespace Webmail.Services
 {
     public class TokenService
     {
-        public static string CookieName => "webmail.identity";
+        public static string CookieName => "mailbox.identity";
 
         public static string GenerateToken(User user, Provider provider)
         {

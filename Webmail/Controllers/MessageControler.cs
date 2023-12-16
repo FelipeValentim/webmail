@@ -36,7 +36,7 @@ namespace Net6_Controller_And_VIte.Controllers
         private readonly List<string> trashNames = new List<string> { "Lixo", "Lixeira", "Trash" };
 
 
-        [HttpPost]
+        [HttpPost("Get")]
         public IActionResult Get(MessageFilter filter)
         {
             List<EmailMessage> emails = new List<EmailMessage>();

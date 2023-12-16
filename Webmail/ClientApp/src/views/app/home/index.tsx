@@ -1,6 +1,5 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import api from "../../../api";
 import RootState from "../../../interfaces/RootState";
 import { setMessages } from "../../../redux/dataMessages";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,14 +7,14 @@ import { faStar as starRegular } from "@fortawesome/free-regular-svg-icons";
 import { faStar as starSolid } from "@fortawesome/free-solid-svg-icons";
 import ScrollableContent from "../../../containers/ScrollableContent";
 import HomeHeader from "../../../components/home/HomeHeader";
-import axios, { CancelTokenSource } from "axios";
 import DataMessages from "../../../interfaces/DataMessages";
 import Pagination from "../../../interfaces/Pagination";
 import { setSelectedFolder } from "../../../redux/selectedFolder";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { MessageAPI } from "../../../services/MessageAPI";
+import MessageFilter from "../../../interfaces/MessageFilter";
 
 const Index = () => {
-  let cancelTokenSource: CancelTokenSource;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,7 +28,6 @@ const Index = () => {
 
   const [loading, setLoading] = React.useState(false);
   const dispatch = useDispatch();
-  const { token } = useSelector((state: RootState) => state.user);
   const dataMessages = useSelector((state: RootState) => state.dataMessages);
   const search = useSelector((state: RootState) => state.search);
 
@@ -38,6 +36,7 @@ const Index = () => {
   );
 
   React.useEffect(() => {
+    console.log("teste");
     if (!location.hash) {
       navigate("/#inbox");
     }
@@ -57,23 +56,16 @@ const Index = () => {
       try {
         setLoading(true);
 
-        const response = await api.post(
-          "webmail/emails",
-          {
-            FolderName: selectedFolder.path,
-            Page: pagination.page,
-            RowsPerPage: pagination.rowsPerPage,
-            SearchQuery: search.query,
-            SearchText: search.text,
-            SearchParams: search.params,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            cancelToken: cancelTokenSource.token,
-          }
-        );
+        const filter: MessageFilter = {
+          folderName: selectedFolder.path,
+          page: pagination.page,
+          rowsPerPage: pagination.rowsPerPage,
+          searchQuery: search.query,
+          searchText: search.text,
+          searchParams: search.params,
+        };
+
+        const response = await MessageAPI.getAll(filter, true);
 
         const data: DataMessages = response.data;
         dispatch(setMessages(data));
@@ -84,20 +76,12 @@ const Index = () => {
             totalEmails: data.countMessages,
           })
         );
-
+      } finally {
         setLoading(false);
-      } catch (error) {
-        console.error(error);
       }
     };
 
-    cancelTokenSource = axios.CancelToken.source();
-
     if (selectedFolder) getFolders();
-
-    return () => {
-      cancelTokenSource.cancel("Cancelled due to stale request");
-    };
   }, [pagination]);
 
   const onSelectedMessage = (id: number) => {

@@ -6,7 +6,6 @@ import api from "../../../api";
 import { useSelector } from "react-redux";
 import RootState from "../../../interfaces/RootState";
 import Message from "../../../interfaces/Message";
-import axios, { CancelTokenSource } from "axios";
 
 type MessageParams = {
   folder: string;
@@ -14,11 +13,9 @@ type MessageParams = {
 };
 
 const Index = () => {
-  let cancelTokenSource: CancelTokenSource;
   const [loading, setLoading] = React.useState(false);
   const [message, setMessage] = React.useState<Message>();
 
-  const { token } = useSelector((state: RootState) => state.user);
   const selectedFolder = useSelector(
     (state: RootState) => state.selectedFolder
   );
@@ -32,34 +29,17 @@ const Index = () => {
 
         // MessageAPI.get(selectedFolder.path, params.uniqueid);
 
-        const response = await api.get(
-          `message/${selectedFolder.path}/${params.uniqueid}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            cancelToken: cancelTokenSource.token,
-          }
-        );
-
-        const data: Message = response.data;
-        console.log(data);
-        setMessage(data);
+        // const data: Message = response.data;
+        // setMessage(data);
         setLoading(false);
       } catch (error) {
         console.error(error);
       }
     };
 
-    cancelTokenSource = axios.CancelToken.source();
-
     if (selectedFolder) {
       getMessage();
     }
-
-    return () => {
-      cancelTokenSource.cancel("Cancelled due to stale request");
-    };
   }, [selectedFolder]);
 
   return (

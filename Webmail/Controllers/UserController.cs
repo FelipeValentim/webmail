@@ -51,23 +51,23 @@ namespace Net6_Controller_And_VIte.Controllers
             }
             catch (ImapProtocolException)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Usuário ou senha incorreta" });
+                return StatusCode(StatusCodes.Status500InternalServerError, "Usuário ou senha incorreta");
             }
             catch (SmtpProtocolException)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Usuário ou senha incorreta" });
+                return StatusCode(StatusCodes.Status500InternalServerError, "Usuário ou senha incorreta");
             }
             catch (AuthenticationException)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Usuário ou senha incorreta" });
+                return StatusCode(StatusCodes.Status500InternalServerError, "Usuário ou senha incorreta");
             }
             catch (System.Net.Sockets.SocketException) //Este Host não é conhecido (válido) / Porta inválida (TimedOut)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocorreu algum problema ao tentar se conectar ao servidor" });
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu algum problema ao tentar se conectar ao servidor");
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Usuário ou senha incorreta" });
+                return StatusCode(StatusCodes.Status500InternalServerError, "Usuário ou senha incorreta");
             }
         }
 
