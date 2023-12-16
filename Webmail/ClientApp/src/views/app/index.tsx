@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import AppLayout from "../../layout/AppLayout";
 import { useDispatch, useSelector } from "react-redux";
 import RootState from "../../interfaces/RootState";
@@ -10,11 +10,14 @@ import { setFolders } from "../../redux/folders";
 import Folder from "../../interfaces/Folder";
 import api from "../../api";
 
+type HomeParams = {
+  folder: string;
+};
+
 const Index = () => {
   const { token } = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = React.useState(true);
   const location = useLocation();
-  const navigate = useNavigate();
   const folders = useSelector((state: RootState) => state.folders);
   const dispatch = useDispatch();
 
@@ -22,14 +25,8 @@ const Index = () => {
     animationData: mailbox,
     loop: true,
   };
-
+  const params = useParams<HomeParams>();
   const { View: LoadingLottie } = useLottie(options);
-
-  React.useEffect(() => {
-    if (!location.hash) {
-      navigate("/#inbox");
-    }
-  }, [location, navigate]);
 
   React.useEffect(() => {
     const getFolders = async () => {
@@ -53,12 +50,19 @@ const Index = () => {
   }, []);
 
   React.useEffect(() => {
+    console.log(location);
     if (folders) {
-      const folder = folders.find(
-        (x) =>
-          x.path.toLowerCase() ===
-          decodeURIComponent(location.hash).substring(1).toLowerCase()
-      );
+      const folder = location.hash
+        ? folders.find(
+            (x) =>
+              x.path.toLowerCase() ===
+              decodeURIComponent(location.hash).substring(1).toLowerCase()
+          )
+        : folders.find(
+            (x) =>
+              x.path.toLowerCase() ===
+              decodeURIComponent(params.folder ?? "inbox").toLowerCase()
+          );
 
       if (folder) {
         dispatch(setSelectedFolder(folder));

@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/user";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { UserAPI } from "../../services/UserAPI";
+import User from "../../interfaces/User";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -62,10 +64,12 @@ const Login = () => {
       setLoading(true);
 
       try {
-        const response = await api.post("/user/login", {
-          Username: email,
-          Password: password,
-        });
+        const user: User = {
+          username: email,
+          password: password,
+        };
+        const response = await UserAPI.login(user);
+
         const data: ResponseData = response.data;
         if (data.succeeded) {
           setAccessToken(data.payload);

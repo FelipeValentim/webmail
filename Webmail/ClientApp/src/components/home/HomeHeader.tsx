@@ -12,7 +12,6 @@ import RootState from "../../interfaces/RootState";
 import { useDispatch, useSelector } from "react-redux";
 import PaginationContainer from "../../containers/PaginationContainer";
 import DropDownButton from "../../containers/DropDownButton";
-import { setSelectedFolder } from "../../redux/selectedFolder";
 import SearchQuery from "../../constants/default";
 import Pagination from "../../interfaces/Pagination";
 import { setSearch } from "../../redux/search";

@@ -32,8 +32,7 @@ function App() {
             }
           >
             <Route path="" element={<Home />} />
-
-            <Route path="message" element={<Message />} />
+            <Route path="/:folder/:uniqueid" element={<Message />} />
           </Route>
           <Route
             path="/login"

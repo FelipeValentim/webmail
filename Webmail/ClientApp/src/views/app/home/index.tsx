@@ -12,9 +12,12 @@ import axios, { CancelTokenSource } from "axios";
 import DataMessages from "../../../interfaces/DataMessages";
 import Pagination from "../../../interfaces/Pagination";
 import { setSelectedFolder } from "../../../redux/selectedFolder";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Index = () => {
   let cancelTokenSource: CancelTokenSource;
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [selectedMessages, setSelectedMessages] = React.useState<Array<number>>(
     []
@@ -35,9 +38,15 @@ const Index = () => {
   );
 
   React.useEffect(() => {
+    if (!location.hash) {
+      navigate("/#inbox");
+    }
+  }, [location, navigate]);
+
+  React.useEffect(() => {
     setPagination({ ...pagination, page: 0 });
     setSelectedMessages([]);
-  }, [selectedFolder.path, search.query, search.text]);
+  }, [selectedFolder?.path, search.query, search.text]);
 
   React.useEffect(() => {
     setSelectedMessages([]);
@@ -119,32 +128,42 @@ const Index = () => {
               toAddresses,
               uniqueId,
             }) => (
-              <li className={seen ? "read" : ""} key={uniqueId.id}>
-                <input
-                  title="Selecionar"
-                  className="select"
-                  type="checkbox"
-                  checked={selectedMessages.includes(uniqueId.id)}
-                  onChange={() => onSelectedMessage(uniqueId.id)}
-                ></input>
-                {flagged ? (
-                  <FontAwesomeIcon className="flag flagged" icon={starSolid} />
-                ) : (
-                  <FontAwesomeIcon className="flag" icon={starRegular} />
-                )}
+              <Link
+                key={uniqueId.id}
+                to={`/${encodeURIComponent(selectedFolder.path)}/${
+                  uniqueId.id
+                }`}
+              >
+                <li className={seen ? "read" : ""}>
+                  <input
+                    title="Selecionar"
+                    className="select"
+                    type="checkbox"
+                    checked={selectedMessages.includes(uniqueId.id)}
+                    onChange={() => onSelectedMessage(uniqueId.id)}
+                  ></input>
+                  {flagged ? (
+                    <FontAwesomeIcon
+                      className="flag flagged"
+                      icon={starSolid}
+                    />
+                  ) : (
+                    <FontAwesomeIcon className="flag" icon={starRegular} />
+                  )}
 
-                <span className="addresses">
-                  {toAddresses.map(({ name, address }, index) => (
-                    <span key={index}>
-                      {name ? name : address}
-                      {index != toAddresses.length - 1 ? ", " : ""}
-                    </span>
-                  ))}
-                </span>
-                <span className="subject">{subject}</span>
-                <span className="content">{content}</span>
-                <span className="time">{date}</span>
-              </li>
+                  <span className="addresses">
+                    {toAddresses.map(({ name, address }, index) => (
+                      <span key={index}>
+                        {name ? name : address}
+                        {index != toAddresses.length - 1 ? ", " : ""}
+                      </span>
+                    ))}
+                  </span>
+                  <span className="subject">{subject}</span>
+                  <span className="content">{content}</span>
+                  <span className="time">{date}</span>
+                </li>
+              </Link>
             )
           )
         ) : (

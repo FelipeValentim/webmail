@@ -1,4 +1,5 @@
 import Address from "./Address";
+import Attachment from "./Attachment";
 
 interface Message {
   uniqueId: { id: number; isValid: boolean; validity: number };
@@ -11,6 +12,7 @@ interface Message {
   flagged: boolean;
   fromAddresses: Array<Address>;
   toAddresses: Array<Address>;
+  attachments: Array<Attachment>;
 }
 
 export default Message;
