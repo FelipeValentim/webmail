@@ -1,9 +1,10 @@
+import { AxiosResponse } from "axios";
 import User from "../interfaces/User";
 import api from "./configs/axiosConfig";
 import { defineCancelApiObject } from "./configs/axiosUtils";
 
 export const UserAPI = {
-  login: async function (user: User, cancel = false) {
+  login: async function (user: User, cancel = false): Promise<AxiosResponse> {
     return api.request({
       url: `/user/login`,
       method: "POST",
