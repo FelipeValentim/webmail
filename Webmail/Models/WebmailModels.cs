@@ -126,7 +126,7 @@ namespace Webmail.Models
             public string Address { get; set; }
         }
 
-        public class EmailFilter
+        public class MessageFilter
         {
             public string FolderName { get; set; }
             public int Page { get; set; }

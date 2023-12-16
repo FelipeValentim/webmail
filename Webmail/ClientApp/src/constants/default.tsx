@@ -11,4 +11,8 @@ const SearchQuery = {
   NotAnswered: "NotAnswered",
 };
 
+export const httpStatus = {
+  unauthorized: 401,
+};
+
 export default SearchQuery;

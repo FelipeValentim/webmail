@@ -49,6 +49,20 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Settings.SecretKey)),
     };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var request = context.HttpContext.Request;
+            var cookies = request.Cookies;
+            if (cookies.TryGetValue(TokenService.CookieName,
+                out var accessTokenValue))
+            {
+                context.Token = accessTokenValue;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 // In production, the Vite files will be served from this directory

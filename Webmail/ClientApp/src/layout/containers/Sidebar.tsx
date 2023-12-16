@@ -7,6 +7,10 @@ import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const folders = useSelector((state: RootState) => state.folders);
+  const selectedFolder = useSelector(
+    (state: RootState) => state.selectedFolder
+  );
+
   return (
     <nav className="app-sidebar">
       {folders ? (
@@ -15,18 +19,16 @@ const Sidebar = () => {
             <FontAwesomeIcon icon={faPen} />
             Novo e-email
           </div>
-
           <div className="folders mt-1">
             <ul>
               {folders.map(({ name, path, unread }) => (
                 <Link
                   className={
-                    path.toLowerCase() ===
-                    decodeURIComponent(location.hash).substring(1).toLowerCase()
+                    path.toLowerCase() === selectedFolder?.path.toLowerCase()
                       ? "active"
                       : ""
                   }
-                  to={`#${encodeURIComponent(path)}`}
+                  to={`/#${encodeURIComponent(path)}`}
                   key={path}
                 >
                   <li>

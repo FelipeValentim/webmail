@@ -3,21 +3,14 @@ using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
 using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using MimeKit.Text;
-using MimeKit.Utils;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using System.IO.Compression;
-using System.Net;
 using System.Text.RegularExpressions;
 using Webmail.Helpers;
 using Webmail.Services;
 using static Webmail.Models.WebMailModels;
-using Microsoft.AspNetCore.Http;
-using Webmail.Models;
 
 namespace Net6_Controller_And_VIte.Controllers
 {
@@ -123,7 +116,7 @@ namespace Net6_Controller_And_VIte.Controllers
         }
 
         [HttpPost("Emails")]
-        public IActionResult Emails(EmailFilter filter)
+        public IActionResult Emails(MessageFilter filter)
         {
             List<EmailMessage> emails = new List<EmailMessage>();
 
@@ -259,7 +252,17 @@ namespace Net6_Controller_And_VIte.Controllers
                 {
                     //ImapClient = MailKitImapClient.Instance;
 
-                    var folder = ImapClient.GetFolder(folderName, FolderAccess.ReadWrite, cancel.Token);
+                    using (var imapClient = new ImapClient())
+                    {
+
+                        var user = UserService.GetUser(_httpContextAccessor);
+
+                        imapClient.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
+
+                        imapClient.Authenticate(user.Username, user.Password);
+
+
+                        var folder = imapClient.GetFolder(folderName, FolderAccess.ReadWrite, cancel.Token);
 
                     // Retorna o email com os dados mais importantes
                     var item = folder.Fetch(new UniqueId[] { new UniqueId(uniqueId) }, MessageSummaryItems.Full | MessageSummaryItems.BodyStructure).FirstOrDefault();
@@ -334,6 +337,8 @@ namespace Net6_Controller_And_VIte.Controllers
 
                     //ImapClient.Disconnect(true, cancel.Token);
                 }
+                }
+
             }
             catch (ImapProtocolException)
             {

@@ -1,6 +1,7 @@
 using MailKit.Net.Imap;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Authentication;
@@ -18,8 +19,8 @@ namespace Net6_Controller_And_VIte.Controllers
 
         //private EmailOptions Email => new EmailOptions("Felipe", "valentimdeveloper@gmail.com", "mhsqewnmqlwwepwx");
 
-        [HttpPost("LogIn")]
         [AllowAnonymous]
+        [HttpPost("LogIn")]
         public IActionResult LogIn(User user)
         {
             try
@@ -35,32 +36,38 @@ namespace Net6_Controller_And_VIte.Controllers
                     imapClient.Authenticate(user.Username, user.Password);
                 }
 
-                    
+                var token = TokenService.GenerateToken(user, provider);
 
-                var token = UserService.GenerateToken(user, provider);
+                Response.Cookies.Append(TokenService.CookieName, token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddHours(2),
+                    SameSite = SameSiteMode.None,
+                    Secure = true
+                });
 
-                return new JsonResult(new { succeeded = true, status = (int)HttpStatusCode.OK, payload = token });
+                return StatusCode(StatusCodes.Status200OK);
 
             }
             catch (ImapProtocolException)
             {
-                return new JsonResult(new { succeeded = false, status = (int)HttpStatusCode.InternalServerError, payload = new { message = "Usuário ou senha incorreta" } });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Usuário ou senha incorreta" });
             }
             catch (SmtpProtocolException)
             {
-                return new JsonResult(new { succeeded = false, status = (int)HttpStatusCode.InternalServerError, payload = new { message = "Usuário ou senha incorreta" } });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Usuário ou senha incorreta" });
             }
             catch (AuthenticationException)
             {
-                return new JsonResult(new { succeeded = false, status = (int)HttpStatusCode.InternalServerError, payload = new { message = "Usuário ou senha incorreta" } });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Usuário ou senha incorreta" });
             }
             catch (System.Net.Sockets.SocketException) //Este Host não é conhecido (válido) / Porta inválida (TimedOut)
             {
-                return new JsonResult(new { succeeded = false, status = (int)HttpStatusCode.InternalServerError, payload = new { message = "Ocorreu algum problema ao tentar se conectar ao servidor" } });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocorreu algum problema ao tentar se conectar ao servidor" });
             }
             catch
             {
-                return new JsonResult(new { succeeded = false, status = (int)HttpStatusCode.InternalServerError, payload = new { message = "Usuário ou senha incorreta" } });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Usuário ou senha incorreta" });
             }
         }
 
@@ -68,7 +75,7 @@ namespace Net6_Controller_And_VIte.Controllers
         [HttpGet("IsLoggedIn")]
         public IActionResult IsLoggedIn()
         {
-            return new JsonResult(new { succeeded = true, status = (int)HttpStatusCode.OK, payload = new { message = "Usuário logado" } });
+            return StatusCode(StatusCodes.Status200OK, new { message = "Usuário logado" });
         }
     }
 }
