@@ -72,10 +72,19 @@ namespace Net6_Controller_And_VIte.Controllers
         }
 
         [Authorize]
-        [HttpGet("IsLoggedIn")]
-        public IActionResult IsLoggedIn()
+        [HttpGet("Logout")]
+        public IActionResult Logout()
         {
-            return StatusCode(StatusCodes.Status200OK, new { message = "Usuário logado" });
+            try
+            {
+                Response.Cookies.Delete(TokenService.CookieName);
+            }
+            catch
+            {
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+
+            return new StatusCodeResult(StatusCodes.Status200OK);
         }
     }
 }
