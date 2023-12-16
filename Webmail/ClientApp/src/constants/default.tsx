@@ -1,4 +1,4 @@
-export const accessTokenKey = "mailbox_token";
+export const mailboxUser = "mailbox_user";
 
 export const themeKey = "mailbox_theme";
 export const defaultTheme = "light-theme";
@@ -12,6 +12,7 @@ const SearchQuery = {
 };
 
 export const httpStatus = {
+  ok: 200,
   unauthorized: 401,
 };
 

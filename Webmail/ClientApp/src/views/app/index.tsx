@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import AppLayout from "../../layout/AppLayout";
 import { useDispatch, useSelector } from "react-redux";
 import RootState from "../../interfaces/RootState";
@@ -8,14 +8,13 @@ import { useLottie } from "lottie-react";
 import mailbox from "../../assets/lotties/mailbox.json";
 import { setFolders } from "../../redux/folders";
 import Folder from "../../interfaces/Folder";
-import api from "../../api";
+import { FolderAPI } from "../../services/FolderAPI";
 
 type HomeParams = {
   folder: string;
 };
 
 const Index = () => {
-  const { token } = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = React.useState(true);
   const location = useLocation();
   const folders = useSelector((state: RootState) => state.folders);
@@ -31,13 +30,10 @@ const Index = () => {
   React.useEffect(() => {
     const getFolders = async () => {
       try {
-        const response = await api.get("webmail/folders", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await FolderAPI.getAll();
+
         const data: Array<Folder> = response.data;
-        console.log(data);
+
         dispatch(setFolders(data));
       } catch (error) {
         console.error(error);
@@ -50,7 +46,6 @@ const Index = () => {
   }, []);
 
   React.useEffect(() => {
-    console.log(location);
     if (folders) {
       const folder = location.hash
         ? folders.find(

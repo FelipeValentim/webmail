@@ -1,12 +1,17 @@
 // Token
-import { accessTokenKey, defaultTheme, themeKey } from "../constants/default";
+import { mailboxUser, defaultTheme, themeKey } from "../constants/default";
 
-export const getAccessToken = localStorage.getItem(accessTokenKey);
+export const getUser = () => localStorage.getItem(mailboxUser);
 
-export const setAccessToken = (token: string) =>
-  localStorage.setItem(accessTokenKey, token);
+export const setUser = (user: string) => {
+  if (user !== null) {
+    localStorage.setItem(mailboxUser, user);
+  } else {
+    localStorage.removeItem(mailboxUser);
+  }
+};
 
-export const removeAccessToken = () => localStorage.removeItem(accessTokenKey);
+export const removeUser = () => localStorage.removeItem(mailboxUser);
 
 // Theme
 export const getTheme = localStorage.getItem(themeKey) ?? defaultTheme;

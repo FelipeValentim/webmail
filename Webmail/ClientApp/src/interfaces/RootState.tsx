@@ -1,11 +1,10 @@
 import DataMessages from "./DataMessages";
 import Folder from "./Folder";
 import Search from "./Search";
-import User from "./User";
 
 interface RootState {
   themeSwitch: string;
-  user: User;
+  user: string;
   folders: Array<Folder>;
   dataMessages: DataMessages;
   selectedFolder: Folder;

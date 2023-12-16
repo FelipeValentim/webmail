@@ -5,21 +5,19 @@ import logomarca from "assets/logo/logomarca.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Errors from "../../interfaces/Erros";
-import api from "../../api";
 import ResponseData from "../../interfaces/ResponseData";
-import { AxiosError } from "axios";
-import { setAccessToken } from "../../helpers/storage";
-import { useNavigate } from "react-router-dom";
+import { AxiosError, AxiosResponse } from "axios";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/user";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { UserAPI } from "../../services/UserAPI";
 import User from "../../interfaces/User";
+import { setUser } from "../../helpers/storage";
+import { httpStatus } from "../../constants/default";
 
 const Login = () => {
   const dispatch = useDispatch();
 
-  const navigate = useNavigate();
   const [email, setEmail] = React.useState<string>("");
   const [loading, setLoading] = React.useState<boolean>(false);
   const [password, setPassword] = React.useState<string>("");
@@ -68,21 +66,21 @@ const Login = () => {
           username: email,
           password: password,
         };
-        const response = await UserAPI.login(user);
+        const response: AxiosResponse = await UserAPI.login(user);
 
-        const data: ResponseData = response.data;
-        if (data.succeeded) {
-          setAccessToken(data.payload);
-          dispatch(loginUser(data.payload));
-          navigate("/#inbox");
+        console.log(response.status);
+        if (response.status === httpStatus.ok) {
+          console.log("foi");
+          setUser(user.username);
+          dispatch(loginUser(user.username));
         } else {
-          setErrors({ ...errors, invalidCredentials: data.payload.message });
+          setErrors({ ...errors, invalidCredentials: response.data });
         }
       } catch (error) {
         if (error instanceof AxiosError) {
           setErrors({
             ...errors,
-            invalidCredentials: error.response?.data.payload.message,
+            invalidCredentials: error.response?.data,
           });
         }
       } finally {

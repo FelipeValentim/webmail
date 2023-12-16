@@ -36,7 +36,7 @@ namespace Net6_Controller_And_VIte.Controllers
         private readonly List<string> trashNames = new List<string> { "Lixo", "Lixeira", "Trash" };
 
 
-        [HttpGet]
+        [HttpGet("Get")]
         public IActionResult Get()
         {
 
