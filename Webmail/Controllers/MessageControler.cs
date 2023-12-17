@@ -249,15 +249,17 @@ namespace Net6_Controller_And_VIte.Controllers
                     email.Content = htmlText;
                     email.Subject = string.IsNullOrEmpty(item.Envelope.Subject) ? "(Sem assunto)" : item.Envelope.Subject;
                     email.Date = date;
-                    email.Attachments = item.Attachments.Select(x => new Webmail.Models.WebMailModels.Attachment() { FileName = x.ContentDisposition.FileName, FolderName = folder, UniqueId = id, ContentId = x.ContentId, Size = Convert.ToInt64(x.Octets - (x.Octets / 3.5)) }).ToList();
+                    email.Attachments = item.Attachments.Select(x => new Attachment() { FileName = x.ContentDisposition.FileName, FolderName = folder, UniqueId = id, ContentId = x.ContentId, Size = Convert.ToInt64(x.Octets - (x.Octets / 3.5)) }).ToList();
 
                     email.ToAddresses.AddRange(item.Envelope.To.Mailboxes.Select(x => new EmailAddress { Address = x.Address, Name = x.Name }));
                     email.FromAddresses.AddRange(item.Envelope.From.Mailboxes.Select(x => new EmailAddress { Address = x.Address, Name = x.Name }));
                     email.IsSent = mailFolder.Attributes.HasFlag(FolderAttributes.Sent);
                     email.IsDraft = mailFolder.Attributes.HasFlag(FolderAttributes.Drafts);
+                        email.Flagged = item.Flags.Value.HasFlag(MessageFlags.Flagged);
 
-                    //ImapClient.Disconnect(true, cancel.Token);
-                }
+
+                        //ImapClient.Disconnect(true, cancel.Token);
+                    }
                 }
 
             }

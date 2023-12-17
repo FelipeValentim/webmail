@@ -271,19 +271,19 @@ body.dark-theme .messages li:hover {
   border: var(--primary-color) solid 0.15em;
 }
 
-.messages .flag {
+.flag {
   color: #5f6368;
 }
 
-.messages .flagged {
+.flagged {
   color: var(--primary-color);
 }
 
-.messages .flag:hover {
+.flag:hover {
   color: var(--primary-color);
 }
 
-.messages .flagged:hover {
+.flagged:hover {
   color: #5f6368;
 }
 .messages li:hover {
@@ -389,3 +389,64 @@ ul li.active:before {
   transform: translateY(-50%);
   border-radius: 0.5rem;
 }
+
+/* Message */
+#message-subject {
+  font-size: 1.6rem;
+  padding: 0.2rem 1rem;
+}
+
+#message-sender {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+#message-sender .info {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto;
+
+  gap: 0.5rem;
+}
+
+#message-sender .from-picture {
+  grid-column: 1;
+  grid-row: span 2;
+  background-color: var(--secondary-color);
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+#message-sender .info .from-name {
+  grid-column: 2;
+  grid-row: 1;
+  font-weight: bold;
+}
+
+#message-sender .info .from-address {
+  grid-column: 3;
+  grid-row: 1;
+  color: var(--secondary-color);
+}
+
+#message-sender .info .to-address {
+  grid-column: 2/-1;
+  grid-row: 2;
+}
+
+.side-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.message-body {
+  height: 100vh;
+}
+/* Message */
