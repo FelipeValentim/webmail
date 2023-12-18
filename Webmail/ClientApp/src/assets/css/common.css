@@ -452,7 +452,7 @@ label {
   top: 100px;
   width: 75%;
   height: calc(100vh - 100px);
-  padding: 1.5rem 0;
+  padding-bottom: 1rem;
   border-radius: 2rem;
   background-color: #fff;
 }

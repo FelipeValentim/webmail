@@ -1,11 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Address from "../../interfaces/Address";
 import UniqueId from "../../interfaces/UniqueId";
-import { faReply } from "@fortawesome/free-solid-svg-icons";
+import { faReply, faSortDown } from "@fortawesome/free-solid-svg-icons";
 import Button from "../../containers/Button";
 import { faStar as starRegular } from "@fortawesome/free-regular-svg-icons";
 import { faStar as starSolid } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
+import DropDownButton from "../../containers/DropDownButton";
+import { toast } from "react-toastify";
 
 interface MessageSubjectProps {
   toAddresses: Address[];
@@ -30,6 +32,12 @@ const MessageSender: React.FC<MessageSubjectProps> = ({
   isDraft,
   flagged,
 }) => {
+  const copyToClipboard = (text: string, type: string) => {
+    navigator.clipboard.writeText(text);
+
+    toast.success(`${type} copiado com sucesso`);
+  };
+
   return (
     <div id="message-sender">
       <div className="sender">
@@ -44,12 +52,44 @@ const MessageSender: React.FC<MessageSubjectProps> = ({
           <div className="from-name">{fromAddresses[0].name}</div>
           <div className="from-address">&lt;{fromAddresses[0].address}&gt;</div>
           <div className="to-address">
-            {toAddresses.map(({ address, name }, index) => (
-              <React.Fragment key={index}>
-                {name ? `${name} <${address}>` : address}
-                <>, </>
-              </React.Fragment>
-            ))}
+            <DropDownButton
+              className="btn-secondary dropdown"
+              icon={faSortDown}
+            >
+              <ul>
+                <li
+                  onClick={() =>
+                    copyToClipboard(`${fromAddresses[0].address}`, "Remetente")
+                  }
+                >
+                  De:{" "}
+                  <b>
+                    {fromAddresses[0].name
+                      ? `${fromAddresses[0].name} <${fromAddresses[0].address}>`
+                      : fromAddresses[0].address}
+                  </b>
+                </li>
+                <li
+                  onClick={() =>
+                    copyToClipboard(
+                      `${toAddresses.map(({ address }) => address)}`,
+                      "Destinatário"
+                    )
+                  }
+                >
+                  Para:{" "}
+                  {toAddresses.map(({ address, name }, index) => (
+                    <React.Fragment key={index}>
+                      {name ? `${name} <${address}>` : address}
+                      <br></br>
+                    </React.Fragment>
+                  ))}
+                </li>
+                <li onClick={() => copyToClipboard(subject, "Assunto")}>
+                  Assunto: {subject}
+                </li>
+              </ul>
+            </DropDownButton>
           </div>
         </div>
       </div>

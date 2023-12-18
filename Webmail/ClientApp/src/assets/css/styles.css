@@ -344,7 +344,7 @@ body.dark-theme .messages li:hover {
   align-items: center;
 }
 
-.home-header .select svg path {
+.dropdown svg path {
   transform: translateY(-25%);
 }
 
@@ -406,7 +406,7 @@ ul li.active:before {
   display: grid;
   grid-template-columns: auto 1fr auto;
   grid-template-rows: auto auto;
-
+  align-items: center;
   gap: 0.5rem;
 }
 
@@ -446,7 +446,13 @@ ul li.active:before {
   gap: 1rem;
 }
 
+.message {
+  display: flex;
+  flex-direction: column;
+}
+
 .message-body {
-  height: 100vh;
+  height: 100%;
+  padding: 0 1rem;
 }
 /* Message */

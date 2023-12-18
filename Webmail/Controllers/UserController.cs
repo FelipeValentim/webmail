@@ -17,7 +17,7 @@ namespace Net6_Controller_And_VIte.Controllers
     {
 
 
-        //private EmailOptions Email => new EmailOptions("Felipe", "valentimdeveloper@gmail.com", "mhsqewnmqlwwepwx");
+        //private EmailOptions Email => new EmailOptions("Felipe", "valentimdeveloper@gmail.com", " ");
 
         [AllowAnonymous]
         [HttpPost("LogIn")]
