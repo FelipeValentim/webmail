@@ -55,7 +55,7 @@ const Index = () => {
       <div className="main-content">
         <MessageHeader />
         {message ? (
-          <div>
+          <div className="message">
             <MessageSubject subject={message.subject} />
             <MessageSender
               fromAddresses={message.fromAddresses}

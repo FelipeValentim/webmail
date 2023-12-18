@@ -6,7 +6,7 @@ interface MessageBodyProps {
 
 const MessageBody: React.FC<MessageBodyProps> = ({ content }) => {
   return (
-    <div className="message-body w-100 h-100">
+    <div className="message-body">
       <iframe
         className="w-100 h-100"
         frameBorder="0"

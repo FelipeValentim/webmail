@@ -64,7 +64,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
             }
             type="checkbox"
           />
-          <DropDownButton className="btn-secondary" icon={faSortDown}>
+          <DropDownButton className="btn-secondary dropdown" icon={faSortDown}>
             <ul>
               <li onClick={() => setSelectedMessages([])}>Nenhum</li>
               <li
