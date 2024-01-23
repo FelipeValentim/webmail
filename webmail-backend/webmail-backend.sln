@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "webmail-backend", "webmail-backend\webmail-backend.csproj", "{04CAF4AD-9D21-4F9F-99A0-A3E1742ABE02}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04CAF4AD-9D21-4F9F-99A0-A3E1742ABE02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04CAF4AD-9D21-4F9F-99A0-A3E1742ABE02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04CAF4AD-9D21-4F9F-99A0-A3E1742ABE02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04CAF4AD-9D21-4F9F-99A0-A3E1742ABE02}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3F2BA23A-AB6F-4AEA-9B0E-3DCDB6090462}
+	EndGlobalSection
+EndGlobal
