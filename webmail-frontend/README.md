@@ -1,30 +1,37 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto tem como objetivo desenvolver um webmail moderno e eficiente, utilizando tecnologias como React, TypeScript, Redux e integração com Inteligência Artificial (I.A). A combinação dessas tecnologias permitirá a criação de uma aplicação de e-mail robusta, escalável e com recursos avançados de automação por meio da I.A.
 
-Currently, two official plugins are available:
+## Tecnologias Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React:** Biblioteca JavaScript para a construção de interfaces de usuário, proporcionando uma experiência de usuário dinâmica e responsiva.
+- **TypeScript:** Superset do JavaScript que adiciona tipagem estática ao código, melhorando a robustez e manutenção do projeto.
+- **Redux:** Biblioteca de gerenciamento de estado, que facilita a manipulação e atualização do estado da aplicação.
+- **Inteligência Artificial:** Integração de I.A. para fornecer recursos avançados, como classificação automática de e-mails, sugestões inteligentes e filtragem de spam.
 
-## Expanding the ESLint configuration
+## Pré-requisitos
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Antes de começar, certifique-se de ter o [Node.js](https://nodejs.org/) instalado em sua máquina.
 
-- Configure the top-level `parserOptions` property like this:
+- É necessário também ter o projeto da API em execução (webmail-backend) para que funcione.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## Configuração do Projeto
+
+1. **Clone o repositório:**
+
+```bash
+git clone https://github.com/FelipeValentim/webmail.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. **Instale as dependências:**
+
+```bash
+cd webmail
+npm install
+```
+
+3. **Execute a aplicação em modo de desenvolvimento:**
+
+```js
+npm run dev
+```
