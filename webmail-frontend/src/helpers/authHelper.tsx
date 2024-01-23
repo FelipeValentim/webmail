@@ -40,5 +40,5 @@ export const UnprotectedRoute: FC<RouteProps> = ({ children }) => {
   if (loading) {
     return <div className="loading" />;
   }
-  return authenticated ? <Navigate to="/" /> : children;
+  return !authenticated ? children : <Navigate to="/" />;
 };

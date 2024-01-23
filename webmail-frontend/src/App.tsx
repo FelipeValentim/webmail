@@ -6,9 +6,9 @@ import { useLottie } from "lottie-react";
 import React from "react";
 
 const ViewApp = lazy(() => import("./views/app/index"));
-const Login = lazy(() => import("./views/user/login"));
-const Message = lazy(() => import("./views/app/message/index"));
-const Home = lazy(() => import("./views/app/home/index"));
+const ViewLogin = lazy(() => import("./views/user/login"));
+const ViewMessage = lazy(() => import("./views/app/message/index"));
+const ViewHome = lazy(() => import("./views/app/home/index"));
 function App() {
   const options = {
     animationData: mailbox,
@@ -32,14 +32,14 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route path="" element={<Home />} />
-            <Route path="/:folder/:uniqueid" element={<Message />} />
+            <Route path="" element={<ViewHome />} />
+            <Route path="/:folder/:uniqueid" element={<ViewMessage />} />
           </Route>
           <Route
             path="/login"
             element={
               <UnprotectedRoute>
-                <Login />
+                <ViewLogin />
               </UnprotectedRoute>
             }
           />
