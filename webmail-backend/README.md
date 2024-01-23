@@ -1,6 +1,6 @@
-# Projeto Webmail com .NET 6
+# Projeto Webmail com .NET 6 e MailKit
 
-O projeto visa criar um sistema de webmail robusto utilizando a tecnologia .NET 6. Essa versão do framework traz melhorias significativas, proporcionando uma experiência de desenvolvimento moderna e eficiente.
+O projeto visa criar um sistema de webmail robusto utilizando a tecnologia .NET 6, com ênfase na integração do MailKit utilizando o protocolo IMAP para a manipulação de e-mails e SMTP para o envio. Essa versão do framework traz melhorias significativas, proporcionando uma experiência de desenvolvimento moderna e eficiente.
 
 ## Pré-requisitos
 
