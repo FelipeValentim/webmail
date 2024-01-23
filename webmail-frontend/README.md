@@ -13,11 +13,11 @@ Este projeto tem como objetivo desenvolver um webmail moderno e eficiente, utili
 
 - Antes de começar, certifique-se de ter o [Node.js](https://nodejs.org/) instalado em sua máquina.
 
-- É necessário também ter o projeto da API em execução (webmail-backend) para que funcione.
+- É necessário também ter o projeto da API (webmail-backend) em execução para que funcione.
 
 ## Configuração do Projeto
 
-1. **Clone o repositório:**
+1. **Clone o repositório (caso não exista):**
 
 ```bash
 git clone https://github.com/FelipeValentim/webmail.git
@@ -26,7 +26,7 @@ git clone https://github.com/FelipeValentim/webmail.git
 2. **Instale as dependências:**
 
 ```bash
-cd webmail
+cd webmail/webmail-frontend
 npm install
 ```
 
@@ -35,3 +35,5 @@ npm install
 ```js
 npm run dev
 ```
+
+- A aplicação React estará disponível em `https://localhost:8080`.
