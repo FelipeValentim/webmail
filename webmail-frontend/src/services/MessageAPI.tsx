@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import MessageFilter from "../interfaces/MessageFilter";
 import api from "./configs/axiosConfig";
 import { defineCancelApiObject } from "./configs/axiosUtils";
+import SendDataMessages from "../interfaces/SendDataMessages";
 
 export const MessageAPI = {
   getAll: async function (
@@ -29,6 +30,21 @@ export const MessageAPI = {
       // retrieving the signal value by using the property name
       signal: cancel
         ? cancelApiObject[this.get.name].handleRequestCancellation().signal
+        : undefined,
+    });
+  },
+  spamMessages: async function (
+    sendDataMessages: SendDataMessages,
+    cancel = false
+  ): Promise<AxiosResponse> {
+    return api.request({
+      url: `/message/spammessages`,
+      method: "PUT",
+      data: sendDataMessages,
+      // retrieving the signal value by using the property name
+      signal: cancel
+        ? cancelApiObject[this.spamMessages.name].handleRequestCancellation()
+            .signal
         : undefined,
     });
   },

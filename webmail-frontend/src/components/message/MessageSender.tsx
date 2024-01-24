@@ -17,7 +17,7 @@ interface MessageSubjectProps {
   uniqueId: UniqueId;
   isDraft: boolean;
   content: string;
-  folderName: string;
+  folderName: string | undefined;
   flagged: boolean;
 }
 

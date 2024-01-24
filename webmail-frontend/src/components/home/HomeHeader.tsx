@@ -17,6 +17,8 @@ import Pagination from "../../interfaces/Pagination";
 import { setSearch } from "../../redux/search";
 import Button from "../../containers/Button";
 import Separator from "../../containers/Separator";
+import { MessageAPI } from "../../services/MessageAPI";
+import SendDataMessages from "../../interfaces/SendDataMessages";
 
 interface HomeHeaderProps {
   setSelectedMessages: (selectedMessages: number[]) => void;
@@ -47,6 +49,14 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
     } else {
       setSelectedMessages([]);
     }
+  };
+
+  const spamMessages = async () => {
+    const sendDataMessages: SendDataMessages = {
+      folder: selectedFolder.path,
+      ids: selectedMessages,
+    };
+    const response = await MessageAPI.spamMessages(sendDataMessages);
   };
 
   return (
@@ -202,6 +212,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
               className="btn-secondary"
               icon={faExclamationCircle}
               title="Spam"
+              onClick={spamMessages}
             />
             <Button
               className="btn-secondary"

@@ -51,7 +51,9 @@ const Index = () => {
   }, [pagination]);
 
   React.useEffect(() => {
-    const getFolders = async () => {
+    let isMounted = true;
+
+    const getMessages = async () => {
       try {
         setLoading(true);
 
@@ -76,18 +78,20 @@ const Index = () => {
           })
         );
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
-    if (selectedFolder) getFolders();
+    if (selectedFolder) getMessages();
+
+    return () => {
+      isMounted = false;
+    };
   }, [pagination]);
 
-  const onSelectedMessage = (
-    e: React.MouseEvent<HTMLInputElement, MouseEvent>,
-    id: number
-  ) => {
-    e.stopPropagation();
+  const onSelectedMessage = (id: number) => {
     if (selectedMessages.includes(id)) {
       setSelectedMessages(selectedMessages.filter((x) => x != id));
     } else {
@@ -126,8 +130,9 @@ const Index = () => {
                     title="Selecionar"
                     className="select"
                     type="checkbox"
+                    onChange={() => onSelectedMessage(uniqueId.id)}
                     checked={selectedMessages.includes(uniqueId.id)}
-                    onClick={(event) => onSelectedMessage(event, uniqueId.id)}
+                    onClick={(event) => event.stopPropagation()}
                   ></input>
                   {flagged ? (
                     <FontAwesomeIcon

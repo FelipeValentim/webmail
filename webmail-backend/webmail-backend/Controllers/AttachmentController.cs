@@ -19,15 +19,12 @@ namespace webmail_backend.Controllers
     [Route("[controller]")]
     public class AttachmentController : ControllerBase
     {
-        private readonly ImapClient _imapClient;
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AttachmentController(IHttpContextAccessor httpContextAccessor, ImapClient imapClient)
+        public AttachmentController(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _imapClient = imapClient;
-
         }
 
         private ServerOptions IMAP = new ServerOptions();

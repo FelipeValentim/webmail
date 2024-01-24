@@ -11,8 +11,10 @@ namespace webmail_backend.Services
     {
         public static string CookieName => "mailbox.identity";
 
-        public static string GenerateToken(User user, Provider provider)
+        public static (string, string) GenerateToken(User user, Provider provider)
         {
+            var id = Guid.NewGuid().ToString();
+
             var key = Encoding.UTF8.GetBytes(Settings.SecretKey);
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -23,7 +25,7 @@ namespace webmail_backend.Services
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(Constants.ClaimTypes.Id, Guid.NewGuid().ToString()),
+                    new Claim(Constants.ClaimTypes.Id, id),
                     new Claim(Constants.ClaimTypes.Username, user.Username),
                     new Claim(Constants.ClaimTypes.Password, user.Password),
                     new Claim(Constants.ClaimTypes.Service, ((int)user.Service).ToString()),
@@ -37,7 +39,7 @@ namespace webmail_backend.Services
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return tokenHandler.WriteToken(token);
+            return (tokenHandler.WriteToken(token), id);
         }
     }
 }

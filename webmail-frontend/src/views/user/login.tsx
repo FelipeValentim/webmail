@@ -5,7 +5,6 @@ import logomarca from "assets/logo/logomarca.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Errors from "../../interfaces/Erros";
-import ResponseData from "../../interfaces/ResponseData";
 import { AxiosError, AxiosResponse } from "axios";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/user";
@@ -68,9 +67,7 @@ const Login = () => {
         };
         const response: AxiosResponse = await UserAPI.login(user);
 
-        console.log(response.status);
         if (response.status === httpStatus.ok) {
-          console.log("foi");
           setUser(user.username);
           dispatch(loginUser(user.username));
         } else {

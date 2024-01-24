@@ -3,6 +3,7 @@ using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.Net;
 using System.Security.Authentication;
 using webmail_backend.Helpers;
@@ -15,7 +16,12 @@ namespace webmail_backend.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
+        private readonly IMemoryCache _cache;
 
+        public UserController(IMemoryCache cache)
+        {
+            _cache = cache;
+        }
 
         //private EmailOptions Email => new EmailOptions("Felipe", "valentimdeveloper@gmail.com", "mhsqewnmqlwwepwx");
 
@@ -27,21 +33,25 @@ namespace webmail_backend.Controllers
             {
                 var (provider, serviceType) = Utils.GetProvider(user.Username);
 
-                using (var imapClient = new ImapClient())
-                {
-                    imapClient.Connect(provider.Host, provider.Port, provider.SecureSocketOptions);
+                ImapClient client = new ImapClient();
 
-                    imapClient.AuthenticationMechanisms.Remove("XOAUTH");
+                client.Connect(provider.Host, provider.Port, provider.SecureSocketOptions);
 
-                    imapClient.Authenticate(user.Username, user.Password);
-                }
+                client.AuthenticationMechanisms.Remove("XOAUTH");
 
-                var token = TokenService.GenerateToken(user, provider);
+                client.Authenticate(user.Username, user.Password);
+
+                var (token, id) = TokenService.GenerateToken(user, provider);
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromHours(1));
+
+                _cache.Set(id, client, cacheOptions);
 
                 Response.Cookies.Append(TokenService.CookieName, token, new CookieOptions
                 {
                     HttpOnly = true,
-                    Expires = DateTime.UtcNow.AddHours(2),
+                    Expires = DateTime.UtcNow.AddHours(1),
                     SameSite = SameSiteMode.None,
                     Secure = true
                 });
