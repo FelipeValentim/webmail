@@ -503,7 +503,7 @@ input[type="checkbox"] {
   height: 1.15em;
   border: 0.15em solid var(--secondary-color);
   border-radius: 0.15em;
-  transform: translateY(-0.075em);
+  /* transform: translateY(-0.075em); */
 }
 
 input[type="checkbox"] {

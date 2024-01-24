@@ -441,5 +441,18 @@ namespace webmail_backend.Models
             public string Password { get; set; }
             public AuthInfo AuthInfo { get; set; }
         }
+
+        public class SendDataMessages
+        {
+            [JsonProperty("folder")]
+            public string Folder { get; set; }
+
+            [JsonProperty("ids")]
+            public uint[] Ids { get; set; }
+
+            [JsonProperty("type")]
+            public string Type { get; set; }
+
+        }
     }
 }

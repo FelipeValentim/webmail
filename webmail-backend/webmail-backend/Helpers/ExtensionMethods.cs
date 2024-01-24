@@ -3,15 +3,64 @@ using MailKit.Search;
 using MailKit;
 using MimeKit;
 using static webmail_backend.Models.WebMailModels;
-using System.Text.Json;
 using webmail_backend.Models;
-using Microsoft.AspNetCore.Http;
-using System.Net.Http;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace webmail_backend.Helpers
 {
     public static class ExtensionMethods
     {
+        /// <summary>
+        /// Get ImapClient
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static ImapClient GetImapClient(this IMemoryCache cache, User user, int hours = 1)
+        {
+            if (!cache.TryGetValue<ImapClient>(user.Id, out var imapClient))
+            {
+                imapClient = new ImapClient();
+
+                imapClient.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
+
+                imapClient.Authenticate(user.Username, user.Password);
+
+                var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(hours));
+
+                cache.Set(user.Id, imapClient, cacheOptions);
+            }
+
+            return imapClient;
+        }
+
+        /// <summary>
+        /// Set ImapClient
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static ConnectionResult SetImapClient(this IMemoryCache cache, User user, int hours = 1)
+        {
+            try
+            {
+                var imapClient = new ImapClient();
+
+                imapClient.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
+
+                imapClient.Authenticate(user.Username, user.Password);
+
+                var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(hours));
+
+                cache.Set(user.Id, imapClient, cacheOptions);
+
+            }
+            catch
+            {
+                return ConnectionResult.Failed("Algum problema aconteceu");
+            }
+
+            return ConnectionResult.Success;
+        }
+
         /// <summary>
         /// Capitaliza a primeira letra de uma string
         /// </summary>
