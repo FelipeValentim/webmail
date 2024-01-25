@@ -19,6 +19,11 @@ import Button from "../../containers/Button";
 import Separator from "../../containers/Separator";
 import { MessageAPI } from "../../services/MessageAPI";
 import SendDataMessages from "../../interfaces/SendDataMessages";
+import { toast } from "react-toastify";
+import DataMessages from "../../interfaces/DataMessages";
+import { removeMessages, setMessages } from "../../redux/dataMessages";
+import { setSelectedFolder, setTotalEmails } from "../../redux/selectedFolder";
+import Folder from "../../interfaces/Folder";
 
 interface HomeHeaderProps {
   setSelectedMessages: (selectedMessages: number[]) => void;
@@ -56,7 +61,27 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
       folder: selectedFolder.path,
       ids: selectedMessages,
     };
-    const response = await MessageAPI.spamMessages(sendDataMessages);
+    const { data } = await MessageAPI.spamMessages(sendDataMessages);
+
+    toast.success(data, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+
+    const countMessages: number =
+      dataMessages.countMessages - selectedMessages.length;
+    console.log(dataMessages.countMessages, selectedMessages.length);
+    dispatch(setTotalEmails(countMessages));
+
+    dispatch(removeMessages(selectedMessages));
+
+    setSelectedMessages([]);
   };
 
   return (
@@ -64,8 +89,9 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
       <div className="options">
         <div className="select">
           <input
+            onChange={setSelection}
+            onClick={(event) => event.stopPropagation()}
             checked={selectedMessages.length > 0}
-            onClick={setSelection}
             title="Selecionar"
             className={
               selectedMessages.length !== dataMessages?.messages.length

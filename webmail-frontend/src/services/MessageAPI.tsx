@@ -3,6 +3,7 @@ import MessageFilter from "../interfaces/MessageFilter";
 import api from "./configs/axiosConfig";
 import { defineCancelApiObject } from "./configs/axiosUtils";
 import SendDataMessages from "../interfaces/SendDataMessages";
+import SendDataMessage from "../interfaces/SendDataMessage";
 
 export const MessageAPI = {
   getAll: async function (
@@ -39,6 +40,21 @@ export const MessageAPI = {
   ): Promise<AxiosResponse> {
     return api.request({
       url: `/message/spammessages`,
+      method: "PUT",
+      data: sendDataMessages,
+      // retrieving the signal value by using the property name
+      signal: cancel
+        ? cancelApiObject[this.spamMessages.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
+  flaggedMessage: async function (
+    sendDataMessages: SendDataMessage,
+    cancel = false
+  ): Promise<AxiosResponse> {
+    return api.request({
+      url: `/message/flagged`,
       method: "PUT",
       data: sendDataMessages,
       // retrieving the signal value by using the property name

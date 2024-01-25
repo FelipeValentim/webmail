@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RootState from "../../../interfaces/RootState";
-import { setMessages } from "../../../redux/dataMessages";
+import { setMessages, toggleFlag } from "../../../redux/dataMessages";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as starRegular } from "@fortawesome/free-regular-svg-icons";
 import { faStar as starSolid } from "@fortawesome/free-solid-svg-icons";
@@ -10,17 +10,19 @@ import HomeHeader from "../../../components/home/HomeHeader";
 import DataMessages from "../../../interfaces/DataMessages";
 import Pagination from "../../../interfaces/Pagination";
 import { setSelectedFolder } from "../../../redux/selectedFolder";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { MessageAPI } from "../../../services/MessageAPI";
 import MessageFilter from "../../../interfaces/MessageFilter";
+import SendDataMessage from "../../../interfaces/SendDataMessage";
+import { toast } from "react-toastify";
 
 const Index = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const [selectedMessages, setSelectedMessages] = React.useState<Array<number>>(
     []
   );
+
   const [pagination, setPagination] = React.useState<Pagination>({
     page: 0,
     rowsPerPage: 30,
@@ -52,7 +54,6 @@ const Index = () => {
 
   React.useEffect(() => {
     let isMounted = true;
-
     const getMessages = async () => {
       try {
         setLoading(true);
@@ -99,6 +100,36 @@ const Index = () => {
     }
   };
 
+  const handleToggleFlagged = async (
+    e: MouseEvent,
+    id: number,
+    type: string
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const sendDataMessage: SendDataMessage = {
+      folder: selectedFolder.path,
+      id: id,
+      type: type,
+    };
+
+    dispatch(toggleFlag({ id, type }));
+
+    const { data } = await MessageAPI.flaggedMessage(sendDataMessage, true);
+
+    toast.success(data, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
   return (
     <div className="main-content">
       <HomeHeader
@@ -138,9 +169,18 @@ const Index = () => {
                     <FontAwesomeIcon
                       className="flag flagged"
                       icon={starSolid}
+                      onClick={(e) =>
+                        handleToggleFlagged(e, uniqueId.id, "unflagged")
+                      }
                     />
                   ) : (
-                    <FontAwesomeIcon className="flag" icon={starRegular} />
+                    <FontAwesomeIcon
+                      className="flag"
+                      icon={starRegular}
+                      onClick={(e) =>
+                        handleToggleFlagged(e, uniqueId.id, "flagged")
+                      }
+                    />
                   )}
 
                   <span className="addresses">

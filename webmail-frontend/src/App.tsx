@@ -3,7 +3,6 @@ import { Suspense, lazy } from "react";
 import { ProtectedRoute, UnprotectedRoute } from "./helpers/authHelper";
 import mailbox from "./assets/lotties/mailbox.json";
 import { useLottie } from "lottie-react";
-import React from "react";
 
 const ViewApp = lazy(() => import("./views/app/index"));
 const ViewLogin = lazy(() => import("./views/user/login"));

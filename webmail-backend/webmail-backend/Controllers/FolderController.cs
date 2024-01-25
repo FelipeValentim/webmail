@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 using MimeKit;
 using MimeKit.Text;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Crypto;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using webmail_backend.Helpers;
@@ -84,7 +85,7 @@ namespace webmail_backend.Controllers
 
                 if (!result.Succeeded)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
+                    return StatusCode(StatusCodes.Status401Unauthorized, result.Message);
                 }
 
                 return Get();
@@ -96,5 +97,7 @@ namespace webmail_backend.Controllers
 
             return StatusCode(StatusCodes.Status200OK, folders);
         }
+
+      
     }
 }
