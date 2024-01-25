@@ -2,7 +2,7 @@ import Message from "./Message";
 
 interface DataMessages {
   messages: Array<Message>;
-  countMessages: string;
+  countMessages: number;
 }
 
 export default DataMessages;

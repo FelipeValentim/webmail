@@ -2,14 +2,21 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import Folder from "../interfaces/Folder";
 import { logoutUser } from "./user";
 
-const initialState: Folder | null = null;
+type FolderState = Folder | null;
+
+const initialState = null as FolderState;
 
 const slice = createSlice({
   name: "selectedFolder",
   initialState,
   reducers: {
-    setSelectedFolder: (_, action: PayloadAction<Folder | null>) => {
+    setSelectedFolder: (_, action: PayloadAction<Folder>) => {
       return action.payload;
+    },
+    setTotalEmails: (state, action: PayloadAction<number>) => {
+      if (state) {
+        state.totalEmails = action.payload;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -19,5 +26,5 @@ const slice = createSlice({
   },
 });
 
-export const { setSelectedFolder } = slice.actions;
+export const { setSelectedFolder, setTotalEmails } = slice.actions;
 export default slice.reducer;

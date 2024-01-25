@@ -452,7 +452,18 @@ namespace webmail_backend.Models
 
             [JsonProperty("type")]
             public string Type { get; set; }
+        }
 
+        public class SendDataMessage
+        {
+            [JsonProperty("folder")]
+            public string Folder { get; set; }
+
+            [JsonProperty("ids")]
+            public uint Id { get; set; }
+
+            [JsonProperty("type")]
+            public string Type { get; set; }
         }
     }
 }

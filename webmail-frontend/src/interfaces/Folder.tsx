@@ -4,7 +4,7 @@ interface Folder {
   totalEmails: number;
   unread: number;
   parent: string | null;
-  id: string | null;
+  id: number | null;
   subFolders: [] | null;
 }
 

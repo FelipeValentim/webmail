@@ -2,7 +2,9 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import Folder from "../interfaces/Folder";
 import { logoutUser } from "./user";
 
-const initialState: Array<Folder> | null = null;
+type FoldersState = Array<Folder> | null;
+
+const initialState = null as FoldersState;
 
 const slice = createSlice({
   name: "folders",

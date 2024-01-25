@@ -139,7 +139,7 @@ namespace webmail_backend.Controllers
 
                 if (!result.Succeeded)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
+                    return StatusCode(StatusCodes.Status401Unauthorized, result.Message);
                 }
 
                 return Get(filter);
@@ -255,7 +255,7 @@ namespace webmail_backend.Controllers
 
                 if (!result.Succeeded)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
+                    return StatusCode(StatusCodes.Status401Unauthorized, result.Message);
                 }
 
                 return GetEmail(folder, id);
@@ -323,7 +323,7 @@ namespace webmail_backend.Controllers
 
                 if (!result.Succeeded)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
+                    return StatusCode(StatusCodes.Status401Unauthorized, result.Message);
                 }
 
                 return SpamMessages(sendDataMessages);
@@ -331,6 +331,56 @@ namespace webmail_backend.Controllers
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [HttpPut("Flagged")]
+        public IActionResult Flagged(SendDataMessage sendDataMessage)
+        {
+            using (var cancel = new CancellationTokenSource())
+            {
+                try
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var imapClient = _cache.GetImapClient(user);
+
+                    lock (imapClient.SyncRoot)
+                    {
+                        var folder = imapClient.GetFolder(sendDataMessage.Folder, FolderAccess.ReadWrite, cancel.Token);
+
+                        var uniqueId = new UniqueId(sendDataMessage.Id);
+
+                        if (sendDataMessage.Type == "flagged")
+                        {
+                            folder.AddFlags(uniqueId, MessageFlags.Flagged, false);
+                            return StatusCode(StatusCodes.Status200OK, "Mensagem marcada como importante");
+                        }
+                        else
+                        {
+                            folder.RemoveFlags(uniqueId, MessageFlags.Flagged, false);
+                            return StatusCode(StatusCodes.Status200OK, "Mensagem marcada como não importante");
+
+                        }
+                    }
+
+                }
+                catch (ImapProtocolException)
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var result = _cache.SetImapClient(user);
+
+                    if (!result.Succeeded)
+                    {
+                        return StatusCode(StatusCodes.Status401Unauthorized, result.Message);
+                    }
+
+                    return Flagged(sendDataMessage);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                }
             }
         }
     }
