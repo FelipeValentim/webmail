@@ -8,13 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using MimeKit;
 using MimeKit.Text;
-using Org.BouncyCastle.Asn1.X509;
-using System.IO.Compression;
-using System.Net.Mail;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using webmail_backend.Helpers;
 using webmail_backend.Services;
@@ -333,6 +326,7 @@ namespace webmail_backend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
         [HttpPut("Flagged")]
         public IActionResult Flagged(SendDataMessage sendDataMessage)
         {
@@ -383,5 +377,6 @@ namespace webmail_backend.Controllers
                 }
             }
         }
+
     }
 }

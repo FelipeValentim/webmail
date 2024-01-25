@@ -5,12 +5,8 @@ using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using MimeKit;
-using MimeKit.Text;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Crypto;
-using System.IO.Compression;
-using System.Text.RegularExpressions;
+using System;
+using webmail_backend.Constants;
 using webmail_backend.Helpers;
 using webmail_backend.Services;
 using static webmail_backend.Models.WebMailModels;
@@ -30,10 +26,6 @@ namespace webmail_backend.Controllers
             _httpContextAccessor = httpContextAccessor;
             _cache = cache;
         }
-
-        private readonly List<string> spamNames = new List<string> { "Spam", "Lixo Eletrônico" };
-        private readonly List<string> trashNames = new List<string> { "Lixo", "Lixeira", "Trash" };
-
 
         [HttpGet("Get")]
         public IActionResult Get()
@@ -98,6 +90,136 @@ namespace webmail_backend.Controllers
             return StatusCode(StatusCodes.Status200OK, folders);
         }
 
-      
+
+        [HttpDelete("DeleteMessages")]
+        public IActionResult DeleteMessages(SendDataMessages sendDataMessages)
+        {
+            using (var cancel = new CancellationTokenSource())
+            {
+                try
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var imapClient = _cache.GetImapClient(user);
+
+                    var folder = imapClient.GetFolder(sendDataMessages.Folder, FolderAccess.ReadWrite, cancel.Token);
+
+                    List<UniqueId> uniqueIds = new List<UniqueId>();
+
+                    foreach (var id in sendDataMessages.Ids)
+                    {
+                        uniqueIds.Add(new UniqueId(id));
+                    }
+
+                    var folders = imapClient.GetFolders(imapClient.PersonalNamespaces[0]);
+
+                    var trash = folders.FirstOrDefault(x => x.Attributes.HasFlag(FolderAttributes.Trash));
+
+                    if (trash == null)
+                    {
+                        // get the default personal namespace root folder
+                        trash = folders.FirstOrDefault(x => FolderNames.Trash.Any(s => x.FullName.EndsWith(s, StringComparison.OrdinalIgnoreCase)));
+
+                        if (trash == null)
+                        {
+                            trash = imapClient.Inbox.Create("Lixo", true);
+                        }
+                    }
+
+                    if (trash == folder)
+                    {
+                        folder.AddFlags(uniqueIds, MessageFlags.Deleted, true);
+
+                        folder.Expunge();
+
+                        return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? "Mensagens deletadas com sucesso" : "Mensagem deletada com sucesso");
+                    }
+                    else
+                    {
+                        folder.MoveTo(uniqueIds, trash);
+
+                        return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? "Mensagens movidas para lixeira" : "Mensagem movida para lixeira");
+                    }
+
+                }
+                catch (ImapProtocolException)
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var result = _cache.SetImapClient(user);
+
+                    if (!result.Succeeded)
+                    {
+                        return StatusCode(StatusCodes.Status401Unauthorized, result.Message);
+                    }
+
+                    return DeleteMessages(sendDataMessages);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                }
+            }
+        }
+
+        [HttpPut("ArchiveMessages")]
+        public IActionResult ArchiveMessages(SendDataMessages sendDataMessages)
+        {
+            using (var cancel = new CancellationTokenSource())
+            {
+                try
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var imapClient = _cache.GetImapClient(user);
+
+                    var folder = imapClient.GetFolder(sendDataMessages.Folder, FolderAccess.ReadWrite, cancel.Token);
+
+                    List<UniqueId> uniqueIds = new List<UniqueId>();
+
+                    foreach (var id in sendDataMessages.Ids)
+                    {
+                        uniqueIds.Add(new UniqueId(id));
+                    }
+
+                    var folders = imapClient.GetFolders(imapClient.PersonalNamespaces[0]);
+
+                    var archive = folders.FirstOrDefault(x => x.Attributes.HasFlag(FolderAttributes.Archive));
+
+                    if (archive == null)
+                    {
+                        archive = folders.FirstOrDefault(x => FolderNames.Archive.Any(s => x.FullName.EndsWith(s, StringComparison.OrdinalIgnoreCase)));
+
+                        if (archive == null)
+                        {
+                            archive = imapClient.Inbox.Create("Arquivados", true);
+                        }
+                    }
+
+                    if (archive == folder) return StatusCode(StatusCodes.Status200OK, "Mensagem já marcada como spam");
+
+                    folder.MoveTo(uniqueIds, archive);
+
+                    return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? "Mensagens arquivadas" : "Mensagem arquivada");
+                }
+                catch (ImapProtocolException)
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var result = _cache.SetImapClient(user);
+
+                    if (!result.Succeeded)
+                    {
+                        return StatusCode(StatusCodes.Status401Unauthorized, result.Message);
+                    }
+
+                    return ArchiveMessages(sendDataMessages);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                }
+            }
+        }
     }
 }
