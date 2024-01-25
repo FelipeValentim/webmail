@@ -20,10 +20,9 @@ import Separator from "../../containers/Separator";
 import { MessageAPI } from "../../services/MessageAPI";
 import SendDataMessages from "../../interfaces/SendDataMessages";
 import { toast } from "react-toastify";
-import DataMessages from "../../interfaces/DataMessages";
-import { removeMessages, setMessages } from "../../redux/dataMessages";
-import { setSelectedFolder, setTotalEmails } from "../../redux/selectedFolder";
-import Folder from "../../interfaces/Folder";
+import { removeMessages } from "../../redux/dataMessages";
+import { setTotalEmails } from "../../redux/selectedFolder";
+import { FolderAPI } from "../../services/FolderAPI";
 
 interface HomeHeaderProps {
   setSelectedMessages: (selectedMessages: number[]) => void;
@@ -38,6 +37,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
   pagination,
   setPagination,
 }) => {
+  const [validating, setValidating] = React.useState(false);
   const dispatch = useDispatch();
   const selectedFolder = useSelector(
     (state: RootState) => state.selectedFolder
@@ -57,31 +57,111 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
   };
 
   const spamMessages = async () => {
-    const sendDataMessages: SendDataMessages = {
-      folder: selectedFolder.path,
-      ids: selectedMessages,
-    };
-    const { data } = await MessageAPI.spamMessages(sendDataMessages);
+    if (!validating) {
+      try {
+        setValidating(true);
 
-    toast.success(data, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+        const sendDataMessages: SendDataMessages = {
+          folder: selectedFolder.path,
+          ids: selectedMessages,
+        };
+        const { data } = await MessageAPI.spamMessages(sendDataMessages);
 
-    const countMessages: number =
-      dataMessages.countMessages - selectedMessages.length;
-    console.log(dataMessages.countMessages, selectedMessages.length);
-    dispatch(setTotalEmails(countMessages));
+        toast.success(data, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
 
-    dispatch(removeMessages(selectedMessages));
+        const countMessages: number =
+          dataMessages.countMessages - selectedMessages.length;
+        console.log(dataMessages.countMessages, selectedMessages.length);
+        dispatch(setTotalEmails(countMessages));
 
-    setSelectedMessages([]);
+        dispatch(removeMessages(selectedMessages));
+
+        setSelectedMessages([]);
+      } finally {
+        setValidating(false);
+      }
+    }
+  };
+
+  const deleteMessages = async () => {
+    if (!validating) {
+      try {
+        setValidating(true);
+        const sendDataMessages: SendDataMessages = {
+          folder: selectedFolder.path,
+          ids: selectedMessages,
+        };
+
+        const { data } = await FolderAPI.deleteMessages(sendDataMessages);
+
+        toast.success(data, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        const countMessages: number =
+          dataMessages.countMessages - selectedMessages.length;
+
+        dispatch(setTotalEmails(countMessages));
+
+        dispatch(removeMessages(selectedMessages));
+
+        setSelectedMessages([]);
+      } finally {
+        setValidating(false);
+      }
+    }
+  };
+
+  const archiveMessages = async () => {
+    if (!validating) {
+      try {
+        setValidating(true);
+        const sendDataMessages: SendDataMessages = {
+          folder: selectedFolder.path,
+          ids: selectedMessages,
+        };
+
+        const { data } = await FolderAPI.archiveMessages(sendDataMessages);
+
+        toast.success(data, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        const countMessages: number =
+          dataMessages.countMessages - selectedMessages.length;
+
+        dispatch(setTotalEmails(countMessages));
+
+        dispatch(removeMessages(selectedMessages));
+
+        setSelectedMessages([]);
+      } finally {
+        setValidating(false);
+      }
+    }
   };
 
   return (
@@ -233,7 +313,12 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
           <>
             <Separator height={18} />
 
-            <Button className="btn-secondary" icon={faTrash} title="Deletar" />
+            <Button
+              className="btn-secondary"
+              icon={faTrash}
+              title="Deletar"
+              onClick={deleteMessages}
+            />
             <Button
               className="btn-secondary"
               icon={faExclamationCircle}
@@ -244,6 +329,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
               className="btn-secondary"
               icon={faArchive}
               title="Arquivar"
+              onClick={archiveMessages}
             />
           </>
         )}

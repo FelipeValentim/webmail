@@ -9,7 +9,7 @@ const MessageBody: React.FC<MessageBodyProps> = ({ content }) => {
     <div className="message-body">
       <iframe
         className="w-100 h-100"
-        frameBorder="0"
+        style={{ border: "none" }}
         title="message"
         srcDoc={content}
       ></iframe>

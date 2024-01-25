@@ -1,9 +1,6 @@
-import React from "react";
 import Button from "../../containers/Button";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import RootState from "../../interfaces/RootState";
-import { useSelector } from "react-redux";
 
 const MessageHeader = () => {
   const navigate = useNavigate();
