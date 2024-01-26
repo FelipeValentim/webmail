@@ -235,6 +235,11 @@ label {
   transition: all 0.2s ease-in-out;
 }
 
+li.disabled {
+  background-color: initial !important;
+  color: initial !important;
+}
+
 .btn-icon {
   border-radius: 25%;
   height: 2rem;

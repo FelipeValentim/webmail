@@ -43,6 +43,21 @@ export const FolderAPI = {
         : undefined,
     });
   },
+  moveMessages: async function (
+    sendDataMessages: SendDataMessages,
+    cancel = false
+  ): Promise<AxiosResponse> {
+    return api.request({
+      url: `/folder/movemessages`,
+      method: "PUT",
+      data: sendDataMessages,
+      // retrieving the signal value by using the property name
+      signal: cancel
+        ? cancelApiObject[this.moveMessages.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI
