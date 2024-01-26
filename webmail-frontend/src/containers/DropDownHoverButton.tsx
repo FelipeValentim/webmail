@@ -4,14 +4,14 @@ import { useState, ReactNode, FC } from "react";
 
 interface DropDownHoverButtonProps {
   children: ReactNode;
-  text?: string;
+  component?: ReactNode;
   place?: "left" | "right" | "up" | "down";
   className?: string;
 }
 
 const DropDownHoverButton: FC<DropDownHoverButtonProps> = ({
   children,
-  text,
+  component,
   place = "right",
   className = "",
 }) => {
@@ -21,8 +21,9 @@ const DropDownHoverButton: FC<DropDownHoverButtonProps> = ({
     <div
       className={`btn btn-hover popup-container ${place} ${className}`}
       onMouseEnter={() => setPopup(true)}
+      onMouseLeave={() => setPopup(false)}
     >
-      {text}
+      {component}
       {popup && <div className="popup">{children}</div>}
     </div>
   );

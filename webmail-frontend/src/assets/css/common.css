@@ -239,6 +239,10 @@ li.disabled {
   background-color: initial !important;
   color: initial !important;
 }
+.dark-theme li.disabled {
+  background-color: var(--primary-dark-bg-color) !important;
+  color: var(--text-dark-color) !important;
+}
 
 .btn-icon {
   border-radius: 25%;

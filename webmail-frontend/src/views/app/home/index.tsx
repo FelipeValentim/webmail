@@ -15,13 +15,14 @@ import { MessageAPI } from "../../../services/MessageAPI";
 import MessageFilter from "../../../interfaces/MessageFilter";
 import SendDataMessage from "../../../interfaces/SendDataMessage";
 import { toast } from "react-toastify";
+import SelectedMessage from "../../../interfaces/SelectedMessage";
 
 const Index = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedMessages, setSelectedMessages] = React.useState<Array<number>>(
-    []
-  );
+  const [selectedMessages, setSelectedMessages] = React.useState<
+    Array<SelectedMessage>
+  >([]);
 
   const [pagination, setPagination] = React.useState<Pagination>({
     page: 0,
@@ -92,11 +93,13 @@ const Index = () => {
     };
   }, [pagination]);
 
-  const onSelectedMessage = (id: number) => {
-    if (selectedMessages.includes(id)) {
-      setSelectedMessages(selectedMessages.filter((x) => x != id));
+  const onSelectedMessage = (selectedMessage: SelectedMessage) => {
+    if (selectedMessages.some((x) => x.id == selectedMessage.id)) {
+      setSelectedMessages(
+        selectedMessages.filter((x) => x.id != selectedMessage.id)
+      );
     } else {
-      setSelectedMessages([...selectedMessages, id]);
+      setSelectedMessages([...selectedMessages, { ...selectedMessage }]);
     }
   };
 
@@ -161,8 +164,10 @@ const Index = () => {
                     title="Selecionar"
                     className="select"
                     type="checkbox"
-                    onChange={() => onSelectedMessage(uniqueId.id)}
-                    checked={selectedMessages.includes(uniqueId.id)}
+                    onChange={() =>
+                      onSelectedMessage({ id: uniqueId.id, flagged, seen })
+                    }
+                    checked={selectedMessages.some((x) => x.id == uniqueId.id)}
                     onClick={(event) => event.stopPropagation()}
                   ></input>
                   {flagged ? (

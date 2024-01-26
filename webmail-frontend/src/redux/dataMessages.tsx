@@ -30,6 +30,30 @@ const slice = createSlice({
         state.countMessages -= ids.length;
       }
     },
+    setSeenMessages: (state, action) => {
+      const { ids, type } = action.payload;
+      const items = state?.messages.filter((item) =>
+        ids.includes(item.uniqueId.id)
+      );
+
+      if (items) {
+        items.forEach((item) => {
+          item.seen = type == "seen";
+        });
+      }
+    },
+    setFlaggedMessaages: (state, action) => {
+      const { ids, type } = action.payload;
+      const items = state?.messages.filter((item) =>
+        ids.includes(item.uniqueId.id)
+      );
+
+      if (items) {
+        items.forEach((item) => {
+          item.flagged = type == "flagged";
+        });
+      }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(logoutUser, () => {
@@ -38,6 +62,12 @@ const slice = createSlice({
   },
 });
 
-export const { setMessages, toggleFlag, removeMessages } = slice.actions;
+export const {
+  setMessages,
+  toggleFlag,
+  removeMessages,
+  setFlaggedMessaages,
+  setSeenMessages,
+} = slice.actions;
 
 export default slice.reducer;
