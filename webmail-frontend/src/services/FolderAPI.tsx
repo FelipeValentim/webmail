@@ -58,6 +58,37 @@ export const FolderAPI = {
         : undefined,
     });
   },
+
+  seenMessages: async function (
+    sendDataMessages: SendDataMessages,
+    cancel = false
+  ): Promise<AxiosResponse> {
+    return api.request({
+      url: `/folder/seen`,
+      method: "PUT",
+      data: sendDataMessages,
+      // retrieving the signal value by using the property name
+      signal: cancel
+        ? cancelApiObject[this.seenMessages.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
+  flaggedMessages: async function (
+    sendDataMessages: SendDataMessages,
+    cancel = false
+  ): Promise<AxiosResponse> {
+    return api.request({
+      url: `/folder/flagged`,
+      method: "PUT",
+      data: sendDataMessages,
+      // retrieving the signal value by using the property name
+      signal: cancel
+        ? cancelApiObject[this.flaggedMessages.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI

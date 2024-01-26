@@ -273,5 +273,115 @@ namespace webmail_backend.Controllers
                 }
             }
         }
+
+        [HttpPut("Flagged")]
+        public IActionResult Flagged(SendDataMessages sendDataMessages)
+        {
+            using (var cancel = new CancellationTokenSource())
+            {
+                try
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var imapClient = _cache.GetImapClient(user);
+
+                    lock (imapClient.SyncRoot)
+                    {
+                        var folder = imapClient.GetFolder(sendDataMessages.Folder, FolderAccess.ReadWrite, cancel.Token);
+
+                        List<UniqueId> uniqueIds = new List<UniqueId>();
+
+                        foreach (var id in sendDataMessages.Ids)
+                        {
+                            uniqueIds.Add(new UniqueId(id));
+                        }
+
+                        if (sendDataMessages.Type == "flagged")
+                        {
+                            folder.AddFlags(uniqueIds, MessageFlags.Flagged, false);
+                            return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? "Mensagens marcadas como importante" : "Mensagem marcada como importante");
+                        }
+                        else
+                        {
+                            folder.RemoveFlags(uniqueIds, MessageFlags.Flagged, false);
+                            return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? "Mensagens marcadas como não importante" : "Mensagem marcada como não importante");
+                        }
+                    }
+
+                }
+                catch (ImapProtocolException)
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var result = _cache.SetImapClient(user);
+
+                    if (!result.Succeeded)
+                    {
+                        return StatusCode(StatusCodes.Status401Unauthorized, result.Message);
+                    }
+
+                    return Flagged(sendDataMessages);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                }
+            }
+        }
+
+        [HttpPut("Seen")]
+        public IActionResult Seen(SendDataMessages sendDataMessages)
+        {
+            using (var cancel = new CancellationTokenSource())
+            {
+                try
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var imapClient = _cache.GetImapClient(user);
+
+                    lock (imapClient.SyncRoot)
+                    {
+                        var folder = imapClient.GetFolder(sendDataMessages.Folder, FolderAccess.ReadWrite, cancel.Token);
+
+                        List<UniqueId> uniqueIds = new List<UniqueId>();
+
+                        foreach (var id in sendDataMessages.Ids)
+                        {
+                            uniqueIds.Add(new UniqueId(id));
+                        }
+
+                        if (sendDataMessages.Type == "seen")
+                        {
+                            folder.AddFlags(uniqueIds, MessageFlags.Seen, false);
+                            return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? "Mensagens marcadas como lidas" : "Mensagem marcada como lida");
+                        }
+                        else
+                        {
+                            folder.RemoveFlags(uniqueIds, MessageFlags.Seen, false);
+                            return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? "Mensagens marcadas como não lidas" : "Mensagem marcada como não lida");
+                        }
+                    }
+
+                }
+                catch (ImapProtocolException)
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var result = _cache.SetImapClient(user);
+
+                    if (!result.Succeeded)
+                    {
+                        return StatusCode(StatusCodes.Status401Unauthorized, result.Message);
+                    }
+
+                    return Seen(sendDataMessages);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                }
+            }
+        }
     }
 }

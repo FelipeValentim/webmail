@@ -20,14 +20,21 @@ import Separator from "../../containers/Separator";
 import { MessageAPI } from "../../services/MessageAPI";
 import SendDataMessages from "../../interfaces/SendDataMessages";
 import { toast } from "react-toastify";
-import { removeMessages } from "../../redux/dataMessages";
+import {
+  removeMessages,
+  setFlaggedMessaages,
+  setSeenMessages,
+} from "../../redux/dataMessages";
 import { setTotalEmails } from "../../redux/selectedFolder";
 import { FolderAPI } from "../../services/FolderAPI";
 import DropDownHoverButton from "../../containers/DropDownHoverButton";
+import SelectedMessage from "../../interfaces/SelectedMessage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons/faArrowRight";
 
 interface HomeHeaderProps {
-  setSelectedMessages: (selectedMessages: number[]) => void;
-  selectedMessages: number[]; // O tipo correto para selectedMessages
+  setSelectedMessages: (selectedMessages: SelectedMessage[]) => void;
+  selectedMessages: SelectedMessage[]; // O tipo correto para selectedMessages
   pagination: Pagination;
   setPagination: (pagination: Pagination) => void;
 }
@@ -52,7 +59,13 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
       selectedMessages.length >= 0 &&
       selectedMessages.length !== dataMessages?.messages.length
     ) {
-      setSelectedMessages(dataMessages.messages.map((x) => x.uniqueId.id));
+      setSelectedMessages(
+        dataMessages.messages.map(({ uniqueId, seen, flagged }) => ({
+          id: uniqueId.id,
+          seen,
+          flagged,
+        }))
+      );
     } else {
       setSelectedMessages([]);
     }
@@ -63,9 +76,11 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
       try {
         setValidating(true);
 
+        const ids = selectedMessages.map((x) => x.id);
+
         const sendDataMessages: SendDataMessages = {
           folder: selectedFolder.path,
-          ids: selectedMessages,
+          ids: ids,
         };
         const { data } = await MessageAPI.spamMessages(sendDataMessages);
 
@@ -85,7 +100,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
         console.log(dataMessages.countMessages, selectedMessages.length);
         dispatch(setTotalEmails(countMessages));
 
-        dispatch(removeMessages(selectedMessages));
+        dispatch(removeMessages(ids));
 
         setSelectedMessages([]);
       } finally {
@@ -99,9 +114,11 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
       try {
         setValidating(true);
 
+        const ids = selectedMessages.map((x) => x.id);
+
         const sendDataMessages: SendDataMessages = {
           folder: selectedFolder.path,
-          ids: selectedMessages,
+          ids: ids,
           type: folder,
         };
         const { data } = await FolderAPI.moveMessages(sendDataMessages);
@@ -122,7 +139,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
 
         dispatch(setTotalEmails(countMessages));
 
-        dispatch(removeMessages(selectedMessages));
+        dispatch(removeMessages(ids));
 
         setSelectedMessages([]);
       } finally {
@@ -135,9 +152,12 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
     if (!validating) {
       try {
         setValidating(true);
+
+        const ids = selectedMessages.map((x) => x.id);
+
         const sendDataMessages: SendDataMessages = {
           folder: selectedFolder.path,
-          ids: selectedMessages,
+          ids: ids,
         };
 
         const { data } = await FolderAPI.deleteMessages(sendDataMessages);
@@ -158,7 +178,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
 
         dispatch(setTotalEmails(countMessages));
 
-        dispatch(removeMessages(selectedMessages));
+        dispatch(removeMessages(ids));
 
         setSelectedMessages([]);
       } finally {
@@ -171,9 +191,12 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
     if (!validating) {
       try {
         setValidating(true);
+
+        const ids = selectedMessages.map((x) => x.id);
+
         const sendDataMessages: SendDataMessages = {
           folder: selectedFolder.path,
-          ids: selectedMessages,
+          ids: ids,
         };
 
         const { data } = await FolderAPI.archiveMessages(sendDataMessages);
@@ -194,7 +217,55 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
 
         dispatch(setTotalEmails(countMessages));
 
-        dispatch(removeMessages(selectedMessages));
+        dispatch(removeMessages(ids));
+
+        setSelectedMessages([]);
+      } finally {
+        setValidating(false);
+      }
+    }
+  };
+
+  const seenMessages = async (type: string) => {
+    if (!validating) {
+      try {
+        setValidating(true);
+
+        const ids = selectedMessages.map((x) => x.id);
+
+        const sendDataMessages: SendDataMessages = {
+          folder: selectedFolder.path,
+          ids: ids,
+          type: type,
+        };
+
+        await FolderAPI.seenMessages(sendDataMessages);
+
+        dispatch(setSeenMessages({ ids, type }));
+
+        setSelectedMessages([]);
+      } finally {
+        setValidating(false);
+      }
+    }
+  };
+
+  const flaggedMessages = async (type: string) => {
+    if (!validating) {
+      try {
+        setValidating(true);
+
+        const ids = selectedMessages.map((x) => x.id);
+
+        const sendDataMessages: SendDataMessages = {
+          folder: selectedFolder.path,
+          ids: ids,
+          type: type,
+        };
+
+        await FolderAPI.flaggedMessages(sendDataMessages);
+
+        dispatch(setFlaggedMessaages({ ids, type }));
 
         setSelectedMessages([]);
       } finally {
@@ -225,7 +296,13 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
               <li
                 onClick={() =>
                   setSelectedMessages(
-                    dataMessages.messages.map((x) => x.uniqueId.id)
+                    dataMessages.messages.map(
+                      ({ uniqueId, seen, flagged }) => ({
+                        id: uniqueId.id,
+                        seen,
+                        flagged,
+                      })
+                    )
                   )
                 }
               >
@@ -236,7 +313,11 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
                   setSelectedMessages(
                     dataMessages.messages
                       .filter((x) => x.seen)
-                      .map((x) => x.uniqueId.id)
+                      .map(({ uniqueId, seen, flagged }) => ({
+                        id: uniqueId.id,
+                        seen,
+                        flagged,
+                      }))
                   )
                 }
               >
@@ -247,7 +328,11 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
                   setSelectedMessages(
                     dataMessages.messages
                       .filter((x) => !x.seen)
-                      .map((x) => x.uniqueId.id)
+                      .map(({ uniqueId, seen, flagged }) => ({
+                        id: uniqueId.id,
+                        seen,
+                        flagged,
+                      }))
                   )
                 }
               >
@@ -258,7 +343,11 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
                   setSelectedMessages(
                     dataMessages.messages
                       .filter((x) => x.flagged)
-                      .map((x) => x.uniqueId.id)
+                      .map(({ uniqueId, seen, flagged }) => ({
+                        id: uniqueId.id,
+                        seen,
+                        flagged,
+                      }))
                   )
                 }
               >
@@ -269,7 +358,11 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
                   setSelectedMessages(
                     dataMessages.messages
                       .filter((x) => !x.flagged)
-                      .map((x) => x.uniqueId.id)
+                      .map(({ uniqueId, seen, flagged }) => ({
+                        id: uniqueId.id,
+                        seen,
+                        flagged,
+                      }))
                   )
                 }
               >
@@ -343,28 +436,66 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
           </ul>
         </DropDownButton>
 
-        <DropDownButton className="btn-secondary" icon={faEllipsisVertical}>
-          <ul>
-            <DropDownHoverButton text="Mover para">
-              <ul>
-                {folders.map(({ name, path }) =>
-                  selectedFolder.path == path ? (
-                    <li
-                      className="disabled"
-                      title="Email já se encontra nessa pasta"
-                    >
-                      {name}
-                    </li>
-                  ) : (
-                    <li onClick={() => moveMessages(path)}>{name}</li>
-                  )
-                )}
-              </ul>
-            </DropDownHoverButton>
-          </ul>
-        </DropDownButton>
         {selectedMessages.length > 0 && (
           <>
+            <DropDownButton className="btn-secondary" icon={faEllipsisVertical}>
+              <ul>
+                <DropDownHoverButton
+                  component={
+                    <>
+                      <span>Mover para</span>
+                      <FontAwesomeIcon
+                        className="right"
+                        icon={faArrowRight}
+                      ></FontAwesomeIcon>
+                    </>
+                  }
+                >
+                  <ul>
+                    {folders.map(({ name, path }) =>
+                      selectedFolder.path == path ? (
+                        <li
+                          key={path}
+                          className="disabled"
+                          title="Email já se encontra nessa pasta"
+                        >
+                          {name}
+                        </li>
+                      ) : (
+                        <li key={path} onClick={() => moveMessages(path)}>
+                          {name}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </DropDownHoverButton>
+
+                {selectedMessages.some((x) => !x.seen) && (
+                  <li onClick={() => seenMessages("seen")}>
+                    Marcar como lidos
+                  </li>
+                )}
+
+                {selectedMessages.some((x) => x.seen) && (
+                  <li onClick={() => seenMessages("unseen")}>
+                    Marcar como não lidos
+                  </li>
+                )}
+
+                {selectedMessages.some((x) => !x.flagged) && (
+                  <li onClick={() => flaggedMessages("flagged")}>
+                    Marcar como favoritos
+                  </li>
+                )}
+
+                {selectedMessages.some((x) => x.flagged) && (
+                  <li onClick={() => flaggedMessages("unflagged")}>
+                    Marcar como não favoritos
+                  </li>
+                )}
+              </ul>
+            </DropDownButton>
+
             <Separator height={18} />
 
             <Button

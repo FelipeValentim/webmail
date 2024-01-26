@@ -459,6 +459,7 @@ ul li.active:before {
 
 .popup .btn-hover {
   padding: 0.8rem 1.5rem;
+  justify-content: start;
 }
 
 .popup .btn-hover .popup {
@@ -472,4 +473,18 @@ ul li.active:before {
 
 .popup .btn-hover.bottom .popup {
   top: 100%;
+}
+
+.dark-theme .popup .btn-hover.right svg.right {
+  color: var(--primary-light-color-bg);
+}
+
+.popup .btn-hover.right svg.right {
+  position: absolute;
+  right: 10px;
+  color: #000;
+}
+
+.popup .btn-hover.right:hover svg.right {
+  color: var(--primary-color);
 }
