@@ -456,3 +456,20 @@ ul li.active:before {
   padding: 0 1rem;
 }
 /* Message */
+
+.popup .btn-hover {
+  padding: 0.8rem 1.5rem;
+}
+
+.popup .btn-hover .popup {
+  position: absolute;
+}
+
+.popup .btn-hover.right .popup {
+  top: 0;
+  left: 100%;
+}
+
+.popup .btn-hover.bottom .popup {
+  top: 100%;
+}

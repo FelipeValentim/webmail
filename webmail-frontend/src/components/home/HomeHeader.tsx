@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import { removeMessages } from "../../redux/dataMessages";
 import { setTotalEmails } from "../../redux/selectedFolder";
 import { FolderAPI } from "../../services/FolderAPI";
+import DropDownHoverButton from "../../containers/DropDownHoverButton";
 
 interface HomeHeaderProps {
   setSelectedMessages: (selectedMessages: number[]) => void;
@@ -42,6 +43,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
   const selectedFolder = useSelector(
     (state: RootState) => state.selectedFolder
   );
+  const folders = useSelector((state: RootState) => state.folders);
   const search = useSelector((state: RootState) => state.search);
   const dataMessages = useSelector((state: RootState) => state.dataMessages);
 
@@ -81,6 +83,43 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
         const countMessages: number =
           dataMessages.countMessages - selectedMessages.length;
         console.log(dataMessages.countMessages, selectedMessages.length);
+        dispatch(setTotalEmails(countMessages));
+
+        dispatch(removeMessages(selectedMessages));
+
+        setSelectedMessages([]);
+      } finally {
+        setValidating(false);
+      }
+    }
+  };
+
+  const moveMessages = async (folder: string) => {
+    if (!validating) {
+      try {
+        setValidating(true);
+
+        const sendDataMessages: SendDataMessages = {
+          folder: selectedFolder.path,
+          ids: selectedMessages,
+          type: folder,
+        };
+        const { data } = await FolderAPI.moveMessages(sendDataMessages);
+
+        toast.success(data, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        const countMessages: number =
+          dataMessages.countMessages - selectedMessages.length;
+
         dispatch(setTotalEmails(countMessages));
 
         dispatch(removeMessages(selectedMessages));
@@ -306,7 +345,22 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
 
         <DropDownButton className="btn-secondary" icon={faEllipsisVertical}>
           <ul>
-            <li>Mover para</li>
+            <DropDownHoverButton text="Mover para">
+              <ul>
+                {folders.map(({ name, path }) =>
+                  selectedFolder.path == path ? (
+                    <li
+                      className="disabled"
+                      title="Email já se encontra nessa pasta"
+                    >
+                      {name}
+                    </li>
+                  ) : (
+                    <li onClick={() => moveMessages(path)}>{name}</li>
+                  )
+                )}
+              </ul>
+            </DropDownHoverButton>
           </ul>
         </DropDownButton>
         {selectedMessages.length > 0 && (

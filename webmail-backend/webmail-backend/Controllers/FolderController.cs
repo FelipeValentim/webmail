@@ -5,6 +5,7 @@ using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Org.BouncyCastle.Crypto;
 using System;
 using webmail_backend.Constants;
 using webmail_backend.Helpers;
@@ -214,6 +215,57 @@ namespace webmail_backend.Controllers
                     }
 
                     return ArchiveMessages(sendDataMessages);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                }
+            }
+        }
+
+        [HttpPut("MoveMessages")]
+        public IActionResult MoveMessages(SendDataMessages sendDataMessages)
+        {
+            using (var cancel = new CancellationTokenSource())
+            {
+                try
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var imapClient = _cache.GetImapClient(user);
+
+                    var folderTo = imapClient.GetFolder(sendDataMessages.Type, FolderAccess.ReadWrite, cancel.Token);
+
+                    var folderFrom = imapClient.GetFolder(sendDataMessages.Folder, FolderAccess.ReadWrite, cancel.Token);
+
+                    if (folderTo == folderFrom)
+                    {
+                        return StatusCode(StatusCodes.Status400BadRequest, $"O email já está na pasta {folderTo}");
+                    }
+
+                    List<UniqueId> uniqueIds = new List<UniqueId>();
+
+                    foreach (var id in sendDataMessages.Ids)
+                    {
+                        uniqueIds.Add(new UniqueId(id));
+                    }
+
+                    folderFrom.MoveTo(uniqueIds, folderTo);
+
+                    return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? $"Mensagens movidas para {folderTo.Name}" : $"Mensagem movida para {folderTo.Name}");
+                }
+                catch (ImapProtocolException)
+                {
+                    var user = UserService.GetUser(_httpContextAccessor);
+
+                    var result = _cache.SetImapClient(user);
+
+                    if (!result.Succeeded)
+                    {
+                        return StatusCode(StatusCodes.Status401Unauthorized, result.Message);
+                    }
+
+                    return MoveMessages(sendDataMessages);
                 }
                 catch (Exception ex)
                 {
