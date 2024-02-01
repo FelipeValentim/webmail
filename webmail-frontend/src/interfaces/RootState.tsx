@@ -1,5 +1,6 @@
 import DataMessages from "./DataMessages";
 import Folder from "./Folder";
+import Pagination from "./Pagination";
 import Search from "./Search";
 
 interface RootState {
@@ -9,6 +10,7 @@ interface RootState {
   dataMessages: DataMessages;
   selectedFolder: Folder;
   search: Search;
+  pagination: Pagination;
 
   // Outras chaves de estado aqui...
 }

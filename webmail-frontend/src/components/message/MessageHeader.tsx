@@ -1,19 +1,20 @@
 import Button from "../../containers/Button";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import RootState from "../../interfaces/RootState";
+import { setReturning } from "../../redux/pagination";
 
 const MessageHeader = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const selectedFolder = useSelector(
     (state: RootState) => state.selectedFolder
   );
 
   const goBack = () => {
-    navigate(`/#${encodeURIComponent(selectedFolder.path)}`, {
-      state: { back: true },
-    });
+    dispatch(setReturning(true));
+    navigate(`/#${encodeURIComponent(selectedFolder.path)}`);
     // navigate(-1);
   };
 

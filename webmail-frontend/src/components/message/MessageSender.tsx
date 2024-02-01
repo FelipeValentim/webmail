@@ -19,6 +19,7 @@ interface MessageSubjectProps {
   content: string;
   folderName: string | undefined;
   flagged: boolean;
+  flaggedMessage: (id: number, type: string) => Promise<void>;
 }
 
 const MessageSender: React.FC<MessageSubjectProps> = ({
@@ -31,6 +32,7 @@ const MessageSender: React.FC<MessageSubjectProps> = ({
   content,
   isDraft,
   flagged,
+  flaggedMessage,
 }) => {
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -98,9 +100,17 @@ const MessageSender: React.FC<MessageSubjectProps> = ({
         <div className="date">{date}</div>
         <div className="flag">
           {flagged ? (
-            <FontAwesomeIcon className="flag flagged" icon={starSolid} />
+            <FontAwesomeIcon
+              onClick={() => flaggedMessage(uniqueId.id, "unflagged")}
+              className="flag flagged"
+              icon={starSolid}
+            />
           ) : (
-            <FontAwesomeIcon className="flag" icon={starRegular} />
+            <FontAwesomeIcon
+              onClick={() => flaggedMessage(uniqueId.id, "flagged")}
+              className="flag"
+              icon={starRegular}
+            />
           )}
         </div>
         <div className="reply">

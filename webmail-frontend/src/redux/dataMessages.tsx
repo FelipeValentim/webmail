@@ -42,7 +42,7 @@ const slice = createSlice({
         });
       }
     },
-    setFlaggedMessaages: (state, action) => {
+    setFlaggedMessages: (state, action) => {
       const { ids, type } = action.payload;
       const items = state?.messages.filter((item) =>
         ids.includes(item.uniqueId.id)
@@ -66,7 +66,7 @@ export const {
   setMessages,
   toggleFlag,
   removeMessages,
-  setFlaggedMessaages,
+  setFlaggedMessages,
   setSeenMessages,
 } = slice.actions;
 

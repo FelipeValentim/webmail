@@ -22,7 +22,7 @@ import SendDataMessages from "../../interfaces/SendDataMessages";
 import { toast } from "react-toastify";
 import {
   removeMessages,
-  setFlaggedMessaages,
+  setFlaggedMessages,
   setSeenMessages,
 } from "../../redux/dataMessages";
 import { setTotalEmails } from "../../redux/selectedFolder";
@@ -31,25 +31,23 @@ import DropDownHoverButton from "../../containers/DropDownHoverButton";
 import SelectedMessage from "../../interfaces/SelectedMessage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons/faArrowRight";
+import { setPagination } from "../../redux/pagination";
 
 interface HomeHeaderProps {
   setSelectedMessages: (selectedMessages: SelectedMessage[]) => void;
   selectedMessages: SelectedMessage[]; // O tipo correto para selectedMessages
-  pagination: Pagination;
-  setPagination: (pagination: Pagination) => void;
 }
 
 const HomeHeader: React.FC<HomeHeaderProps> = ({
   setSelectedMessages,
   selectedMessages,
-  pagination,
-  setPagination,
 }) => {
   const [validating, setValidating] = React.useState(false);
   const dispatch = useDispatch();
   const selectedFolder = useSelector(
     (state: RootState) => state.selectedFolder
   );
+  const pagination = useSelector((state: RootState) => state.pagination);
   const folders = useSelector((state: RootState) => state.folders);
   const search = useSelector((state: RootState) => state.search);
   const dataMessages = useSelector((state: RootState) => state.dataMessages);
@@ -97,7 +95,6 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
 
         const countMessages: number =
           dataMessages.countMessages - selectedMessages.length;
-        console.log(dataMessages.countMessages, selectedMessages.length);
         dispatch(setTotalEmails(countMessages));
 
         dispatch(removeMessages(ids));
@@ -254,7 +251,6 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
     if (!validating) {
       try {
         setValidating(true);
-
         const ids = selectedMessages.map((x) => x.id);
 
         const sendDataMessages: SendDataMessages = {
@@ -265,7 +261,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
 
         await FolderAPI.flaggedMessages(sendDataMessages);
 
-        dispatch(setFlaggedMessaages({ ids, type }));
+        dispatch(setFlaggedMessages({ ids, type }));
 
         setSelectedMessages([]);
       } finally {
@@ -373,7 +369,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
         </div>
         <Button
           className="btn-secondary"
-          onClick={() => setPagination({ ...pagination })}
+          onClick={() => dispatch(setPagination({ ...pagination }))}
           icon={faArrowsRotate}
         />
 
@@ -523,7 +519,9 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
         page={pagination.page}
         rowsPerPage={pagination.rowsPerPage}
         onPageChange={(newPage) =>
-          setPagination({ ...pagination, page: newPage })
+          dispatch(
+            setPagination({ ...pagination, page: newPage, returning: false })
+          )
         }
         count={selectedFolder?.totalEmails ?? 0}
         previousLabel="Anterior"
