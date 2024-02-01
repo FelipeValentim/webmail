@@ -8,14 +8,14 @@ import { faStar as starSolid } from "@fortawesome/free-solid-svg-icons";
 import ScrollableContent from "../../../containers/ScrollableContent";
 import HomeHeader from "../../../components/home/HomeHeader";
 import DataMessages from "../../../interfaces/DataMessages";
-import Pagination from "../../../interfaces/Pagination";
 import { setSelectedFolder } from "../../../redux/selectedFolder";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MessageAPI } from "../../../services/MessageAPI";
 import MessageFilter from "../../../interfaces/MessageFilter";
 import SendDataMessage from "../../../interfaces/SendDataMessage";
 import { toast } from "react-toastify";
 import SelectedMessage from "../../../interfaces/SelectedMessage";
+import { setPagination } from "../../../redux/pagination";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -24,15 +24,11 @@ const Index = () => {
     Array<SelectedMessage>
   >([]);
 
-  const [pagination, setPagination] = React.useState<Pagination>({
-    page: 0,
-    rowsPerPage: 30,
-  });
-
   const [loading, setLoading] = React.useState(false);
   const dispatch = useDispatch();
   const dataMessages = useSelector((state: RootState) => state.dataMessages);
   const search = useSelector((state: RootState) => state.search);
+  const pagination = useSelector((state: RootState) => state.pagination);
 
   const selectedFolder = useSelector(
     (state: RootState) => state.selectedFolder
@@ -45,8 +41,10 @@ const Index = () => {
   }, [location, navigate]);
 
   React.useEffect(() => {
-    setPagination({ ...pagination, page: 0 });
-    setSelectedMessages([]);
+    if (!pagination.returning) {
+      dispatch(setPagination({ ...pagination, page: 0 }));
+      setSelectedMessages([]);
+    }
   }, [selectedFolder?.path, search.query, search.text]);
 
   React.useEffect(() => {
@@ -86,7 +84,7 @@ const Index = () => {
       }
     };
 
-    if (selectedFolder) getMessages();
+    if (selectedFolder && !pagination.returning) getMessages();
 
     return () => {
       isMounted = false;
@@ -138,8 +136,6 @@ const Index = () => {
       <HomeHeader
         setSelectedMessages={setSelectedMessages}
         selectedMessages={selectedMessages}
-        pagination={pagination}
-        setPagination={setPagination}
       />
       <ScrollableContent updater={[dataMessages]}>
         {dataMessages && !loading ? (

@@ -3,10 +3,12 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RootState from "../../interfaces/RootState";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setReturning } from "../../redux/pagination";
 
 const Sidebar = () => {
   const folders = useSelector((state: RootState) => state.folders);
+  const dispatch = useDispatch();
   const selectedFolder = useSelector(
     (state: RootState) => state.selectedFolder
   );
@@ -30,6 +32,7 @@ const Sidebar = () => {
                   }
                   to={`/#${encodeURIComponent(path)}`}
                   key={path}
+                  onClick={() => dispatch(setReturning(false))}
                 >
                   <li>
                     <span className="folder-name">{name}</span>{" "}

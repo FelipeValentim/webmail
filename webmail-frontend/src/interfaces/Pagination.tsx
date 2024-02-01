@@ -1,7 +1,7 @@
 interface Pagination {
   page: number;
   rowsPerPage: number;
-  back?: boolean;
+  returning: boolean;
 }
 
 export default Pagination;

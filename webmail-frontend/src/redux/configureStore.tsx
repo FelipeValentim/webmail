@@ -6,6 +6,7 @@ import folders from "./folders";
 import dataMessages from "./dataMessages";
 import selectedFolder from "./selectedFolder";
 import search from "./search";
+import pagination from "./pagination";
 
 const reducer = combineReducers({
   user,
@@ -14,6 +15,7 @@ const reducer = combineReducers({
   dataMessages,
   selectedFolder,
   search,
+  pagination,
 });
 
 const reducerProxy = (state: any, action: AnyAction) => {

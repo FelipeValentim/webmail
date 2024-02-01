@@ -223,6 +223,7 @@ namespace webmail_backend.Controllers
                         // Pega a data com o tempo percorrido
                         date = $"{date} {item.Date.GetPastTime()}";
 
+                        email.UniqueId = item.UniqueId;
                         email.Content = htmlText;
                         email.Subject = string.IsNullOrEmpty(item.Envelope.Subject) ? "(Sem assunto)" : item.Envelope.Subject;
                         email.Date = date;
