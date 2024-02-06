@@ -151,9 +151,9 @@ const Index = () => {
             }) => (
               <Link
                 key={uniqueId.id}
-                to={`/${encodeURIComponent(selectedFolder.path)}/${
-                  uniqueId.id
-                }`}
+                to={`/${encodeURIComponent(
+                  selectedFolder.path.toLowerCase()
+                )}/${uniqueId.id}`}
               >
                 <li className={seen ? "read" : ""}>
                   <input

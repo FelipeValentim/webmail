@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 import PaginationContainer from "../../containers/PaginationContainer";
 import DropDownButton from "../../containers/DropDownButton";
 import SearchQuery from "../../constants/default";
-import Pagination from "../../interfaces/Pagination";
 import { setSearch } from "../../redux/search";
 import Button from "../../containers/Button";
 import Separator from "../../containers/Separator";
@@ -370,7 +369,7 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
         <Button
           className="btn-secondary"
           onClick={() => dispatch(setPagination({ ...pagination }))}
-          icon={faArrowsRotate}
+          component={<FontAwesomeIcon icon={faArrowsRotate} />}
         />
 
         <DropDownButton className="btn-secondary" icon={faFilter}>
@@ -496,19 +495,19 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({
 
             <Button
               className="btn-secondary"
-              icon={faTrash}
+              component={<FontAwesomeIcon icon={faTrash} />}
               title="Deletar"
               onClick={deleteMessages}
             />
             <Button
               className="btn-secondary"
-              icon={faExclamationCircle}
+              component={<FontAwesomeIcon icon={faExclamationCircle} />}
               title="Spam"
               onClick={spamMessages}
             />
             <Button
               className="btn-secondary"
-              icon={faArchive}
+              component={<FontAwesomeIcon icon={faArchive} />}
               title="Arquivar"
               onClick={archiveMessages}
             />

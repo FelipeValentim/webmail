@@ -1,9 +1,11 @@
+import React from "react";
 import Button from "../../containers/Button";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import RootState from "../../interfaces/RootState";
 import { setReturning } from "../../redux/pagination";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const MessageHeader = () => {
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ const MessageHeader = () => {
 
   const goBack = () => {
     dispatch(setReturning(true));
-    navigate(`/#${encodeURIComponent(selectedFolder.path)}`);
+    navigate(`/#${encodeURIComponent(selectedFolder.path.toLowerCase())}`);
     // navigate(-1);
   };
 
@@ -25,7 +27,7 @@ const MessageHeader = () => {
           onClick={goBack}
           className="btn-secondary"
           title="Voltar"
-          icon={faArrowLeftLong}
+          component={<FontAwesomeIcon icon={faArrowLeftLong} />}
         />
       </div>
     </div>

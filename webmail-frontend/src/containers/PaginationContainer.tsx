@@ -1,3 +1,4 @@
+import React from "react";
 import {
   faChevronLeft,
   faChevronRight,
@@ -49,13 +50,13 @@ const PaginationContainer: FC<PaginationProps> = ({
       <Button
         title={previousLabel}
         onClick={previousPage}
-        icon={faChevronLeft}
+        component={<FontAwesomeIcon icon={faChevronLeft} />}
         className={page > 0 ? "active btn-secondary" : "disabled btn-secondary"}
       />
       <Button
         title={nextLabel}
         onClick={nextPage}
-        icon={faChevronRight}
+        component={<FontAwesomeIcon icon={faChevronRight} />}
         className={
           activeNext ? "active btn-secondary" : "disabled btn-secondary"
         }

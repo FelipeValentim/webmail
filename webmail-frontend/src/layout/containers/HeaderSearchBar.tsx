@@ -41,7 +41,7 @@ const HeaderSearchBar = () => {
     <div className="search-bar">
       <Button
         className="search btn-secondary"
-        icon={faSearch}
+        component={<FontAwesomeIcon icon={faSearch} />}
         onClick={() => dispatch(setSearch({ ...search, text: text }))}
       />
       <input
@@ -53,7 +53,7 @@ const HeaderSearchBar = () => {
       {text.length > 0 && (
         <Button
           className="clean btn-secondary"
-          icon={faXmark}
+          component={<FontAwesomeIcon icon={faXmark} />}
           onClick={cleanText}
         />
       )}
