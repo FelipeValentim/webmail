@@ -85,7 +85,7 @@ const ScrollableContent: FC<ScrollableContentProps> = ({
 
   const handleThumbMouseup = useCallback(
     (e: MouseEvent) => {
-      e.preventDefault();
+      //e.preventDefault();
       e.stopPropagation();
       if (isDragging) {
         setIsDragging(false);
@@ -96,7 +96,7 @@ const ScrollableContent: FC<ScrollableContentProps> = ({
 
   const handleThumbMousemove = useCallback(
     (e: MouseEvent) => {
-      e.preventDefault();
+      // e.preventDefault();
       e.stopPropagation();
       if (isDragging) {
         const { current } = contentRef;

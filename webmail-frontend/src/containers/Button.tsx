@@ -1,9 +1,8 @@
-import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FC } from "react";
+import React, { FC } from "react";
 
 interface ButtonProps {
-  icon?: IconDefinition;
+  component: React.ReactNode;
+  icon?: boolean;
   label?: string;
   className?: string;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -11,7 +10,8 @@ interface ButtonProps {
 }
 
 const Button: FC<ButtonProps> = ({
-  icon,
+  component,
+  icon = true,
   className = "",
   onClick,
   title,
@@ -19,12 +19,12 @@ const Button: FC<ButtonProps> = ({
 }) => {
   return (
     <div
-      className={`btn btn-icon ${className}`}
+      className={`btn${icon ? " btn-icon" : ""} ${className}`}
       onClick={onClick}
-      {...props}
       title={title}
+      {...props}
     >
-      {icon && <FontAwesomeIcon icon={icon} />}
+      {component}
     </div>
   );
 };
