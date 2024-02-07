@@ -12,9 +12,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setReturning } from "../../redux/pagination";
 import RicTextEditor from "../../components/RichTextEditor/RichTextEditor";
 import Button from "../../containers/Button";
+import { InputTags } from "../../containers/Fields";
 
 const Sidebar = () => {
   const [modal, setModal] = React.useState(false);
+  const [addresses, setAddresses] = React.useState<string[]>([]);
   const [message, setMessage] = React.useState("");
   const folders = useSelector((state: RootState) => state.folders);
   const dispatch = useDispatch();
@@ -45,23 +47,34 @@ const Sidebar = () => {
               />
             </div>
             <div className="modal-body">
-              <div className="input-group">
-                <div className="form-control">
-                  <label htmlFor="to">Destinatário</label>
-                  <input placeholder="Para" id="to"></input>
-                </div>
+              <form>
+                <div className="input-group">
+                  <div className="form-control">
+                    <label htmlFor="to">Destinatários</label>
+                    {/* <input placeholder="Para" id="to"></input> */}
+                    <InputTags
+                      value={addresses}
+                      addTag={(value) => setAddresses([...addresses, value])}
+                      deleteTag={(_, i) =>
+                        setAddresses(
+                          addresses.filter((tag, index) => index !== i)
+                        )
+                      }
+                    />
+                  </div>
 
-                <div className="form-control">
-                  <label htmlFor="subject">Assunto</label>
-                  <input placeholder="Assunto" id="subject"></input>
-                </div>
+                  <div className="form-control">
+                    <label htmlFor="subject">Assunto</label>
+                    <input placeholder="Seu assunto" id="subject"></input>
+                  </div>
 
-                <div className="form-control">
-                  <label htmlFor="to">Mensagem</label>
+                  <div className="form-control">
+                    <label htmlFor="to">Mensagem</label>
 
-                  <RicTextEditor data={message} setData={setMessage} />
+                    <RicTextEditor data={message} setData={setMessage} />
+                  </div>
                 </div>
-              </div>
+              </form>
             </div>
 
             <div className="modal-footer">

@@ -1,0 +1,36 @@
+.form-control .react-tagsinput {
+  padding: 0.8rem;
+  border: 2px solid #00000030;
+  border-radius: 0.2rem;
+  transition: all 0.2s ease-in-out;
+  font-size: 1rem;
+  overflow: initial !important;
+}
+
+.react-tagsinput:focus-within {
+  outline: none !important;
+  border: 2px solid #a06df2aa !important;
+  box-shadow: none !important;
+}
+
+.react-tagsinput .react-tagsinput-input {
+  border: none !important;
+  padding: 0;
+  width: max-content;
+  margin-bottom: 0;
+}
+
+.react-tagsinput > span {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.react-tagsinput .react-tagsinput-tag {
+  background-color: #a06df2;
+  color: #fff;
+  border: none;
+  border-radius: 0.2rem;
+  margin: 0;
+}

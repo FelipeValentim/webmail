@@ -1,3 +1,8 @@
 .ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline {
   height: 250px;
 }
+
+.ck :is(ul, li, div, span, li:before) {
+  padding: inherit;
+  list-style: inherit;
+}

@@ -70,7 +70,7 @@ namespace webmail_backend.Controllers
 
                 }
             }
-            catch (ImapProtocolException)
+            catch
             {
                 var user = UserService.GetUser(_httpContextAccessor);
 
@@ -82,10 +82,6 @@ namespace webmail_backend.Controllers
                 }
 
                 return Get();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
             return StatusCode(StatusCodes.Status200OK, folders);
