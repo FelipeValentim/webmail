@@ -40,22 +40,22 @@ namespace webmail_backend.Helpers
             }
         }
 
-        public static (Provider, ServiceType) GetProvider(string emailAddress)
+        public static (Provider, Provider, ServiceType) GetProvider(string emailAddress)
         {
-            Dictionary<ServiceType, Provider> providers = new Dictionary<ServiceType, Provider> {
-            { ServiceType.Google, new Provider("imap.gmail.com", 993, SecureSocketOptions.Auto) },
-            { ServiceType.Microsoft, new Provider("outlook.office365.com", 993, SecureSocketOptions.StartTls) },
-            // Add other provider configurations here
-             };
-    
+            Dictionary<ServiceType, (Provider IMAP, Provider SMTP)> providers = new Dictionary<ServiceType, (Provider, Provider)> {
+            { ServiceType.Google, (new Provider("imap.gmail.com", 993, SecureSocketOptions.Auto), new Provider("smtp.gmail.com", 587, SecureSocketOptions.Auto)) },
+            { ServiceType.Microsoft, (new Provider("outlook.office365.com", 993, SecureSocketOptions.StartTls), new Provider("smtp.office365.com", 587, SecureSocketOptions.StartTls)) },
+            // Adicione outras configurações de provedor aqui
+            };
+
             ServiceType serviceType = IdentifyProvider(emailAddress);
 
-            if (providers.TryGetValue(serviceType, out var provider))
+            if (providers.TryGetValue(serviceType, out var providerTuple))
             {
-                return (provider, serviceType);
+                return (providerTuple.IMAP, providerTuple.SMTP, serviceType);
             }
 
-            return (null, serviceType);
+            return (null, null, serviceType);
         }
 
         /// <summary>

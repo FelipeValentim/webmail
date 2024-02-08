@@ -5,6 +5,7 @@ using MimeKit;
 using static webmail_backend.Models.WebMailModels;
 using webmail_backend.Models;
 using Microsoft.Extensions.Caching.Memory;
+using webmail_backend.Constants;
 
 namespace webmail_backend.Helpers
 {
@@ -21,7 +22,7 @@ namespace webmail_backend.Helpers
             {
                 imapClient = new ImapClient();
 
-                imapClient.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
+                imapClient.Connect(user.ImapProvider.Host, user.ImapProvider.Port, user.ImapProvider.SecureSocketOptions);
 
                 imapClient.Authenticate(user.Username, user.Password);
 
@@ -44,7 +45,7 @@ namespace webmail_backend.Helpers
             {
                 var imapClient = new ImapClient();
 
-                imapClient.Connect(user.Provider.Host, user.Provider.Port, user.Provider.SecureSocketOptions);
+                imapClient.Connect(user.ImapProvider.Host, user.ImapProvider.Port, user.ImapProvider.SecureSocketOptions);
 
                 imapClient.Authenticate(user.Username, user.Password);
 
@@ -264,7 +265,8 @@ namespace webmail_backend.Helpers
             if (sent == null)
             {
                 // Se não encontrar, procure pelos nomes comuns
-                sent = folders.FirstOrDefault(x => new List<string> { "Enviado", "Enviados", "Enviada", "Enviadas", "Sent" }.Any(s => x.FullName.EndsWith(s, StringComparison.OrdinalIgnoreCase)));
+                sent = folders.FirstOrDefault(x => FolderNames.Sent.Any(s => x.FullName.EndsWith(s, StringComparison.OrdinalIgnoreCase)));
+                
                 if (sent == null)
                 {
                     // Se ainda assim não encontrar, criar a pasta

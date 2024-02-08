@@ -5,5 +5,6 @@
         public static readonly List<string> Spam = new List<string> { "Spam", "Lixo Eletrônico" };
         public static readonly List<string> Trash = new List<string> { "Lixo", "Lixeira", "Trash" };
         public static readonly List<string> Archive = new List<string> { "Archive", "Arquivados" };
+        public static readonly List<string> Sent = new List<string> { "Enviado", "Enviados", "Enviada", "Enviadas", "Sent" };
     }
 }

@@ -31,7 +31,6 @@ namespace webmail_backend.Controllers
         [HttpGet("Get")]
         public IActionResult Get()
         {
-
             List<FolderInfo> folders = new List<FolderInfo>();
 
             try
@@ -139,7 +138,7 @@ namespace webmail_backend.Controllers
                     }
 
                 }
-                catch (ImapProtocolException)
+                catch
                 {
                     var user = UserService.GetUser(_httpContextAccessor);
 
@@ -151,10 +150,6 @@ namespace webmail_backend.Controllers
                     }
 
                     return DeleteMessages(sendDataMessages);
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
                 }
             }
         }
@@ -199,7 +194,7 @@ namespace webmail_backend.Controllers
 
                     return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? "Mensagens arquivadas" : "Mensagem arquivada");
                 }
-                catch (ImapProtocolException)
+                catch
                 {
                     var user = UserService.GetUser(_httpContextAccessor);
 
@@ -212,10 +207,7 @@ namespace webmail_backend.Controllers
 
                     return ArchiveMessages(sendDataMessages);
                 }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-                }
+
             }
         }
 
@@ -250,7 +242,7 @@ namespace webmail_backend.Controllers
 
                     return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? $"Mensagens movidas para {folderTo.Name}" : $"Mensagem movida para {folderTo.Name}");
                 }
-                catch (ImapProtocolException)
+                catch
                 {
                     var user = UserService.GetUser(_httpContextAccessor);
 
@@ -263,10 +255,7 @@ namespace webmail_backend.Controllers
 
                     return MoveMessages(sendDataMessages);
                 }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-                }
+
             }
         }
 
@@ -305,7 +294,7 @@ namespace webmail_backend.Controllers
                     }
 
                 }
-                catch (ImapProtocolException)
+                catch
                 {
                     var user = UserService.GetUser(_httpContextAccessor);
 
@@ -318,10 +307,7 @@ namespace webmail_backend.Controllers
 
                     return Flagged(sendDataMessages);
                 }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-                }
+
             }
         }
 
@@ -360,7 +346,7 @@ namespace webmail_backend.Controllers
                     }
 
                 }
-                catch (ImapProtocolException)
+                catch
                 {
                     var user = UserService.GetUser(_httpContextAccessor);
 
@@ -372,10 +358,6 @@ namespace webmail_backend.Controllers
                     }
 
                     return Seen(sendDataMessages);
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
                 }
             }
         }

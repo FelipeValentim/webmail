@@ -1,4 +1,6 @@
-﻿using MailKit.Security;
+﻿using MailKit.Net.Imap;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 
 namespace webmail_backend.Models
 {
@@ -16,4 +18,6 @@ namespace webmail_backend.Models
         public SecureSocketOptions SecureSocketOptions { get; set; }
         public int Port { get; set; }
     }
+
+
 }

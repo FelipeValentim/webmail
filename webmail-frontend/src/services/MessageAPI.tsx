@@ -4,6 +4,7 @@ import api from "./configs/axiosConfig";
 import { defineCancelApiObject } from "./configs/axiosUtils";
 import SendDataMessages from "../interfaces/SendDataMessages";
 import SendDataMessage from "../interfaces/SendDataMessage";
+import SendMessage from "../interfaces/SendMessage";
 
 export const MessageAPI = {
   getAll: async function (
@@ -59,8 +60,22 @@ export const MessageAPI = {
       data: sendDataMessages,
       // retrieving the signal value by using the property name
       signal: cancel
-        ? cancelApiObject[this.spamMessages.name].handleRequestCancellation()
+        ? cancelApiObject[this.flaggedMessage.name].handleRequestCancellation()
             .signal
+        : undefined,
+    });
+  },
+  send: async function (
+    sendMessage: SendMessage,
+    cancel = false
+  ): Promise<AxiosResponse> {
+    return api.request({
+      url: `/message/send`,
+      method: "POST",
+      data: sendMessage,
+      // retrieving the signal value by using the property name
+      signal: cancel
+        ? cancelApiObject[this.send.name].handleRequestCancellation().signal
         : undefined,
     });
   },
