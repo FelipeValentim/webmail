@@ -7,8 +7,11 @@
         public const string Username = "Username";
         public const string Password = "Password";
         public const string Service = "Service";
-        public const string Host = "Host";
-        public const string Port = "Port";
-        public const string Security = "Security";
+        public const string ImapHost = "ImapHost";
+        public const string ImapPort = "ImapPort";
+        public const string ImapSecurity = "ImapSecurity";
+        public const string SmtpHost = "SmtpHost";
+        public const string SmtpPort = "SmtpPort";
+        public const string SmtpSecurity = "SmtpSecurity";
     }
 }

@@ -6,6 +6,7 @@ import "react-tagsinput/react-tagsinput.css";
 interface InputTagsProps {
   value: string[];
   placeholder?: string;
+  onChange?: (tags: string[], value: string[], indexes: number[]) => void;
   addTag: (value: string, index: number) => void;
   deleteTag: (value: string, index: number) => void;
 }
@@ -14,6 +15,7 @@ const InputTags: React.FC<InputTagsProps> = ({
   value,
   addTag,
   deleteTag,
+  onChange,
   placeholder = "Para",
   ...props
 }) => {
@@ -25,6 +27,10 @@ const InputTags: React.FC<InputTagsProps> = ({
       addTag(v, i);
     } else {
       deleteTag(v, i);
+    }
+
+    if (onChange) {
+      onChange(tags, val, index);
     }
   };
 

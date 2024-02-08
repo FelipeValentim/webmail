@@ -19,9 +19,12 @@ namespace webmail_backend.Services
             var username = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Username);
             var password = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Password);
             var service = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Service);
-            var host = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Host);
-            var port = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Port);
-            var security = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Security);
+            var imapHost = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.ImapHost);
+            var imapPort = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.ImapPort);
+            var imapSecurity = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.ImapSecurity);
+            var smtpHost = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.SmtpHost);
+            var smtpPort = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.SmtpPort);
+            var smtpSecurity = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.SmtpSecurity);
 
             return new User()
             {
@@ -29,7 +32,9 @@ namespace webmail_backend.Services
                 Username = username,
                 Password = password,
                 Service = (ServiceType)int.Parse(service),
-                Provider = new Provider(host, int.Parse(port), (SecureSocketOptions)int.Parse(security))
+                ImapProvider = new Provider(imapHost, int.Parse(imapPort), (SecureSocketOptions)int.Parse(imapSecurity)),
+                SmtpProvider = new Provider(smtpHost, int.Parse(smtpPort), (SecureSocketOptions)int.Parse(smtpSecurity))
+
             };
         }
     }

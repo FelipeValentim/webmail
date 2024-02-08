@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using MimeKit;
 using MimeKit.Text;
+using MimeKit.Utils;
+using Org.BouncyCastle.Crypto;
+using System.Net;
 using System.Text.RegularExpressions;
 using webmail_backend.Helpers;
 using webmail_backend.Services;
@@ -124,7 +127,7 @@ namespace webmail_backend.Controllers
 
 
             }
-            catch (ImapProtocolException)
+            catch
             {
                 var user = UserService.GetUser(_httpContextAccessor);
 
@@ -136,10 +139,6 @@ namespace webmail_backend.Controllers
                 }
 
                 return Get(filter);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
             return StatusCode(StatusCodes.Status200OK, new { messages = emails, countMessages = queryUID.Count });
@@ -241,7 +240,7 @@ namespace webmail_backend.Controllers
                 }
 
             }
-            catch (ImapProtocolException)
+            catch
             {
                 var user = UserService.GetUser(_httpContextAccessor);
 
@@ -253,10 +252,6 @@ namespace webmail_backend.Controllers
                 }
 
                 return GetEmail(folder, id);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
             return StatusCode(StatusCodes.Status200OK, email);
@@ -305,11 +300,11 @@ namespace webmail_backend.Controllers
 
                         folder.MoveTo(uniqueIds, spam);
 
-                        return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? "Mensagens marcadas como spam" : "Mensagem marcada como spam" );
+                        return StatusCode(StatusCodes.Status200OK, sendDataMessages.Ids.Length > 1 ? "Mensagens marcadas como spam" : "Mensagem marcada como spam");
                     }
                 }
             }
-            catch (ImapProtocolException)
+            catch
             {
                 var user = UserService.GetUser(_httpContextAccessor);
 
@@ -321,10 +316,6 @@ namespace webmail_backend.Controllers
                 }
 
                 return SpamMessages(sendDataMessages);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -359,7 +350,7 @@ namespace webmail_backend.Controllers
                     }
 
                 }
-                catch (ImapProtocolException)
+                catch
                 {
                     var user = UserService.GetUser(_httpContextAccessor);
 
@@ -372,10 +363,77 @@ namespace webmail_backend.Controllers
 
                     return Flagged(sendDataMessage);
                 }
-                catch (Exception ex)
+            }
+        }
+
+        [HttpPost("Send")]
+        public IActionResult Send(SendMessage sendMessage)
+        {
+            try
+            {
+                var user = UserService.GetUser(_httpContextAccessor);
+
+                var message = new MimeMessage();
+
+                message.MessageId = MimeUtils.GenerateMessageId("MailBox");
+
+                message.From.Add(new MailboxAddress("", user.Username));
+
+                foreach (var address in sendMessage.ToAddresses)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                    message.To.Add(new MailboxAddress("", address));
                 }
+
+                message.Subject = sendMessage.Subject;
+
+                //message.Importance = MessageImportance.High;
+
+                var builder = new BodyBuilder();
+
+                builder.HtmlBody = sendMessage.Content;
+
+                message.Body = builder.ToMessageBody();
+
+                // Envio da mensagem
+                using (var smtpClient = new SmtpClient())
+                {
+                    using (var imapClient = new ImapClient())
+                    {
+                        smtpClient.Connect(user.SmtpProvider.Host, user.SmtpProvider.Port, user.SmtpProvider.SecureSocketOptions);
+
+                        smtpClient.Authenticate(user.Username, user.Password);
+
+                        imapClient.Connect(user.ImapProvider.Host, user.ImapProvider.Port, user.ImapProvider.SecureSocketOptions);
+
+                        imapClient.Authenticate(user.Username, user.Password);
+
+                        smtpClient.Send(message);
+
+                        imapClient.AppendSent(message);
+
+                        smtpClient.Disconnect(true);
+
+
+                        imapClient.Disconnect(true);
+                    }
+                }
+
+                return StatusCode(StatusCodes.Status200OK, "Mensagem enviada com sucesso");
+
+
+            }
+            catch
+            {
+                var user = UserService.GetUser(_httpContextAccessor);
+
+                var result = _cache.SetImapClient(user);
+
+                if (!result.Succeeded)
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized, result.Message);
+                }
+
+                return Send(sendMessage);
             }
         }
 

@@ -11,7 +11,7 @@ namespace webmail_backend.Services
     {
         public static string CookieName => "mailbox.identity";
 
-        public static (string, string) GenerateToken(User user, Provider provider)
+        public static (string, string) GenerateToken(User user, Provider imap, Provider smtp)
         {
             var id = Guid.NewGuid().ToString();
 
@@ -29,9 +29,12 @@ namespace webmail_backend.Services
                     new Claim(Constants.ClaimTypes.Username, user.Username),
                     new Claim(Constants.ClaimTypes.Password, user.Password),
                     new Claim(Constants.ClaimTypes.Service, ((int)user.Service).ToString()),
-                    new Claim(Constants.ClaimTypes.Host, provider.Host.ToString()),
-                    new Claim(Constants.ClaimTypes.Port, provider.Port.ToString()),
-                    new Claim(Constants.ClaimTypes.Security, ((int)provider.SecureSocketOptions).ToString()),
+                    new Claim(Constants.ClaimTypes.ImapHost, imap.Host.ToString()),
+                    new Claim(Constants.ClaimTypes.ImapPort, imap.Port.ToString()),
+                    new Claim(Constants.ClaimTypes.ImapSecurity, ((int)imap.SecureSocketOptions).ToString()),
+                    new Claim(Constants.ClaimTypes.SmtpHost, smtp.Host.ToString()),
+                    new Claim(Constants.ClaimTypes.SmtpPort, smtp.Port.ToString()),
+                    new Claim(Constants.ClaimTypes.SmtpSecurity, ((int)smtp.SecureSocketOptions).ToString()),
 
                     // Adicione outras claims necessárias aqui.
                 }),

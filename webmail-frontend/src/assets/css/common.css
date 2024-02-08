@@ -258,6 +258,7 @@ li.disabled {
 }
 
 .btn-primary {
+  cursor: pointer;
   color: #fff;
   background-color: var(--primary-color);
 }
@@ -681,3 +682,7 @@ body.dark-theme .loading-button:after {
   font-size: 1.3rem;
 }
 /* Modal */
+
+.color-light-color-bg {
+  color: var(--primary-light-color-bg);
+}

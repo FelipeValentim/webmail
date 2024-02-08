@@ -34,3 +34,7 @@
   border-radius: 0.2rem;
   margin: 0;
 }
+
+.form-control:has(.invalid-feedback) .react-tagsinput {
+  border: 2px solid #f26d6d !important;
+}

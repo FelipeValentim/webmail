@@ -4,7 +4,7 @@ import logo from "assets/logo/logo.svg";
 import logomarca from "assets/logo/logomarca.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import Errors from "../../interfaces/Erros";
+import Errors from "../../interfaces/Errors";
 import { AxiosError, AxiosResponse } from "axios";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../redux/user";

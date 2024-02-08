@@ -31,17 +31,17 @@ namespace webmail_backend.Controllers
         {
             try
             {
-                var (provider, serviceType) = Utils.GetProvider(user.Username);
+                var (imap, smtp, serviceType) = Utils.GetProvider(user.Username);
 
                 ImapClient client = new ImapClient();
 
-                client.Connect(provider.Host, provider.Port, provider.SecureSocketOptions);
+                client.Connect(imap.Host, imap.Port, imap.SecureSocketOptions);
 
                 client.AuthenticationMechanisms.Remove("XOAUTH");
 
                 client.Authenticate(user.Username, user.Password);
 
-                var (token, id) = TokenService.GenerateToken(user, provider);
+                var (token, id) = TokenService.GenerateToken(user, imap, smtp);
 
                 var cacheOptions = new MemoryCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromHours(1));

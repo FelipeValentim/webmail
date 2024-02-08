@@ -465,5 +465,17 @@ namespace webmail_backend.Models
             [JsonProperty("type")]
             public string Type { get; set; }
         }
+
+        public class SendMessage
+        {
+            [JsonProperty("toAddresses")]
+            public string[] ToAddresses { get; set; }
+
+            [JsonProperty("subject")]
+            public string Subject { get; set; }
+
+            [JsonProperty("content")]
+            public string Content { get; set; }
+        }
     }
 }
