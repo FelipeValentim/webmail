@@ -35,6 +35,10 @@
   margin: 0;
 }
 
+.dark-theme .react-tagsinput {
+  background-color: #1a1a1a;
+}
+
 .form-control:has(.invalid-feedback) .react-tagsinput {
   border: 2px solid #f26d6d !important;
 }
