@@ -18,6 +18,8 @@ import { AxiosResponse } from "axios";
 import { MessageAPI } from "../services/MessageAPI";
 import { toast } from "react-toastify";
 import RichTextEditor from "./RichTextEditor/RichTextEditor";
+import { TextCortexAPI } from "../services/TextCortexAPI";
+import IAResponse from "../interfaces/IAResponse";
 
 const NewEmail = ({ modal, setModal }) => {
   const [addresses, setAddresses] = React.useState<string[]>([]);
@@ -92,6 +94,11 @@ const NewEmail = ({ modal, setModal }) => {
     }
   };
 
+  const correct = async () => {
+    const { data }: { data: string } = await TextCortexAPI.correct(message);
+    setMessage(data);
+  };
+
   return (
     modal && (
       <div className="modal" onClick={handleClickOutside}>
@@ -147,10 +154,11 @@ const NewEmail = ({ modal, setModal }) => {
                   <label htmlFor="to">Mensagem</label>
 
                   <RichTextEditor data={message} setData={setMessage} />
-                  <div className="ia-options">
+                  <div className="ia-options d-flex justify-content-end gap-1">
                     <Button
                       className="btn-secondary"
                       title="Corrigir"
+                      onClick={correct}
                       component={<FontAwesomeIcon icon={faWandMagicSparkles} />}
                     />
                     <Button
