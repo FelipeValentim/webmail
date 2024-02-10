@@ -6,3 +6,11 @@
   padding: inherit;
   list-style: inherit;
 }
+
+.dark-theme .ck {
+  background-color: #1a1a1a !important;
+}
+
+.dark-theme .ck :is(svg, .ck-button__label) {
+  color: #fff !important;
+}

@@ -172,9 +172,6 @@ label {
   color: #111;
 }
 
-.form-group {
-}
-
 .form-control input {
   padding: 0.8rem;
   border: 2px solid #00000030;
@@ -205,6 +202,10 @@ label {
 .form-control input:focus {
   outline: none;
   border: 2px solid #a06df2aa;
+}
+
+.dark-theme .form-control input {
+  background-color: var(--primary-dark-bg-color);
 }
 
 .input-group {
@@ -669,6 +670,10 @@ body.dark-theme .loading-button:after {
   box-shadow: var(--box-shadow-light);
   border-radius: 0.5rem;
   width: 50%;
+}
+
+.dark-theme .modal-wrapper {
+  background-color: var(--secondary-dark-bg-color);
 }
 
 .modal-header {
