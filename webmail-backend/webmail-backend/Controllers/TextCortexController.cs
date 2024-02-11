@@ -27,10 +27,8 @@ namespace webmail_backend.Controllers
                 using (var client = new HttpClient()) 
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Api.Key);
-                    client.DefaultRequestHeaders.Add("Accept", "application/json");
 
-
-                    var nText = $"Faça apenas a correção ortográfica das palavras incorretas, e mantenha os estilos: {text}";
+                    var nText = $"Faça apenas a correção ortográfica das palavras incorretas, e mantenha os estilos do RichTextEditor: {text}";
 
                     var model = new Codes(nText);
 

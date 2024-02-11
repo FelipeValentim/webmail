@@ -8,6 +8,6 @@ namespace webmail_backend.TextCortex
 {
     public static class Api
     {
-        public static string Key => "gAAAAABlxXAWM13_RVEXN9jMLkiqKoxZngLjR1vlf_vFSGeBsH8Aog_jrsIZYv0wXTJLfJS4VebMmPk3PEdQImvThHKrL99TEdg_X3SM9OAXf3NwSxeThk6l-EGgoA9jh587WfvhyRlt";
+        public static string Key => "gAAAAABlyBclBIYUCdLdctFF5oavj_psqgVP2KIpgWKIKm2fe3kyHyEi5gJ406RT2F9Pm4GG8MQEZtQMNppK_NigBhmBc3vERe0Txes9JsACzprZ7Zh1Fv5quQhdyPSTNsJCImClupLy";
     }
 }

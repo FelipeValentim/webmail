@@ -4,18 +4,22 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "assets/css/RichTextEditor.css";
 
 interface RichTextEditorProps {
+  disabled?: boolean;
   data: string;
   setData: (data: string) => void;
 }
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
+  disabled = false,
   data,
   setData,
+  ...props
 }) => {
   return (
     <>
       <CKEditor
         editor={ClassicEditor}
+        disabled={disabled}
         data={data}
         config={{ placeholder: "Seu texto" }}
         onReady={(editor) => {
@@ -25,6 +29,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         onChange={(_, editor) => {
           setData(editor.getData());
         }}
+        {...props}
       />
     </>
   );

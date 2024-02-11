@@ -488,3 +488,44 @@ ul li.active:before {
 .popup .btn-hover.right:hover svg.right {
   color: var(--primary-color);
 }
+
+.rich-text-editor {
+  position: relative;
+}
+
+.rich-text-editor .accept-refuse {
+  display: flex;
+  gap: 0.5rem;
+  position: absolute;
+  bottom: 0.3rem;
+  right: 0.3rem;
+}
+
+.rich-text-editor .accept-refuse span {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--primary-color);
+  border-radius: 1rem;
+  padding: 0.2rem 0.5rem;
+  color: var(--primary-color);
+  cursor: pointer;
+  gap: 0.2rem;
+  transition: all ease-in-out 0.2s;
+}
+
+.rich-text-editor .accept-refuse span:hover {
+  color: var(--primary-color-darker);
+  border-color: var(--primary-color-darker);
+}
+
+.rich-text-editor .accept-refuse span:last-child svg {
+  font-size: 0.8rem;
+}
+
+.rich-text-editor .loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: auto;
+}
