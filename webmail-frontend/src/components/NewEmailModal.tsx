@@ -63,37 +63,40 @@ const NewEmailModal = ({ modal, setModal }) => {
   };
 
   const sendMessage = async () => {
-    if (validating) return;
+    if (!validating) {
+      if (!subject || addresses.length == 0) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          addresses:
+            addresses.length == 0 ? "Endereço é obrigatório" : undefined,
+          subject: !subject ? "Assunto é obrigatória" : undefined,
+        }));
+      } else {
+        setValidating(true);
 
-    if (!subject || addresses.length == 0) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        addresses: addresses.length == 0 ? "Endereço é obrigatório" : undefined,
-        subject: !subject ? "Assunto é obrigatória" : undefined,
-      }));
-    } else {
-      setValidating(true);
+        try {
+          const user: SendMessage = {
+            toAddresses: addresses,
+            subject: subject,
+            content: message,
+          };
+          const { data }: AxiosResponse = await MessageAPI.send(user);
 
-      try {
-        const user: SendMessage = {
-          toAddresses: addresses,
-          subject: subject,
-          content: message,
-        };
-        const { data }: AxiosResponse = await MessageAPI.send(user);
+          toast.success(data, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
 
-        toast.success(data, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      } finally {
-        setValidating(false);
+          setModal(false);
+        } finally {
+          setValidating(false);
+        }
       }
     }
   };
@@ -105,6 +108,70 @@ const NewEmailModal = ({ modal, setModal }) => {
 
       try {
         const { data }: { data: string } = await TextCortexAPI.correct(message);
+        setPreview(data);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const autocomplete = async () => {
+    if (!loading) {
+      setLoading(true);
+      setTempMessage(message);
+
+      try {
+        const { data }: { data: string } = await TextCortexAPI.autocomplete(
+          message
+        );
+        setPreview(data);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const summarize = async () => {
+    if (!loading) {
+      setLoading(true);
+      setTempMessage(message);
+
+      try {
+        const { data }: { data: string } = await TextCortexAPI.summarize(
+          message
+        );
+        setPreview(data);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const paraphrase = async () => {
+    if (!loading) {
+      setLoading(true);
+      setTempMessage(message);
+
+      try {
+        const { data }: { data: string } = await TextCortexAPI.paraphrase(
+          message
+        );
+        setPreview(data);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const suggestion = async () => {
+    if (!loading) {
+      setLoading(true);
+      setTempMessage(message);
+
+      try {
+        const { data }: { data: string } = await TextCortexAPI.suggestion(
+          message
+        );
         setPreview(data);
       } finally {
         setLoading(false);
@@ -206,21 +273,25 @@ const NewEmailModal = ({ modal, setModal }) => {
                     <Button
                       className="btn-secondary"
                       title="Autocomplementar"
+                      onClick={autocomplete}
                       component={<FontAwesomeIcon icon={faPen} />}
                     />
                     <Button
                       className="btn-secondary"
                       title="Paráfrase"
+                      onClick={paraphrase}
                       component={<FontAwesomeIcon icon={faFileLines} />}
                     />
                     <Button
                       className="btn-secondary"
                       title="Resumir"
+                      onClick={summarize}
                       component={<FontAwesomeIcon icon={faList} />}
                     />
                     <Button
                       className="btn-secondary"
                       title="Sugerir"
+                      onClick={suggestion}
                       component={<FontAwesomeIcon icon={faPenFancy} />}
                     />
                   </div>
@@ -233,14 +304,17 @@ const NewEmailModal = ({ modal, setModal }) => {
             <Button
               icon={false}
               component={
-                <span className="d-flex align-items-center gap-0-5 color-light-color-bg">
-                  Enviar <FontAwesomeIcon icon={faShare} />
-                </span>
+                <>
+                  <span className="d-flex align-items-center gap-0-5 color-light-color-bg">
+                    Enviar <FontAwesomeIcon icon={faShare} />
+                  </span>
+                  {validating && <div className="loading-button"></div>}
+                </>
               }
               title="Enviar"
               onClick={sendMessage}
-              className="btn-primary mt-2"
-            />
+              className="btn-primary mt-2 position-relative"
+            ></Button>
           </div>
         </div>
       </div>
