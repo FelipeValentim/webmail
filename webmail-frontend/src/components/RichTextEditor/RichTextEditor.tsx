@@ -21,7 +21,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         editor={ClassicEditor}
         disabled={disabled}
         data={data}
-        config={{ placeholder: "Seu texto" }}
+        config={{
+          placeholder: "Seu texto",
+          removePlugins: ["EasyImage", "ImageUpload", "MediaEmbed"],
+        }}
         onReady={(editor) => {
           // You can store the "editor" and use when it is needed.
           console.log("Editor is ready to use!", editor);

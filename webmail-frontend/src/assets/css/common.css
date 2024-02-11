@@ -247,6 +247,15 @@ label {
   transition: all 0.2s ease-in-out;
 }
 
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.btn-primary[disabled]:hover {
+  background-color: var(--primary-color);
+}
+
 li.disabled {
   background-color: initial !important;
   color: initial !important;
