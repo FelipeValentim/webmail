@@ -1,16 +1,11 @@
 import React from "react";
-import {
-  faPen,
-  faShare,
-  faX,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import RootState from "../../interfaces/RootState";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setReturning } from "../../redux/pagination";
-import NewEmail from "../../components/NewEmail";
+import NewEmailModal from "../../components/NewEmailModal";
 
 const Sidebar = () => {
   const [modal, setModal] = React.useState(false);
@@ -22,7 +17,7 @@ const Sidebar = () => {
 
   return (
     <React.Fragment>
-      <NewEmail modal={modal} setModal={setModal} />
+      <NewEmailModal modal={modal} setModal={setModal} />
       <nav className="app-sidebar">
         {folders ? (
           <React.Fragment>

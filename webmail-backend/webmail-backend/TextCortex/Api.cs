@@ -8,6 +8,6 @@ namespace webmail_backend.TextCortex
 {
     public static class Api
     {
-        public static string Key => "PLACEHOLDER_TEXTCORTEX_API_KEY_1";
+        public static string Key => "PLACEHOLDER_TEXTCORTEX_API_KEY_2";
     }
 }

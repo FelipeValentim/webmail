@@ -1,5 +1,18 @@
 .ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline {
   height: 250px;
+  border: 2px solid #00000030;
+  box-shadow: none;
+  transition: all 0.2s ease-in-out;
+  border-radius: 0 0 0.2rem 0.2rem;
+}
+.ck.ck-toolbar.ck-toolbar_grouping {
+  border: 2px solid #00000030;
+  border-radius: 0.2rem 0.2rem 0 0 !important;
+}
+
+.ck.ck-content.ck-editor__editable.ck-rounded-corners.ck-editor__editable_inline:focus {
+  outline: none;
+  border: 2px solid #a06df2aa;
 }
 
 .ck :is(ul, li, div, span, li:before) {

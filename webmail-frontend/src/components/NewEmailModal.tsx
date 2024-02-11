@@ -3,6 +3,7 @@ import Button from "../containers/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InputTags } from "../containers/Fields";
 import {
+  faCheck,
   faFileLines,
   faLanguage,
   faList,
@@ -10,6 +11,7 @@ import {
   faPenFancy,
   faShare,
   faWandMagicSparkles,
+  faX,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import Errors from "../interfaces/Errors";
@@ -19,11 +21,13 @@ import { MessageAPI } from "../services/MessageAPI";
 import { toast } from "react-toastify";
 import RichTextEditor from "./RichTextEditor/RichTextEditor";
 import { TextCortexAPI } from "../services/TextCortexAPI";
-import IAResponse from "../interfaces/IAResponse";
 
-const NewEmail = ({ modal, setModal }) => {
+const NewEmailModal = ({ modal, setModal }) => {
   const [addresses, setAddresses] = React.useState<string[]>([]);
   const [message, setMessage] = React.useState("");
+  const [tempMessage, setTempMessage] = React.useState("");
+  const [preview, setPreview] = React.useState<string | null>(null); //Ola, meu nome e Felipe
+  const [loading, setLoading] = React.useState(false);
   const [subject, setSubject] = React.useState("");
   const [validating, setValidating] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<Errors>({
@@ -44,7 +48,7 @@ const NewEmail = ({ modal, setModal }) => {
     if (tags.length > 0) {
       setErrors({ ...errors, addresses: undefined });
     } else {
-      setErrors({ ...errors, addresses: "Senha é obrigatório" });
+      setErrors({ ...errors, addresses: "Destinatário é obrigatório" });
     }
   };
 
@@ -95,8 +99,17 @@ const NewEmail = ({ modal, setModal }) => {
   };
 
   const correct = async () => {
-    const { data }: { data: string } = await TextCortexAPI.correct(message);
-    setMessage(data);
+    if (!loading) {
+      setLoading(true);
+      setTempMessage(message);
+
+      try {
+        const { data }: { data: string } = await TextCortexAPI.correct(message);
+        setPreview(data);
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   return (
@@ -149,11 +162,40 @@ const NewEmail = ({ modal, setModal }) => {
                     </div>
                   )}
                 </div>
-
                 <div className="form-control">
                   <label htmlFor="to">Mensagem</label>
+                  <div className="rich-text-editor">
+                    <RichTextEditor
+                      disabled={preview != null || loading}
+                      data={preview != null ? preview : message}
+                      setData={setMessage}
+                    />
 
-                  <RichTextEditor data={message} setData={setMessage} />
+                    {loading && <div className="loading"></div>}
+                    {preview && (
+                      <div className="accept-refuse">
+                        <span
+                          onClick={() => {
+                            setMessage(preview);
+                            setPreview(null);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faCheck} />
+                          aceitar
+                        </span>
+                        {/* Ola, meu nome e Felipe, muito praser em te conheser. */}
+                        <span
+                          onClick={() => {
+                            setPreview(null);
+                            setMessage(tempMessage);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faX} />
+                          recusar
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   <div className="ia-options d-flex justify-content-end gap-1">
                     <Button
                       className="btn-secondary"
@@ -206,4 +248,4 @@ const NewEmail = ({ modal, setModal }) => {
   );
 };
 
-export default NewEmail;
+export default NewEmailModal;
