@@ -18,7 +18,7 @@ namespace webmail_backend.Helpers
         /// <returns></returns>
         public static ImapClient GetImapClient(this IMemoryCache cache, User user, int hours = 1)
         {
-            if (!cache.TryGetValue<ImapClient>(user.Id, out var imapClient))
+            if (!cache.TryGetValue<ImapClient>(user.Username, out var imapClient))
             {
                 imapClient = new ImapClient();
 
@@ -28,7 +28,7 @@ namespace webmail_backend.Helpers
 
                 var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(hours));
 
-                cache.Set(user.Id, imapClient, cacheOptions);
+                cache.Set(user.Username, imapClient, cacheOptions);
             }
 
             return imapClient;
@@ -51,7 +51,7 @@ namespace webmail_backend.Helpers
 
                 var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(hours));
 
-                cache.Set(user.Id, imapClient, cacheOptions);
+                cache.Set(user.Username, imapClient, cacheOptions);
 
             }
             catch

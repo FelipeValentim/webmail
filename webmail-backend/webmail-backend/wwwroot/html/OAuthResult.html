@@ -1,0 +1,38 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="error-box">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div id="error-box-inner">
+                            <img src="~/img/welcome/email_marketing.svg" style="width: 500px" />
+                        </div><h1>Tudo certo!</h1><p>
+                            O processo de autorização foi um sucesso.
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function sendMessage() {
+        // Obtenha os tokens que deseja compartilhar
+        // Você precisará definir o valor de authResult antes de chamar esta função
+        const authResult = [authResult];
+
+
+        // Envie os tokens para a guia principal
+        window.opener.postMessage({ authResult: authResult }, '*');
+
+        // Verifique se authInfo.Succeeded está definido e é verdadeiro
+        if (authResult && authResult.succeeded) {
+            window.close(); // Fecha a janela
+        }
+    }
+
+    // Aguarde 5 segundos antes de executar o código
+    setTimeout(sendMessage, 5000);
+</script>
