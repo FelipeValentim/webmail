@@ -6,13 +6,16 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Newtonsoft.Json;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Auth.OAuth2.Flows;
+using webmail_backend.Constants;
+using static Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp;
 
 namespace webmail_backend.Models
 {
     public class WebMailModels
     {
-        public class AuthInfo
+        public class AuthResult
         {
+            [JsonProperty("email")]
             public string Email { get; set; }
 
             [JsonProperty("access_token")]
@@ -24,16 +27,19 @@ namespace webmail_backend.Models
             [JsonProperty("expires_in")]
             public int? ExpiresIn { get; set; }
 
+            [JsonProperty("service_type")]
             public int ServiceType { get; set; }
 
+            [JsonProperty("succeeded")]
             public bool Succeeded { get; set; } = true;
 
-            public static AuthInfo Failed => new AuthInfo { Succeeded = false };
+            public static AuthResult Failed => new AuthResult { Succeeded = false };
 
-            public AuthInfo() { }
+            private AuthResult() { }
 
-            public AuthInfo(string accessToken, string refreshToken, int serviceType)
+            public AuthResult(string email, string accessToken, string refreshToken, int serviceType)
             {
+                Email = email;
                 AccessToken = accessToken;
                 RefreshToken = refreshToken;
                 ServiceType = serviceType;
@@ -49,7 +55,7 @@ namespace webmail_backend.Models
 
                     string responseBody = httpResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
-                    AuthInfo token = JsonConvert.DeserializeObject<AuthInfo>(responseBody);
+                    AuthResult token = JsonConvert.DeserializeObject<AuthResult>(responseBody);
                     return token.ExpiresIn == null || token.ExpiresIn <= 0;
                 }
             }
@@ -58,8 +64,8 @@ namespace webmail_backend.Models
             {
                 var clientSecrets = new ClientSecrets
                 {
-                    ClientId = "697415031176-ks0ulk1p7ue0d4mn4d2ekloog88rv6h7.apps.googleusercontent.com",
-                    ClientSecret = "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"
+                    ClientId = OAuth.CLIENTID_GOOGLE,
+                    ClientSecret = OAuth.CLIENTSECRET_GOOGLE
                 };
                 var flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
                 {
@@ -299,19 +305,6 @@ namespace webmail_backend.Models
                 {
                     Connection(client, cancel);
 
-                    if (Email.AuthInfo != null)
-                    {
-                        if (Email.AuthInfo.IsExpired())
-                        {
-                            Email.AuthInfo.RefreshAccessToken(Email.Id);
-                        }
-
-                        AuthenticationOAuth2(client, cancel);
-                    }
-                    else
-                    {
-                        Authentication(client, cancel);
-                    }
 
                 }
                 catch (ImapProtocolException)
@@ -358,10 +351,7 @@ namespace webmail_backend.Models
 
             private void AuthenticationOAuth2(IMailService client, CancellationToken cancel = default)
             {
-                if (!client.IsAuthenticated)
-                {
-                    client.Authenticate(new SaslMechanismOAuth2(Email.Address, Email.AuthInfo.AccessToken), cancel);
-                }
+              
             }
 
             public ConnectionResult Reconnect(IMailService client, CancellationToken cancel = default)
@@ -419,27 +409,15 @@ namespace webmail_backend.Models
                 Password = password;
             }
 
-            public EmailOptions(string name, string address, AuthInfo authInfo)
-            {
-                Name = name;
-                Address = address;
-                AuthInfo = authInfo;
-            }
+     
 
 
-            public EmailOptions(int id, string name, string address, AuthInfo authInfo)
-            {
-                Id = id;
-                Name = name;
-                Address = address;
-                AuthInfo = authInfo;
-            }
+        
 
             public int Id { get; set; }
             public string Name { get; set; }
             public string Address { get; set; }
             public string Password { get; set; }
-            public AuthInfo AuthInfo { get; set; }
         }
 
         public class SendDataMessages

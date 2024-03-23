@@ -12,7 +12,7 @@ import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { UserAPI } from "../../services/UserAPI";
 import User from "../../interfaces/User";
 import { setUser } from "../../helpers/storage";
-import { httpStatus } from "../../constants/default";
+import { ORIGIN_URL, httpStatus } from "../../constants/default";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -47,6 +47,31 @@ const Login = () => {
       setErrors({ ...errors, password: "Senha é obrigatório" });
     }
   };
+
+  React.useEffect(() => {
+    // Ouça a mensagem enviada pela guia secundária
+    const messageListener = (event: MessageEvent) => {
+      console.log(event.origin, ORIGIN_URL);
+      // Certifique-se de verificar a origem da mensagem para garantir a segurança
+      if (event.origin !== ORIGIN_URL) {
+        return;
+      }
+
+      // Verifique se a mensagem contém o token
+      if (event.data.authResult) {
+        // Faça o que quiser com os tokens na guia principal
+        console.log("result", event.data.authResult);
+      }
+    };
+
+    // Adicione o event listener ao montar o componente
+    window.addEventListener("message", messageListener);
+
+    // Remova o event listener ao desmontar o componente
+    return () => {
+      window.removeEventListener("message", messageListener);
+    };
+  }, []);
 
   const logIn = async () => {
     if (loading) return;
@@ -92,6 +117,37 @@ const Login = () => {
           }),
         5000
       );
+    }
+  };
+
+  const authGoogle = async () => {
+    if (!loading) {
+      setLoading(true);
+
+      try {
+        const response: AxiosResponse = await UserAPI.authGoogle();
+
+        if (response.status === httpStatus.ok) {
+          console.log(response);
+          const { data } = response;
+
+          const newWindow = window.open(data, "_blank");
+
+          const checkWindowClosed = setInterval(() => {
+            if (newWindow && newWindow.closed) {
+              setLoading(false);
+              clearInterval(checkWindowClosed);
+            }
+          }, 1000);
+        }
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          setErrors({
+            ...errors,
+            invalidCredentials: error.response?.data,
+          });
+        }
+      }
     }
   };
 
@@ -171,8 +227,9 @@ const Login = () => {
           </button>
 
           <h4 className="mb-2 text-align-center lines-around">OU</h4>
-          <button type="button" className="btn btn-google">
-            <FontAwesomeIcon icon={faGoogle} /> Autenticar com Google
+          <button type="button" className="btn btn-google" onClick={authGoogle}>
+            <FontAwesomeIcon icon={faGoogle} />
+            &nbsp;Autenticar com Google
           </button>
         </form>
       </div>

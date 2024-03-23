@@ -15,7 +15,6 @@ namespace webmail_backend.Services
 
         public static User GetUser(IHttpContextAccessor httpContext)
         {
-            var id = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Id);
             var username = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Username);
             var password = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Password);
             var service = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Service);
@@ -28,7 +27,6 @@ namespace webmail_backend.Services
 
             return new User()
             {
-                Id = id,
                 Username = username,
                 Password = password,
                 Service = (ServiceType)int.Parse(service),

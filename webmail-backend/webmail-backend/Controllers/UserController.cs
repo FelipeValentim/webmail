@@ -41,12 +41,12 @@ namespace webmail_backend.Controllers
 
                 client.Authenticate(user.Username, user.Password);
 
-                var (token, id) = TokenService.GenerateToken(user, imap, smtp);
+                var token = TokenService.GenerateToken(user, imap, smtp);
 
                 var cacheOptions = new MemoryCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromHours(1));
 
-                _cache.Set(id, client, cacheOptions);
+                _cache.Set(user.Username, client, cacheOptions);
 
                 Response.Cookies.Append(TokenService.CookieName, token, new CookieOptions
                 {

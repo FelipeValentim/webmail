@@ -14,6 +14,16 @@ export const UserAPI = {
         : undefined,
     });
   },
+  authGoogle: async function (cancel = false): Promise<AxiosResponse> {
+    return api.request({
+      url: `/oauth/googleauthenticate`,
+      method: "GET",
+      signal: cancel
+        ? cancelApiObject[this.authGoogle.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI
