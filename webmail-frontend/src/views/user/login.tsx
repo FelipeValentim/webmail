@@ -186,6 +186,11 @@ const Login = () => {
         <div className="titles mb-2">
           <h1>Log In</h1>
           <h4>Entre com sua conta do E-mail</h4>
+          <h5>
+            <strong>
+              No momento o Login apenas funciona com contas da Google e Outlook
+            </strong>
+          </h5>
         </div>
 
         <form>
