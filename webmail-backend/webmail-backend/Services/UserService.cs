@@ -17,6 +17,8 @@ namespace webmail_backend.Services
         {
             var username = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Username);
             var password = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Password);
+            var accessToken = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.AccessToken);
+            var refreshToken = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.RefreshToken);
             var service = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.Service);
             var imapHost = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.ImapHost);
             var imapPort = httpContext.HttpContext.User.FindFirstValue(Constants.ClaimTypes.ImapPort);
@@ -29,6 +31,8 @@ namespace webmail_backend.Services
             {
                 Username = username,
                 Password = password,
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
                 Service = (ServiceType)int.Parse(service),
                 ImapProvider = new Provider(imapHost, int.Parse(imapPort), (SecureSocketOptions)int.Parse(imapSecurity)),
                 SmtpProvider = new Provider(smtpHost, int.Parse(smtpPort), (SecureSocketOptions)int.Parse(smtpSecurity))

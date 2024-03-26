@@ -18,16 +18,16 @@ namespace webmail_backend.Models
             [JsonProperty("email")]
             public string Email { get; set; }
 
-            [JsonProperty("access_token")]
+            [JsonProperty("accessToken")]
             public string AccessToken { get; set; }
 
-            [JsonProperty("refresh_token")]
+            [JsonProperty("refreshToken")]
             public string RefreshToken { get; set; }
 
             [JsonProperty("expires_in")]
             public int? ExpiresIn { get; set; }
 
-            [JsonProperty("service_type")]
+            [JsonProperty("serviceType")]
             public int ServiceType { get; set; }
 
             [JsonProperty("succeeded")]
@@ -203,67 +203,10 @@ namespace webmail_backend.Models
             public Provider SmtpProvider { get; set; } // DTO
 
 
-            private void GetServerOptions() // 
-            {
-                Dictionary<int?, ServersOptions> providers = new Dictionary<int?, ServersOptions> {
-                    { 1, new ServersOptions { ImapProvider = new Provider("imap.gmail.com", 993, 1), SmtpProvider = new Provider("smtp.gmail.com", 587, 1) } },
-                    { 2, new ServersOptions { ImapProvider = new Provider("outlook.office365.com", 993, 1), SmtpProvider = new Provider("smtp.office365.com", 587,  3) } } ,
-                    { 3, new ServersOptions { ImapProvider = new Provider("imap.mail.yahoo.com", 993, 1), SmtpProvider = new Provider("smtp.mail.yahoo.com", 587, 1) } },
-                    // adicione outras configurações aqui
-                };
 
-                if (providers.TryGetValue(ProviderId, out ServersOptions options))
-                {
-                    ImapProvider = options.ImapProvider;
-                    SmtpProvider = options.SmtpProvider;
-                }
-            }
-
-            public void SetServerOptions(EmailOptions emailOptions)
-            {
-                if (ProviderId != null)
-                {
-                    GetServerOptions();
-                }
-
-                Imap = new ServerOptions(ImapProvider.Host, ImapProvider.Port, emailOptions, ImapProvider.SecureSocketOptions);
-                Smtp = new ServerOptions(SmtpProvider.Host, SmtpProvider.Port, emailOptions, ImapProvider.SecureSocketOptions);
-            }
         }
 
-        public class Provider // DTO
-        {
-            public string Type { get; set; }
-            public string Host { get; set; }
-            public int SecureSocketOption { get; set; }
-            public SecureSocketOptions SecureSocketOptions => (SecureSocketOptions)SecureSocketOption;
-            public int Port { get; set; }
-
-            public Provider() { }
-
-            public Provider(string host, int port, int secureSocketOption)
-            {
-                Host = host;
-                Port = port;
-                SecureSocketOption = secureSocketOption;
-            }
-
-            public IMailService CreateClient()
-            {
-                if (Type == "imap")
-                {
-                    return new ImapClient();
-                }
-                else if (Type == "smtp")
-                {
-                    return new SmtpClient();
-                }
-
-                throw new ArgumentException("Tipo de provedor de e-mail inválido");
-
-            }
-        }
-
+       
         public class ServerOptions
         {
             public class ConnectionResult

@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import User from "../interfaces/User";
 import api from "./configs/axiosConfig";
 import { defineCancelApiObject } from "./configs/axiosUtils";
+import AuthResult from "../interfaces/AuthResult";
 
 export const UserAPI = {
   login: async function (user: User, cancel = false): Promise<AxiosResponse> {
@@ -20,6 +21,20 @@ export const UserAPI = {
       method: "GET",
       signal: cancel
         ? cancelApiObject[this.authGoogle.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
+  loginOAuth: async function (
+    authResult: AuthResult,
+    cancel = false
+  ): Promise<AxiosResponse> {
+    return api.request({
+      url: `/user/oauthlogin`,
+      method: "POST",
+      data: { ...authResult },
+      signal: cancel
+        ? cancelApiObject[this.loginOAuth.name].handleRequestCancellation()
             .signal
         : undefined,
     });

@@ -13,6 +13,7 @@ import { UserAPI } from "../../services/UserAPI";
 import User from "../../interfaces/User";
 import { setUser } from "../../helpers/storage";
 import { ORIGIN_URL, httpStatus } from "../../constants/default";
+import AuthResult from "../../interfaces/AuthResult";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,17 @@ const Login = () => {
   };
 
   React.useEffect(() => {
+    const oAuthLogin = async (authResult: AuthResult) => {
+      const response: AxiosResponse = await UserAPI.loginOAuth(authResult);
+
+      if (response.status === httpStatus.ok) {
+        setUser(authResult.email);
+        dispatch(loginUser(authResult.email));
+      } else {
+        setErrors({ ...errors, invalidCredentials: response.data });
+      }
+    };
+
     // Ouça a mensagem enviada pela guia secundária
     const messageListener = (event: MessageEvent) => {
       console.log(event.origin, ORIGIN_URL);
@@ -61,6 +73,9 @@ const Login = () => {
       if (event.data.authResult) {
         // Faça o que quiser com os tokens na guia principal
         console.log("result", event.data.authResult);
+        if (event.data.authResult.succeeded) {
+          oAuthLogin(event.data.authResult);
+        }
       }
     };
 

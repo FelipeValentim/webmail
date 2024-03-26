@@ -11,6 +11,9 @@ using webmail_backend.Constants;
 using Google.Apis.PeopleService.v1;
 using Newtonsoft.Json;
 using Google.Apis.Oauth2.v2.Data;
+using System.Text;
+using static Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp;
+using AuthResult = webmail_backend.Models.WebMailModels.AuthResult;
 
 namespace webmail_backend.Controllers
 {
@@ -64,17 +67,18 @@ namespace webmail_backend.Controllers
         [HttpGet("GoogleCallback")]
         public async Task<IActionResult> GoogleCallback(string code, string error)
         {
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/html", "OAuthResult.html");
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/html", "OAuthSuccess.html");
 
             string html = System.IO.File.ReadAllText(filePath);
+            
+            AuthResult authResult;
 
             try
             {
-                AuthResult authResult;
 
                 if (code == null)
                 {
-                    return Content(html, "text/html");
+                    return Content(html, "text/html", Encoding.UTF8);
                 }
 
                 // Defina suas credenciais do cliente do Google
@@ -106,26 +110,28 @@ namespace webmail_backend.Controllers
 
                         authResult = new AuthResult(userData.Email, token.AccessToken, token.RefreshToken, (int)ServiceType.Google);
 
-                        var json = JsonConvert.SerializeObject(authResult);
-
-                        html = html.Replace("[authResult]", json);
+                        html = html.Replace("[authResult]", JsonConvert.SerializeObject(authResult));
                     }
                     else
                     {
-                        return Content(html, "text/html");
+                        authResult = AuthResult.Failed;
+
+                        html = html.Replace("[authResult]", JsonConvert.SerializeObject(authResult));
+
+                        return Content(html, "text/html", Encoding.UTF8);
 
                     }
                 }
 
-                return Content(html, "text/html");
+                return Content(html, "text/html", Encoding.UTF8);
             }
             catch
             {
-                return new ContentResult
-                {
-                    Content = html,
-                    ContentType = "text/html",
-                };
+                authResult = AuthResult.Failed;
+
+                html = html.Replace("[authResult]", JsonConvert.SerializeObject(authResult));
+
+                return Content(html, "text/html", Encoding.UTF8);
             }
         }
 
