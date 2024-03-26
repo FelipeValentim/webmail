@@ -6,6 +6,9 @@ using static webmail_backend.Models.WebMailModels;
 using webmail_backend.Models;
 using Microsoft.Extensions.Caching.Memory;
 using webmail_backend.Constants;
+using Google.Apis.PeopleService.v1.Data;
+using MailKit.Security;
+using static Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp;
 
 namespace webmail_backend.Helpers
 {
@@ -24,7 +27,18 @@ namespace webmail_backend.Helpers
 
                 imapClient.Connect(user.ImapProvider.Host, user.ImapProvider.Port, user.ImapProvider.SecureSocketOptions);
 
-                imapClient.Authenticate(user.Username, user.Password);
+                if (string.IsNullOrEmpty(user.AccessToken))
+                {
+                    imapClient.Authenticate(user.Username, user.Password);
+                }
+                else
+                {
+                    var oauth2 = new SaslMechanismOAuth2(user.Username, user.AccessToken);
+
+                    imapClient.Authenticate(oauth2);
+                }
+
+
 
                 var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(hours));
 
@@ -47,7 +61,16 @@ namespace webmail_backend.Helpers
 
                 imapClient.Connect(user.ImapProvider.Host, user.ImapProvider.Port, user.ImapProvider.SecureSocketOptions);
 
-                imapClient.Authenticate(user.Username, user.Password);
+                if (string.IsNullOrEmpty(user.AccessToken))
+                {
+                    imapClient.Authenticate(user.Username, user.Password);
+                }
+                else
+                {
+                    var oauth2 = new SaslMechanismOAuth2(user.Username, user.AccessToken);
+
+                    imapClient.Authenticate(oauth2);
+                }
 
                 var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(hours));
 

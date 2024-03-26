@@ -9,6 +9,9 @@ namespace webmail_backend.Models
     {
         public string Username { get; set; }
         public string Password { get; set; }
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
+
         public ServiceType Service { get; set; }
         public Provider ImapProvider { get; set; }
         public Provider SmtpProvider { get; set; }
