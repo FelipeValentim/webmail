@@ -63,7 +63,6 @@ const Login = () => {
 
     // Ouça a mensagem enviada pela guia secundária
     const messageListener = (event: MessageEvent) => {
-      console.log(event.origin, ORIGIN_URL);
       // Certifique-se de verificar a origem da mensagem para garantir a segurança
       if (event.origin !== ORIGIN_URL) {
         return;
@@ -75,6 +74,11 @@ const Login = () => {
         console.log("result", event.data.authResult);
         if (event.data.authResult.succeeded) {
           oAuthLogin(event.data.authResult);
+        } else {
+          setErrors({
+            ...errors,
+            invalidCredentials: "Ocorreu algum erro na autenticação",
+          });
         }
       }
     };
@@ -143,7 +147,6 @@ const Login = () => {
         const response: AxiosResponse = await UserAPI.authGoogle();
 
         if (response.status === httpStatus.ok) {
-          console.log(response);
           const { data } = response;
 
           const newWindow = window.open(data, "_blank");
@@ -156,10 +159,11 @@ const Login = () => {
           }, 1000);
         }
       } catch (error) {
+        console.log(error);
         if (error instanceof AxiosError) {
           setErrors({
             ...errors,
-            invalidCredentials: error.response?.data,
+            invalidCredentials: "Ocorreu algum erro na autenticação",
           });
         }
       }

@@ -14,6 +14,7 @@ using Google.Apis.Oauth2.v2.Data;
 using System.Text;
 using static Google.Apis.Auth.OAuth2.Web.AuthorizationCodeWebApp;
 using AuthResult = webmail_backend.Models.WebMailModels.AuthResult;
+using webmail_backend.Helpers;
 
 namespace webmail_backend.Controllers
 {
@@ -67,9 +68,7 @@ namespace webmail_backend.Controllers
         [HttpGet("GoogleCallback")]
         public async Task<IActionResult> GoogleCallback(string code, string error)
         {
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/html", "OAuthSuccess.html");
-
-            string html = System.IO.File.ReadAllText(filePath);
+            string html = string.Empty;
             
             AuthResult authResult;
 
@@ -78,6 +77,12 @@ namespace webmail_backend.Controllers
 
                 if (code == null)
                 {
+                    authResult = AuthResult.Failed;
+
+                    html = Utils.ReadHtmlOAuth(OAuthResult.Failed);
+
+                    html = html.Replace("[authResult]", JsonConvert.SerializeObject(authResult));
+
                     return Content(html, "text/html", Encoding.UTF8);
                 }
 
@@ -97,7 +102,6 @@ namespace webmail_backend.Controllers
 
                 var token = await flow.ExchangeCodeForTokenAsync("user", code, redirectUri, CancellationToken.None);
 
-
                 using (var client = new HttpClient())
                 {
                     var response = await client.GetAsync($"https://www.googleapis.com/oauth2/v1/userinfo?access_token={token.AccessToken}");
@@ -110,11 +114,15 @@ namespace webmail_backend.Controllers
 
                         authResult = new AuthResult(userData.Email, token.AccessToken, token.RefreshToken, (int)ServiceType.Google);
 
+                        html = Utils.ReadHtmlOAuth(OAuthResult.Success);
+
                         html = html.Replace("[authResult]", JsonConvert.SerializeObject(authResult));
                     }
                     else
                     {
                         authResult = AuthResult.Failed;
+
+                        html = Utils.ReadHtmlOAuth(OAuthResult.Failed);
 
                         html = html.Replace("[authResult]", JsonConvert.SerializeObject(authResult));
 
@@ -128,6 +136,8 @@ namespace webmail_backend.Controllers
             catch
             {
                 authResult = AuthResult.Failed;
+
+                html = Utils.ReadHtmlOAuth(OAuthResult.Failed);
 
                 html = html.Replace("[authResult]", JsonConvert.SerializeObject(authResult));
 

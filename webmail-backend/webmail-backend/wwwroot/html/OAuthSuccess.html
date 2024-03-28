@@ -61,10 +61,11 @@
 
 
         // Envie os tokens para a guia principal
-        window.opener.postMessage({ authResult: authResult }, '*');
 
         // Verifique se authInfo.Succeeded está definido e é verdadeiro
         if (authResult && authResult.succeeded) {
+            window.opener.postMessage({ authResult: authResult }, '*');
+
             window.close(); // Fecha a janela
         }
     }
