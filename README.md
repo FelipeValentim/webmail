@@ -1,6 +1,14 @@
-# Projeto de Aplicações Separadas com Frontend em React e Backend em .NET 6
+# Projeto de WebMail com Integração de IA
 
-Este é um projeto que demonstra a arquitetura de uma aplicação web dividida em frontend e backend. O frontend é construído usando React, uma biblioteca JavaScript popular para construção de interfaces de usuário orientado a componentes, enquanto o backend é desenvolvido utilizando o .NET 6 em C#.
+Este é um projeto que demonstra a arquitetura de uma aplicação web dividida em frontend e backend. O frontend é construído usando React, uma biblioteca JavaScript popular para construção de interfaces de usuário orientado a componentes, enquanto o backend é desenvolvido utilizando o .NET 6 em C#. Ele é um projeto de Webmail inovador que integra uma Inteligência Artificial (IA) avançada para fornecer recursos de geração e alteração de texto diretamente na plataforma de e-mail. Combinando a conveniência do e-mail com a potência da IA, oferecemos uma solução completa para comunicação e produtividade.
+
+## Recursos Principais
+
+- **Geração de Texto**: A IA integrada pode gerar texto automaticamente com base em entradas fornecidas pelo usuário. Seja redigindo um e-mail, redação de documentos ou simplesmente brainstorming, a IA está aqui para ajudar.
+
+- **Correção e Aprimoramento de Texto**: Além de gerar texto, a IA pode corrigir e aprimorar o texto existente. Isso inclui verificação ortográfica, sugestões gramaticais e até mesmo melhorias na estrutura e estilo do texto.
+
+- **Alteração de Texto**: A inteligência artificial não só eleva a qualidade do seu texto, mas também possui a habilidade de alterá-lo. Através da função de parafraseamento, é viável reescrever seu conteúdo de forma distinta, preservando o significado original. Tal funcionalidade pode ser valiosa para prevenir plágio, variar o estilo de escrita ou simplificar a linguagem. Outro exemplo é o resumo, na qual a IA é capaz de condensar o seu texto para conter menos palavras.
 
 ## Pré-requisitos
 
