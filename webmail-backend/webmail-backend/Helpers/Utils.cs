@@ -7,9 +7,17 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using webmail_backend.Models;
+using static webmail_backend.TextCortex.TextCortex;
 
 namespace webmail_backend.Helpers
 {
+    public enum OAuthResult
+    {
+        Success,
+        Failed
+    }
+
+
     public static class Utils
     {
         public static string Domain => "http://localhost:50012";
@@ -97,6 +105,14 @@ namespace webmail_backend.Helpers
             }
 
             return SearchQuery.All;
+        }
+
+        public static string ReadHtmlOAuth(OAuthResult result)
+        {
+            string fileName = result == OAuthResult.Success ? "OAuthSuccess.html" : "OAuthFailed.html";
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/html", fileName);
+
+            return File.ReadAllText(filePath);
         }
 
         /// <summary>
