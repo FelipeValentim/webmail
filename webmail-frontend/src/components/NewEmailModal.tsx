@@ -21,6 +21,7 @@ import { MessageAPI } from "../services/MessageAPI";
 import { toast } from "react-toastify";
 import RichTextEditor from "./RichTextEditor/RichTextEditor";
 import { TextCortexAPI } from "../services/TextCortexAPI";
+import Template from "./RichTextEditor/UserTemplates";
 
 const NewEmailModal = ({ modal, setModal }) => {
   const [addresses, setAddresses] = React.useState<string[]>([]);
@@ -35,7 +36,7 @@ const NewEmailModal = ({ modal, setModal }) => {
     subject: undefined,
   });
 
-  const handleClickOutside = (event) => {
+  const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {
     if (
       event.target === event.currentTarget &&
       window.getSelection()?.toString() === ""
@@ -263,6 +264,8 @@ const NewEmailModal = ({ modal, setModal }) => {
                       </div>
                     )}
                   </div>
+                  <Template />
+
                   <div className="ia-options d-flex justify-content-end gap-1">
                     <Button
                       className="btn-secondary"

@@ -6,6 +6,8 @@ export const ORIGIN_URL =
 
 export const mailboxUser = "mailbox_user";
 
+export const mailboxTemplates = "mailbox_templates";
+
 export const themeKey = "mailbox_theme";
 export const defaultTheme = "light-theme";
 
