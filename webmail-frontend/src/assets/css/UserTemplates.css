@@ -1,4 +1,70 @@
+:root {
+  --primary-color: #a06df2;
+  --primary-color-darker: #7b4dc4;
+  --primary-color-lighter: #a06df220;
+  --secondary-color: #acacac;
+  --primary-light-color-bg: #f8f7fc;
+  --hover-light-bg-color: #ccc;
+  --box-shadow-light: 0 1px 15px #00000005, 0 1px 6px #00000020;
+
+  /* Dark-Mode */
+  --primary-dark-bg-color: #1a1a1a;
+  --secondary-dark-bg-color: #333333;
+  --text-dark-color: #fff;
+  --box-shadow-dark: 0 1px 15px #a06df220, 0 1px 6px #a06df240;
+}
+
 .templates {
   display: flex;
   gap: 1rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 0.4rem;
+}
+
+.templates::-webkit-scrollbar {
+  height: 5px;
+}
+
+/* Track */
+.templates::-webkit-scrollbar-track {
+  /* background: #f1f1f1; */
+  background-color: transparent;
+}
+
+/* Handle */
+.templates::-webkit-scrollbar-thumb {
+  background: transparent;
+  transition: all ease-in-out 0.3s;
+  border-radius: 1rem;
+}
+
+.show-scrollbar.templates::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+.templates::-webkit-scrollbar-thumb:hover {
+  /* background: #555; */
+}
+
+.templates li {
+  flex: 0 0 auto;
+  background-color: transparent;
+  padding: 0.3rem 0.6em;
+  border-radius: 0.5rem;
+  border: 1px solid var(--primary-color);
+  cursor: pointer;
+}
+
+.template-list li {
+  margin-top: 1rem;
+  border: 1px solid var(--primary-color);
+  padding: 0.3rem 0.6em;
+  cursor: pointer;
+  border-radius: 0.2rem;
+}
+
+.template-list li:hover {
+  background-color: var(--primary-color);
 }

@@ -1,23 +1,55 @@
-import React from "react";
+import React, { WheelEvent } from "react";
 import { getTemplates } from "../../helpers/storage";
-
-import NewTemplate from "./NewTemplate";
 import "/src/assets/css/UserTemplates.css";
+import NewTemplate from "./NewTemplate";
+import TemplateList from "./TemplateList";
 
-const UserTemplates = () => {
+interface UserTemplatesProps {
+  generateText: (text: string) => void;
+}
+
+const UserTemplates: React.FC<UserTemplatesProps> = ({ generateText }) => {
   const [templates, setTemplates] = React.useState(getTemplates());
-  console.log(templates);
+  const templatesRef = React.useRef<HTMLUListElement>(null);
+  const [isHovered, setIsHovered] = React.useState<boolean>(false);
+
+  const handleWheel = (event: WheelEvent<HTMLUListElement>) => {
+    event.preventDefault();
+    const element = templatesRef?.current;
+
+    if (element) {
+      element.scrollBy({
+        left: event.deltaY < 0 ? -30 : 30,
+      });
+    }
+  };
+
   return (
     <div>
       {templates && (
-        <ul className="templates">
+        <ul
+          ref={templatesRef}
+          className={`templates ${isHovered ? "show-scrollbar" : ""}`}
+          onWheel={handleWheel}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           {templates.map(({ guid, title, text }) => (
-            <li key={guid}>{title}</li>
+            <li key={guid} onClick={() => generateText(text)}>
+              {title}
+            </li>
           ))}
         </ul>
       )}
 
-      <NewTemplate templates={templates} setTemplates={setTemplates} />
+      <div className="d-flex justify-content-space-between">
+        <NewTemplate templates={templates} setTemplates={setTemplates} />
+        <TemplateList
+          templates={templates}
+          setTemplates={setTemplates}
+          generateText={generateText}
+        />
+      </div>
     </div>
   );
 };

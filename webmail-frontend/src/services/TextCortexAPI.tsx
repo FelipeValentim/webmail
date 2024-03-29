@@ -72,6 +72,20 @@ export const TextCortexAPI = {
         : undefined,
     });
   },
+  generateText: async function (
+    text: string,
+    cancel = false
+  ): Promise<AxiosResponse> {
+    return api.request({
+      url: `/textcortex/generatetext`,
+      method: "POST",
+      data: text,
+      signal: cancel
+        ? cancelApiObject[this.generateText.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
 };
 
 // defining the cancel API object for ProductAPI
