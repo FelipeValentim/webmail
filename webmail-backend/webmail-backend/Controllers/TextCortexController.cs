@@ -28,7 +28,7 @@ namespace webmail_backend.Controllers
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Api.Key);
 
-                    var nText = $"Apenas faça correção ortográfica das palavras incorretas, e mantenha os estilos do RichTextEditor: {text}";
+                    var nText = $"Apenas faça correção ortográfica das palavras incorretas, e mantenha os estilos do HTML: {text}";
 
                     var model = new Codes(nText);
 
@@ -73,7 +73,7 @@ namespace webmail_backend.Controllers
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Api.Key);
 
-                    var nText = $"Apenas autocomplete esse texto, e mantenha os estilos do RichTextEditor: {text}";
+                    var nText = $"Apenas autocomplete esse texto, e mantenha os estilos do HTML: {text}";
 
                     var model = new Codes(nText);
 
@@ -118,7 +118,7 @@ namespace webmail_backend.Controllers
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Api.Key);
 
-                    var nText = $"Apenas troque as palavras desse texto sem mudar sem significado (paráfrase), e mantenha os estilos do RichTextEditor: {text}";
+                    var nText = $"Apenas troque as palavras desse texto sem mudar sem significado (paráfrase), e mantenha os estilos do HTML: {text}";
 
                     var model = new Codes(nText);
 
@@ -163,7 +163,7 @@ namespace webmail_backend.Controllers
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Api.Key);
 
-                    var nText = $"Apenas resuma esse texto, e mantenha os estilos do RichTextEditor: {text}";
+                    var nText = $"Apenas resuma esse texto, e mantenha os estilos do HTML: {text}";
 
                     var model = new Codes(nText);
 
@@ -208,7 +208,7 @@ namespace webmail_backend.Controllers
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Api.Key);
 
-                    var nText = $"Adicione ou remova palavras para melhorar esse texto, e mantenha os estilos do RichTextEditor: {text}";
+                    var nText = $"Adicione ou remova palavras para melhorar esse texto, e mantenha os estilos do HTML: {text}";
 
                     var model = new Codes(nText);
 
@@ -253,7 +253,7 @@ namespace webmail_backend.Controllers
                 {
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Api.Key);
 
-                    var nText = $"{text}";
+                    var nText = $"No estilo HTML: {text}";
 
                     var model = new Codes(nText);
 

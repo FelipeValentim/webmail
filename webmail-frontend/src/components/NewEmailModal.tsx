@@ -5,7 +5,6 @@ import { InputTags } from "../containers/Fields";
 import {
   faCheck,
   faFileLines,
-  faLanguage,
   faList,
   faPen,
   faPenFancy,
@@ -180,6 +179,22 @@ const NewEmailModal = ({ modal, setModal }) => {
     }
   };
 
+  const generateText = async (text: string) => {
+    if (!loading) {
+      setLoading(true);
+      setTempMessage(message);
+
+      try {
+        const { data }: { data: string } = await TextCortexAPI.generateText(
+          text
+        );
+        setPreview(data);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   return (
     modal && (
       <div className="modal" onClick={handleClickOutside}>
@@ -264,7 +279,7 @@ const NewEmailModal = ({ modal, setModal }) => {
                       </div>
                     )}
                   </div>
-                  <Template />
+                  <Template generateText={generateText} />
 
                   <div className="ia-options d-flex justify-content-end gap-1">
                     <Button
