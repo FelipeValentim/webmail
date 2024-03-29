@@ -176,12 +176,13 @@ label {
   color: #111;
 }
 
-.form-control input {
+.form-control :is(input, textarea) {
   padding: 0.8rem;
   border: 2px solid #00000030;
   border-radius: 0.2rem;
   transition: all 0.2s ease-in-out;
   font-size: 1rem;
+  font-family: "Trebuchet MS", Courier, monospace;
 }
 
 .form-control label {
@@ -197,18 +198,18 @@ label {
   position: relative;
 }
 
-.form-control input::placeholder {
+.form-control :is(input, textarea)::placeholder {
   color: #acacac;
   font-size: 1rem;
   font-weight: 500;
 }
 
-.form-control input:focus {
+.form-control :is(input, textarea):focus {
   outline: none;
   border: 2px solid #a06df2aa;
 }
 
-.dark-theme .form-control input {
+.dark-theme .form-control :is(input, textarea) {
   background-color: var(--primary-dark-bg-color);
 }
 
@@ -339,7 +340,7 @@ li.disabled {
   border-color: transparent #a06df2 transparent transparent;
 }
 
-.form-control:has(.invalid-feedback) input {
+.form-control:has(.invalid-feedback) :is(input, textarea) {
   border: 2px solid #f26d6d;
 }
 
@@ -670,6 +671,17 @@ body.dark-theme .loading-button:after {
   z-index: 999;
   width: 100%;
   height: 100%;
+}
+
+.modal.nested {
+  background-color: transparent;
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .modal-wrapper {

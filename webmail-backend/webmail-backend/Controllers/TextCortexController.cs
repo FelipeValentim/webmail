@@ -241,5 +241,50 @@ namespace webmail_backend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpPost("GenerateText")]
+        public async Task<IActionResult> GenerateText()
+        {
+            try
+            {
+                var text = HttpContext.Request.Form.Keys.FirstOrDefault();
+
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Api.Key);
+
+                    var nText = $"{text}";
+
+                    var model = new Codes(nText);
+
+                    var payload = JsonConvert.SerializeObject(model);
+
+                    var content = new StringContent(payload, Encoding.Default, "application/json");
+                    content.Headers.ContentType.CharSet = null;
+
+                    HttpResponseMessage response = await client.PostAsync(Urls.Codes, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var json = await response.Content.ReadAsStringAsync();
+
+                        var result = JsonConvert.DeserializeObject<Result>(json);
+
+                        return StatusCode(StatusCodes.Status200OK, result.Data.Outputs.FirstOrDefault().Text);
+                    }
+                    else
+                    {
+                        var json = await response.Content.ReadAsStringAsync();
+
+                        return StatusCode((int)response.StatusCode);
+                    }
+                }
+
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }
