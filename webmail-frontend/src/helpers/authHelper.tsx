@@ -13,15 +13,15 @@ export const ProtectedRoute: FC<RouteProps> = ({ children }) => {
   const user = useSelector((state: RootState) => state.user);
 
   React.useEffect(() => {
-    if (user !== null) {
-      setAuthenticated(true);
-    }
+    setAuthenticated(user !== null);
+
     setLoading(false);
   }, [user]);
 
   if (loading) {
     return <div className="loading"></div>;
   }
+
   return authenticated ? children : <Navigate to="/login" />;
 };
 
@@ -31,9 +31,8 @@ export const UnprotectedRoute: FC<RouteProps> = ({ children }) => {
   const user = useSelector((state: RootState) => state.user);
 
   React.useEffect(() => {
-    if (user !== null) {
-      setAuthenticated(true);
-    }
+    setAuthenticated(user !== null);
+
     setLoading(false);
   }, [user]);
 
