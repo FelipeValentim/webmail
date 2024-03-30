@@ -109,7 +109,7 @@ namespace webmail_backend.Controllers
                 Response.Cookies.Append(TokenService.CookieName, token, new CookieOptions
                 {
                     HttpOnly = true,
-                    Expires = DateTime.UtcNow.AddHours(1),
+                    Expires = DateTime.UtcNow.AddSeconds(30),
                     SameSite = SameSiteMode.None,
                     Secure = true
                 });
