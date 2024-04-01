@@ -119,15 +119,15 @@ namespace webmail_backend.Controllers
             }
             catch (ImapProtocolException)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Usuário ou senha incorreta");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu algum problema na autenticação, tente novamente");
             }
             catch (SmtpProtocolException)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Usuário ou senha incorreta");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu algum problema na autenticação, tente novamente");
             }
             catch (MailKit.Security.AuthenticationException)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Usuário ou senha incorreta");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu algum problema na autenticação, tente novamente");
             }
             catch (System.Net.Sockets.SocketException) //Este Host não é conhecido (válido) / Porta inválida (TimedOut)
             {
@@ -135,7 +135,7 @@ namespace webmail_backend.Controllers
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Usuário ou senha incorreta");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu algum problema na autenticação, tente novamente");
             }
         }
 
