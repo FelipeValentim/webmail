@@ -2,6 +2,14 @@
 
 Este é um projeto que demonstra a arquitetura de uma aplicação web dividida em frontend e backend. O frontend é construído usando React, uma biblioteca JavaScript popular para construção de interfaces de usuário orientado a componentes, enquanto o backend é desenvolvido utilizando o .NET 6 em C#. Ele é um projeto de Webmail inovador que integra uma Inteligência Artificial (IA) avançada para fornecer recursos de geração e alteração de texto diretamente na plataforma de e-mail. Combinando a conveniência do e-mail com a potência da IA, oferecemos uma solução completa para comunicação e produtividade.
 
+## Status - Em Desenvolvimento
+
+### Recursos a serem implementados
+
+- **Responsividade**
+- **Gerenciar pastas (criar, editar, deletar)**
+- **Anexos em leitura e envio de emails**
+
 ## Recursos Principais
 
 - **Geração de Texto**: A IA integrada pode gerar texto automaticamente com base em entradas fornecidas pelo usuário. Seja redigindo um e-mail, redação de documentos ou simplesmente brainstorming, a IA está aqui para ajudar.
