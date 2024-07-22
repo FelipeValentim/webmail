@@ -91,6 +91,30 @@
   background-color: #aa2222;
 }
 
+.user-container .settings {
+  position: relative;
+}
+
+.user-container .settings-button {
+  transition: all 0.2s ease-in-out;
+  padding: 0.8rem;
+  border-radius: 0.5rem;
+}
+
+.user-container .settings-button:hover {
+  background-color: var(--primary-color-darker);
+  color: #fff;
+}
+
+.user-container .settings .settings-provider {
+  position: absolute;
+  background-color: #fff;
+  box-shadow: var(--box-shadow-dark);
+  width: 500px;
+  bottom: 50px;
+  right: 50px;
+}
+
 @media (max-width: 1150px) {
   .user-container .logos img {
     height: 30px;

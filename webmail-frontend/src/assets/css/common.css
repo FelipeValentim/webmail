@@ -180,7 +180,7 @@ label {
   color: #111;
 }
 
-.form-control :is(input, textarea) {
+.form-control :is(input, textarea, select) {
   padding: 0.8rem;
   border: 2px solid #00000030;
   border-radius: 0.2rem;
@@ -202,18 +202,18 @@ label {
   position: relative;
 }
 
-.form-control :is(input, textarea)::placeholder {
+.form-control :is(input, textarea, select)::placeholder {
   color: #acacac;
   font-size: 1rem;
   font-weight: 500;
 }
 
-.form-control :is(input, textarea):focus {
+.form-control :is(input, textarea, select):focus {
   outline: none;
   border: 2px solid #a06df2aa;
 }
 
-.dark-theme .form-control :is(input, textarea) {
+.dark-theme .form-control :is(input, textarea, select) {
   background-color: var(--primary-dark-bg-color);
 }
 
@@ -250,6 +250,7 @@ label {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .btn[disabled] {
@@ -277,7 +278,6 @@ li.disabled {
 }
 
 .btn-primary {
-  cursor: pointer;
   color: #fff;
   background-color: var(--primary-color);
 }
@@ -344,7 +344,7 @@ li.disabled {
   border-color: transparent #a06df2 transparent transparent;
 }
 
-.form-control:has(.invalid-feedback) :is(input, textarea) {
+.form-control:has(.invalid-feedback) :is(input, textarea, select) {
   border: 2px solid #f26d6d;
 }
 
