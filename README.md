@@ -25,6 +25,12 @@ Em Desenvolvimento
 - Node.js e npm instalados para rodar o frontend React.
 - .NET 6 SDK instalado para executar o backend.
 
+## Configuração
+
+1. Rode o comando `dotnet dev-certs https` e `dotnet dev-certs https --trust` para geração de certificado.
+2. Vá em `chrome://flags/` ou similar referente ao seu navegador e ative a opção `Allow invalid certificates for resources loaded from localhost.`
+
+
 ## Configuração do Frontend
 
 1. Navegue até o diretório `webmail-frontend` do projeto.
