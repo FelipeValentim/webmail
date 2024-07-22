@@ -1,9 +1,14 @@
-import React from "react";
+import React, { Provider } from "react";
 import auth from "assets/auth.svg";
 import logo from "assets/logo/logo.svg";
 import logomarca from "assets/logo/logomarca.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faGear,
+  faStream,
+} from "@fortawesome/free-solid-svg-icons";
 import Errors from "../../interfaces/Errors";
 import { AxiosError, AxiosResponse } from "axios";
 import { useDispatch } from "react-redux";
@@ -14,11 +19,52 @@ import User from "../../interfaces/User";
 import { setUser } from "../../helpers/storage";
 import { ORIGIN_URL, httpStatus } from "../../constants/default";
 import AuthResult from "../../interfaces/AuthResult";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import {
+  ConnectionSettings,
+  ProviderSettings,
+} from "../../interfaces/Provider";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+const options = [
+  { value: 0, label: "Nenhum" },
+  { value: 2, label: "SSL/TLS" },
+  { value: 3, label: "SslOnConnect" },
+  { value: 4, label: "StartTls" },
+  { value: 5, label: "StartTlsWhenAvailable" },
+];
+
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
 
 const Login = () => {
   const dispatch = useDispatch();
 
   const [email, setEmail] = React.useState<string>("");
+  const [settings, setSettings] = React.useState<any>({
+    open: false,
+    tab: 0,
+  });
   const [loading, setLoading] = React.useState<boolean>(false);
   const [password, setPassword] = React.useState<string>("");
   const [errors, setErrors] = React.useState<Errors>({
@@ -27,6 +73,19 @@ const Login = () => {
     invalidCredentials: undefined,
   });
   const [passwordHide, setPasswordHide] = React.useState<boolean>(true);
+  const [provider, settProvider] = React.useState<ProviderSettings | null>(
+    null
+  );
+  const [imap, setImap] = React.useState<ConnectionSettings>({
+    host: "",
+    port: undefined,
+    security: 0,
+  });
+  const [smtp, setSmtp] = React.useState<ConnectionSettings>({
+    host: "",
+    port: undefined,
+    security: 0,
+  });
 
   const checkEmail = (value: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -93,49 +152,49 @@ const Login = () => {
   }, []);
 
   const logIn = async () => {
-    if (loading) return;
+    if (!loading) {
+      if (!email || !password) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: !email ? "E-mail é obrigatório" : undefined,
+          password: !password ? "Senha é obrigatória" : undefined,
+        }));
+      } else {
+        setLoading(true);
 
-    if (!email || !password) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        email: !email ? "E-mail é obrigatório" : undefined,
-        password: !password ? "Senha é obrigatória" : undefined,
-      }));
-    } else {
-      setLoading(true);
+        try {
+          const user: User = {
+            username: email,
+            password: password,
+          };
+          const response: AxiosResponse = await UserAPI.login(user);
 
-      try {
-        const user: User = {
-          username: email,
-          password: password,
-        };
-        const response: AxiosResponse = await UserAPI.login(user);
-
-        if (response.status === httpStatus.ok) {
-          setUser(user.username);
-          dispatch(loginUser(user.username));
-        } else {
-          setErrors({ ...errors, invalidCredentials: response.data });
+          if (response.status === httpStatus.ok) {
+            setUser(user.username);
+            dispatch(loginUser(user.username));
+          } else {
+            setErrors({ ...errors, invalidCredentials: response.data });
+          }
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            setErrors({
+              ...errors,
+              invalidCredentials: error.response?.data,
+            });
+          }
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          setErrors({
-            ...errors,
-            invalidCredentials: error.response?.data,
-          });
-        }
-      } finally {
-        setLoading(false);
+
+        setTimeout(
+          () =>
+            setErrors({
+              ...errors,
+              invalidCredentials: undefined,
+            }),
+          5000
+        );
       }
-
-      setTimeout(
-        () =>
-          setErrors({
-            ...errors,
-            invalidCredentials: undefined,
-          }),
-        5000
-      );
     }
   };
 
@@ -241,14 +300,156 @@ const Login = () => {
             </div>
           </div>
 
-          <button
-            type="button"
-            className="btn btn-primary mt-2 mb-2 position-relative"
-            onClick={logIn}
-          >
-            Login
-            {loading && <div className="loading-button"></div>}
-          </button>
+          <div className="d-flex align-items-center  gap-1">
+            <button
+              type="button"
+              className="btn btn-primary mt-2 mb-2 position-relative"
+              onClick={logIn}
+            >
+              Login
+              {loading && <div className="loading-button"></div>}
+            </button>
+            <div className="settings">
+              <div
+                className="settings-button"
+                onClick={() =>
+                  setSettings({ ...settings, open: !settings.open })
+                }
+              >
+                <FontAwesomeIcon icon={faGear} size="xl" />
+              </div>
+              {settings.open && (
+                <div className="settings-provider">
+                  <Box sx={{ width: "100%" }}>
+                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                      <Tabs
+                        value={settings.tab}
+                        onChange={(
+                          event: React.SyntheticEvent,
+                          newValue: number
+                        ) => setSettings({ ...settings, tab: newValue })}
+                        aria-label="basic tabs example"
+                      >
+                        <Tab label="IMAP" />
+                        <Tab label="SMTP" />
+                      </Tabs>
+                    </Box>
+                    <CustomTabPanel value={settings.tab} index={0}>
+                      <h3 className="mb-1">Configuraçao do Servidor IMAP</h3>
+                      <div className="input-group">
+                        <div className="form-control">
+                          <label htmlFor="host">Host</label>
+                          <input
+                            value={imap.host}
+                            onChange={({ target }) =>
+                              setImap({ ...imap, host: target.value })
+                            }
+                            placeholder="Digite o Host"
+                            id="host"
+                            type="host"
+                          ></input>
+                        </div>
+                        <div className="form-control">
+                          <label htmlFor="port">Porta</label>
+                          <input
+                            value={imap.port}
+                            onChange={({ target }) =>
+                              setImap({ ...imap, port: target.value })
+                            }
+                            placeholder="Digite a Porta"
+                            id="port"
+                            type="port"
+                          ></input>
+                        </div>
+                        <div className="form-control">
+                          <label htmlFor="security">Segurança</label>
+                          <select
+                            title="Segurança"
+                            name="security"
+                            onChange={(e) =>
+                              setImap({ ...imap, security: e.target.value })
+                            }
+                            value={imap.security}
+                          >
+                            {options.map((option) => (
+                              <option value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      {!provider?.imap && (
+                        <button type="button" className="btn btn-primary mt-2">
+                          Testar conexão
+                        </button>
+                      )}
+                    </CustomTabPanel>
+                    <CustomTabPanel value={settings.tab} index={1}>
+                      <h3 className="mb-1">Configuraçao do Servidor SMTP</h3>
+                      <div className="input-group">
+                        <div className="form-control">
+                          <label htmlFor="host">Host</label>
+                          <input
+                            value={smtp.host}
+                            onChange={({ target }) =>
+                              setSmtp({ ...smtp, host: target.value })
+                            }
+                            placeholder="Digite o Host"
+                            id="host"
+                            type="host"
+                          ></input>
+                        </div>
+                        <div className="form-control">
+                          <label htmlFor="port">Porta</label>
+                          <input
+                            value={smtp.port}
+                            onChange={({ target }) =>
+                              setSmtp({ ...smtp, port: target.value })
+                            }
+                            placeholder="Digite a Porta"
+                            id="port"
+                            type="port"
+                          ></input>
+                        </div>
+                        <div className="form-control">
+                          <label htmlFor="security">Segurança</label>
+                          <select
+                            title="Segurança"
+                            name="security"
+                            onChange={(e) =>
+                              setSmtp({ ...smtp, security: e.target.value })
+                            }
+                            value={smtp.security}
+                          >
+                            {options.map((option) => (
+                              <option value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      {!provider?.smtp && (
+                        <button type="button" className="btn btn-primary mt-2">
+                          Testar conexão
+                        </button>
+                      )}
+                    </CustomTabPanel>
+                    <Box sx={{ p: 3 }}>
+                      <div className="d-flex align-items-center gap-1">
+                        {provider?.imap && provider?.smtp && (
+                          <button type="button" className="btn btn-error">
+                            Remover
+                          </button>
+                        )}
+                      </div>
+                    </Box>
+                  </Box>
+                </div>
+              )}
+            </div>
+          </div>
 
           <h4 className="mb-2 text-align-center lines-around">OU</h4>
           <button type="button" className="btn btn-google" onClick={authGoogle}>

@@ -36,7 +36,8 @@ namespace webmail_backend.Controllers
                 var (imap, smtp, serviceType) = Utils.GetProvider(user.Username);
 
                 ImapClient client = new ImapClient();
-
+                imap = new Provider("imap.uerj.br" , 993, SecureSocketOptions.Auto);
+                smtp = new Provider("smtp.uerj.br",465, SecureSocketOptions.Auto);
                 client.Connect(imap.Host, imap.Port, imap.SecureSocketOptions);
 
                 client.AuthenticationMechanisms.Remove("XOAUTH");
