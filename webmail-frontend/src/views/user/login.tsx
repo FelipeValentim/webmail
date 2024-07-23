@@ -3,12 +3,7 @@ import auth from "assets/auth.svg";
 import logo from "assets/logo/logo.svg";
 import logomarca from "assets/logo/logomarca.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEye,
-  faEyeSlash,
-  faGear,
-  faStream,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faGear } from "@fortawesome/free-solid-svg-icons";
 import Errors from "../../interfaces/Errors";
 import { AxiosError, AxiosResponse } from "axios";
 import { useDispatch } from "react-redux";
@@ -35,10 +30,10 @@ interface TabPanelProps {
 
 const options = [
   { value: 0, label: "Nenhum" },
-  { value: 2, label: "SSL/TLS" },
-  { value: 3, label: "SslOnConnect" },
-  { value: 4, label: "StartTls" },
-  { value: 5, label: "StartTlsWhenAvailable" },
+  { value: 1, label: "SSL/TLS" },
+  { value: 2, label: "SslOnConnect" },
+  { value: 3, label: "StartTls" },
+  { value: 4, label: "StartTlsWhenAvailable" },
 ];
 
 function CustomTabPanel(props: TabPanelProps) {
@@ -73,19 +68,33 @@ const Login = () => {
     invalidCredentials: undefined,
   });
   const [passwordHide, setPasswordHide] = React.useState<boolean>(true);
-  const [provider, settProvider] = React.useState<ProviderSettings | null>(
-    null
-  );
+  const [provider, setProvider] = React.useState<ProviderSettings | null>(null);
   const [imap, setImap] = React.useState<ConnectionSettings>({
     host: "",
     port: undefined,
-    security: 0,
+    secureSocketOptions: 0,
+    type: "IMAP",
   });
   const [smtp, setSmtp] = React.useState<ConnectionSettings>({
     host: "",
     port: undefined,
-    security: 0,
+    secureSocketOptions: 0,
+    type: "SMTP",
   });
+
+  const testConnection = async (protocol: ConnectionSettings, name: string) => {
+    try {
+      if (!loading) {
+        setLoading(true);
+
+        await UserAPI.testConnection(protocol);
+
+        setProvider({ ...provider, [name]: imap });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const checkEmail = (value: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -130,7 +139,6 @@ const Login = () => {
       // Verifique se a mensagem contém o token
       if (event.data.authResult) {
         // Faça o que quiser com os tokens na guia principal
-        console.log("result", event.data.authResult);
         if (event.data.authResult.succeeded) {
           oAuthLogin(event.data.authResult);
         } else {
@@ -166,7 +174,11 @@ const Login = () => {
           const user: User = {
             username: email,
             password: password,
+            serviceType: 3,
+            imapProvider: imap,
+            smtpProvider: smtp,
           };
+
           const response: AxiosResponse = await UserAPI.login(user);
 
           if (response.status === httpStatus.ok) {
@@ -218,7 +230,6 @@ const Login = () => {
           }, 1000);
         }
       } catch (error) {
-        console.log(error);
         if (error instanceof AxiosError) {
           setErrors({
             ...errors,
@@ -354,7 +365,7 @@ const Login = () => {
                           <input
                             value={imap.port}
                             onChange={({ target }) =>
-                              setImap({ ...imap, port: target.value })
+                              setImap({ ...imap, port: Number(target.value) })
                             }
                             placeholder="Digite a Porta"
                             id="port"
@@ -362,14 +373,17 @@ const Login = () => {
                           ></input>
                         </div>
                         <div className="form-control">
-                          <label htmlFor="security">Segurança</label>
+                          <label htmlFor="secureSocketOptions">Segurança</label>
                           <select
                             title="Segurança"
-                            name="security"
+                            name="secureSocketOptions"
                             onChange={(e) =>
-                              setImap({ ...imap, security: e.target.value })
+                              setImap({
+                                ...imap,
+                                secureSocketOptions: Number(e.target.value),
+                              })
                             }
-                            value={imap.security}
+                            value={imap.secureSocketOptions}
                           >
                             {options.map((option) => (
                               <option value={option.value}>
@@ -380,8 +394,13 @@ const Login = () => {
                         </div>
                       </div>
                       {!provider?.imap && (
-                        <button type="button" className="btn btn-primary mt-2">
+                        <button
+                          type="button"
+                          onClick={() => testConnection(imap, "imap")}
+                          className="btn btn-primary mt-2 position-relative"
+                        >
                           Testar conexão
+                          {loading && <div className="loading-button"></div>}
                         </button>
                       )}
                     </CustomTabPanel>
@@ -405,7 +424,7 @@ const Login = () => {
                           <input
                             value={smtp.port}
                             onChange={({ target }) =>
-                              setSmtp({ ...smtp, port: target.value })
+                              setSmtp({ ...smtp, port: Number(target.value) })
                             }
                             placeholder="Digite a Porta"
                             id="port"
@@ -413,14 +432,17 @@ const Login = () => {
                           ></input>
                         </div>
                         <div className="form-control">
-                          <label htmlFor="security">Segurança</label>
+                          <label htmlFor="secureSocketOptions">Segurança</label>
                           <select
                             title="Segurança"
-                            name="security"
-                            onChange={(e) =>
-                              setSmtp({ ...smtp, security: e.target.value })
+                            name="secureSocketOptions"
+                            onChange={({ target }) =>
+                              setSmtp({
+                                ...smtp,
+                                secureSocketOptions: Number(target.value),
+                              })
                             }
-                            value={smtp.security}
+                            value={smtp.secureSocketOptions}
                           >
                             {options.map((option) => (
                               <option value={option.value}>
@@ -431,8 +453,13 @@ const Login = () => {
                         </div>
                       </div>
                       {!provider?.smtp && (
-                        <button type="button" className="btn btn-primary mt-2">
+                        <button
+                          onClick={() => testConnection(smtp, "smtp")}
+                          type="button"
+                          className="btn btn-primary mt-2 position-relative"
+                        >
                           Testar conexão
+                          {loading && <div className="loading-button"></div>}
                         </button>
                       )}
                     </CustomTabPanel>

@@ -6,7 +6,8 @@ export interface Settings {
 export interface ConnectionSettings {
   host: string;
   port?: number;
-  security: number;
+  secureSocketOptions: number;
+  type?: string;
 }
 
 export interface ProviderSettings {

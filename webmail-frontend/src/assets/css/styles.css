@@ -1,19 +1,3 @@
-:root {
-  --primary-color: #a06df2;
-  --primary-color-darker: #7b4dc4;
-  --primary-color-lighter: #a06df220;
-  --secondary-color: #acacac;
-  --primary-light-color-bg: #f8f7fc;
-  --hover-light-bg-color: #ccc;
-  --box-shadow-light: 0 1px 15px #00000005, 0 1px 6px #00000020;
-
-  /* Dark-Mode */
-  --primary-dark-bg-color: #1a1a1a;
-  --secondary-dark-bg-color: #333333;
-  --text-dark-color: #fff;
-  --box-shadow-dark: 0 1px 15px #a06df220, 0 1px 6px #a06df240;
-}
-
 .user-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -111,7 +95,8 @@
   background-color: #fff;
   box-shadow: var(--box-shadow-dark);
   width: 500px;
-  bottom: 50px;
+  top: 50%;
+  transform: translateY(-50%);
   right: 50px;
 }
 
@@ -553,3 +538,13 @@ ul li.active:before {
   transform: translate(-50%, -50%);
   height: auto;
 }
+
+/* LIBS */
+#root .css-1h9z7r5-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: var(--primary-color);
+}
+
+#root .css-1aquho2-MuiTabs-indicator {
+  background-color: var(--primary-color);
+}
+/* LIBS */
