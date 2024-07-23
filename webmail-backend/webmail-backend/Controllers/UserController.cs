@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Org.BouncyCastle.Crypto;
 using System.Net;
 using System.Security.Authentication;
+using webmail_backend.Factory.Abstract;
+using webmail_backend.Factory.ConcreteFactory;
 using webmail_backend.Helpers;
 using webmail_backend.Models;
 using webmail_backend.Services;
@@ -34,10 +37,16 @@ namespace webmail_backend.Controllers
             try
             {
                 var (imap, smtp, serviceType) = Utils.GetProvider(user.Username);
+                //valentim.felipe @graduacao.uerj.br
+                if (serviceType == ServiceType.Unknown)
+                {
+                    imap = user.ImapProvider;
+                    smtp = user.SmtpProvider;
+                }
 
                 ImapClient client = new ImapClient();
-                imap = new Provider("imap.uerj.br" , 993, SecureSocketOptions.Auto);
-                smtp = new Provider("smtp.uerj.br",465, SecureSocketOptions.Auto);
+                //imap = new Provider("imap.uerj.br" , 993, SecureSocketOptions.Auto);
+                //smtp = new Provider("smtp.uerj.br",465, SecureSocketOptions.Auto);
                 client.Connect(imap.Host, imap.Port, imap.SecureSocketOptions);
 
                 client.AuthenticationMechanisms.Remove("XOAUTH");
@@ -154,6 +163,27 @@ namespace webmail_backend.Controllers
             }
 
             return new StatusCodeResult(StatusCodes.Status200OK);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("TestConnection")]
+        public IActionResult TestConnection(Provider provider)
+        {
+            try
+            {
+                IWebmailProtocolFactory factory = new WebmailProtocolFactory();
+
+                var protocol =  factory.CreateWebmailProtocol(provider.Type);
+               
+                protocol.Connect(provider.Host, provider.Port, provider.SecureSocketOptions);
+                
+                return StatusCode(StatusCodes.Status200OK);
+
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu algum problema ao tentar se conectar ao servidor");
+            }
         }
     }
 }

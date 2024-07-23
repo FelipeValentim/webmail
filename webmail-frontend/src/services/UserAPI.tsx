@@ -3,6 +3,7 @@ import User from "../interfaces/User";
 import api from "./configs/axiosConfig";
 import { defineCancelApiObject } from "./configs/axiosUtils";
 import AuthResult from "../interfaces/AuthResult";
+import { ConnectionSettings } from "../interfaces/Provider";
 
 export const UserAPI = {
   login: async function (user: User, cancel = false): Promise<AxiosResponse> {
@@ -35,6 +36,20 @@ export const UserAPI = {
       data: { ...authResult },
       signal: cancel
         ? cancelApiObject[this.loginOAuth.name].handleRequestCancellation()
+            .signal
+        : undefined,
+    });
+  },
+  testConnection: async function (
+    provider: ConnectionSettings,
+    cancel = false
+  ): Promise<AxiosResponse> {
+    return api.request({
+      url: `/User/TestConnection`,
+      method: "POST",
+      data: provider,
+      signal: cancel
+        ? cancelApiObject[this.testConnection.name].handleRequestCancellation()
             .signal
         : undefined,
     });
