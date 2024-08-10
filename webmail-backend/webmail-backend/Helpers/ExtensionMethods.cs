@@ -25,6 +25,8 @@ namespace webmail_backend.Helpers
             {
                 imapClient = new ImapClient();
 
+                imapClient.Timeout = 8000;
+
                 imapClient.Connect(user.ImapProvider.Host, user.ImapProvider.Port, user.ImapProvider.SecureSocketOptions);
 
                 if (string.IsNullOrEmpty(user.AccessToken))
@@ -58,6 +60,8 @@ namespace webmail_backend.Helpers
             try
             {
                 var imapClient = new ImapClient();
+
+                imapClient.Timeout = 8000;
 
                 imapClient.Connect(user.ImapProvider.Host, user.ImapProvider.Port, user.ImapProvider.SecureSocketOptions);
 

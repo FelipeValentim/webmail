@@ -286,5 +286,48 @@ namespace webmail_backend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpPost("Summary")]
+        public async Task<IActionResult> Summary(Codes codes)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Api.Key);
+
+                    var nText = $"Faça um HTML com dois tópicos, o primeiro dizendo sobre o que se trata esse email e o segundo com um resumo desse mesmo email: {codes.Text}";
+
+                    var model = new Codes(nText);
+
+                    var payload = JsonConvert.SerializeObject(model);
+
+                    var content = new StringContent(payload, Encoding.Default, "application/json");
+                    content.Headers.ContentType.CharSet = null;
+
+                    HttpResponseMessage response = await client.PostAsync(Urls.Codes, content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var json = await response.Content.ReadAsStringAsync();
+
+                        var data = JsonConvert.DeserializeObject<Result>(json);
+
+                        return StatusCode(StatusCodes.Status200OK, data.Data.Outputs.FirstOrDefault().Text);
+                    }
+                    else
+                    {
+                        var json = await response.Content.ReadAsStringAsync();
+
+                        return StatusCode(StatusCodes.Status400BadRequest);
+                    }
+                }
+
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

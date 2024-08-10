@@ -36,6 +36,27 @@ export const addTemplate = (template: Template) => {
   }
 };
 
+export const removeTemplate = (guid: string) => {
+  if (guid !== null) {
+    const templates = getTemplates();
+    const newTemplates = templates.filter((x) => x.guid !== guid);
+    localStorage.setItem(mailboxTemplates, JSON.stringify(newTemplates));
+  }
+};
+
+export const toggleFavorite = (guid: string) => {
+  if (guid !== null) {
+    const templates = getTemplates();
+    const newTemplates = templates.map((template) =>
+      template.guid == guid
+        ? { ...template, favorite: !template.favorite }
+        : template
+    );
+
+    localStorage.setItem(mailboxTemplates, JSON.stringify(newTemplates));
+  }
+};
+
 export const cleanTemplates = () => {
   localStorage.removeItem(mailboxTemplates);
 };

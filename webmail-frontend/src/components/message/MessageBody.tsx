@@ -2,16 +2,17 @@ import React from "react";
 
 interface MessageBodyProps {
   content: string;
+  summary?: string | null;
 }
 
-const MessageBody: React.FC<MessageBodyProps> = ({ content }) => {
+const MessageBody: React.FC<MessageBodyProps> = ({ content, summary }) => {
   return (
     <div className="message-body">
       <iframe
         className="w-100 h-100"
         style={{ border: "none" }}
         title="message"
-        srcDoc={content}
+        srcDoc={summary ?? content}
       ></iframe>
     </div>
   );

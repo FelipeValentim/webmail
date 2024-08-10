@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import api from "./configs/axiosConfig";
 import { defineCancelApiObject } from "./configs/axiosUtils";
+import Codes from "../interfaces/Codes";
 
 export const TextCortexAPI = {
   correct: async function (
@@ -27,6 +28,19 @@ export const TextCortexAPI = {
       signal: cancel
         ? cancelApiObject[this.summarize.name].handleRequestCancellation()
             .signal
+        : undefined,
+    });
+  },
+  summary: async function (
+    codes: Codes,
+    cancel = false
+  ): Promise<AxiosResponse> {
+    return api.request({
+      url: `/textcortex/summary`,
+      method: "POST",
+      data: codes,
+      signal: cancel
+        ? cancelApiObject[this.summary.name].handleRequestCancellation().signal
         : undefined,
     });
   },

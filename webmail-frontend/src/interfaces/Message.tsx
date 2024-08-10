@@ -4,6 +4,7 @@ import UniqueId from "./UniqueId";
 
 interface Message {
   uniqueId: UniqueId;
+  summary?: string;
   content: string;
   subject: string;
   date: string;

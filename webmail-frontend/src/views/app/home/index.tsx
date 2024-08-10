@@ -1,7 +1,11 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import RootState from "../../../interfaces/RootState";
-import { setMessages, toggleFlag } from "../../../redux/dataMessages";
+import {
+  setMessages,
+  setSeenMessages,
+  toggleFlag,
+} from "../../../redux/dataMessages";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as starRegular } from "@fortawesome/free-regular-svg-icons";
 import { faStar as starSolid } from "@fortawesome/free-solid-svg-icons";
@@ -149,54 +153,61 @@ const Index = () => {
               toAddresses,
               uniqueId,
             }) => (
-              <Link
-                key={uniqueId.id}
-                to={`/${encodeURIComponent(
-                  selectedFolder.path.toLowerCase()
-                )}/${uniqueId.id}`}
-              >
-                <li className={seen ? "read" : ""}>
-                  <input
-                    title="Selecionar"
-                    className="select"
-                    type="checkbox"
-                    onChange={() =>
-                      onSelectedMessage({ id: uniqueId.id, flagged, seen })
-                    }
-                    checked={selectedMessages.some((x) => x.id == uniqueId.id)}
-                    onClick={(event) => event.stopPropagation()}
-                  ></input>
-                  {flagged ? (
-                    <FontAwesomeIcon
-                      className="flag flagged"
-                      icon={starSolid}
-                      onClick={(e) =>
-                        handleToggleFlagged(e, uniqueId.id, "unflagged")
-                      }
-                    />
-                  ) : (
-                    <FontAwesomeIcon
-                      className="flag"
-                      icon={starRegular}
-                      onClick={(e) =>
-                        handleToggleFlagged(e, uniqueId.id, "flagged")
-                      }
-                    />
-                  )}
+              <li
+                onClick={() => {
+                  dispatch(
+                    setSeenMessages({ ids: [uniqueId.id], type: "seen" })
+                  );
 
-                  <span className="addresses">
-                    {toAddresses.map(({ name, address }, index) => (
-                      <span key={index}>
-                        {name ? name : address}
-                        {index != toAddresses.length - 1 ? ", " : ""}
-                      </span>
-                    ))}
-                  </span>
-                  <span className="subject">{subject}</span>
-                  <span className="content">{content}</span>
-                  <span className="time">{date}</span>
-                </li>
-              </Link>
+                  navigate(
+                    `/${encodeURIComponent(
+                      selectedFolder.path.toLowerCase()
+                    )}/${uniqueId.id}`
+                  );
+                }}
+                key={uniqueId.id}
+                className={seen ? "read" : ""}
+              >
+                <input
+                  title="Selecionar"
+                  className="select"
+                  type="checkbox"
+                  onChange={() =>
+                    onSelectedMessage({ id: uniqueId.id, flagged, seen })
+                  }
+                  checked={selectedMessages.some((x) => x.id == uniqueId.id)}
+                  onClick={(event) => event.stopPropagation()}
+                ></input>
+                {flagged ? (
+                  <FontAwesomeIcon
+                    className="flag flagged"
+                    icon={starSolid}
+                    onClick={(e) =>
+                      handleToggleFlagged(e, uniqueId.id, "unflagged")
+                    }
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    className="flag"
+                    icon={starRegular}
+                    onClick={(e) =>
+                      handleToggleFlagged(e, uniqueId.id, "flagged")
+                    }
+                  />
+                )}
+
+                <span className="addresses">
+                  {toAddresses.map(({ name, address }, index) => (
+                    <span key={index}>
+                      {name ? name : address}
+                      {index != toAddresses.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
+                </span>
+                <span className="subject">{subject}</span>
+                <span className="content">{content}</span>
+                <span className="time">{date}</span>
+              </li>
             )
           )
         ) : (

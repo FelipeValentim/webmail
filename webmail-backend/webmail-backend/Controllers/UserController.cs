@@ -45,6 +45,8 @@ namespace webmail_backend.Controllers
                 }
 
                 ImapClient client = new ImapClient();
+
+                client.Timeout = 8000;
                 //imap = new Provider("imap.uerj.br" , 993, SecureSocketOptions.Auto);
                 //smtp = new Provider("smtp.uerj.br",465, SecureSocketOptions.Auto);
                 client.Connect(imap.Host, imap.Port, imap.SecureSocketOptions);
@@ -55,7 +57,7 @@ namespace webmail_backend.Controllers
 
                 var token = TokenService.GenerateToken(user, imap, smtp);
 
-                var cacheOptions = new MemoryCacheEntryOptions()
+                    var cacheOptions = new MemoryCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromHours(1));
 
                 _cache.Set(user.Username, client, cacheOptions);
@@ -176,6 +178,8 @@ namespace webmail_backend.Controllers
                 var protocol =  factory.CreateWebmailProtocol(provider.Type);
                
                 protocol.Connect(provider.Host, provider.Port, provider.SecureSocketOptions);
+
+                protocol.Disconnect();
                 
                 return StatusCode(StatusCodes.Status200OK);
 
