@@ -20,7 +20,7 @@ import { MessageAPI } from "../services/MessageAPI";
 import { toast } from "react-toastify";
 import RichTextEditor from "./RichTextEditor/RichTextEditor";
 import { TextCortexAPI } from "../services/TextCortexAPI";
-import Template from "./RichTextEditor/UserTemplates";
+import UserTemplates from "./RichTextEditor/UserTemplates";
 
 const NewEmailModal = ({ modal, setModal }) => {
   const [addresses, setAddresses] = React.useState<string[]>([]);
@@ -279,7 +279,7 @@ const NewEmailModal = ({ modal, setModal }) => {
                       </div>
                     )}
                   </div>
-                  <Template generateText={generateText} />
+                  <UserTemplates generateText={generateText} />
 
                   <div className="ia-options d-flex justify-content-end gap-1">
                     <Button

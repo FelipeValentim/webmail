@@ -20,6 +20,7 @@ type MessageParams = {
 const Index = () => {
   const [loading, setLoading] = React.useState(false);
   const [message, setMessage] = React.useState<Message | null>(null);
+  const [summary, setSummary] = React.useState<string | null>(null);
   const [validating, setValidating] = React.useState(false);
   const dispatch = useDispatch();
 
@@ -79,7 +80,13 @@ const Index = () => {
   return (
     <Suspense fallback={<div className="loading" />}>
       <div className="main-content">
-        <MessageHeader />
+        <MessageHeader
+          content={message?.content}
+          summary={message?.summary}
+          isSummarized={summary ? true : false}
+          setSummary={setSummary}
+          setMessage={setMessage}
+        />
         {message ? (
           <div className="message">
             <MessageSubject subject={message.subject} />
@@ -95,7 +102,7 @@ const Index = () => {
               flagged={message.flagged}
               flaggedMessage={flaggedMessages}
             />
-            <MessageBody content={message.content} />
+            <MessageBody content={message.content} summary={summary} />
           </div>
         ) : (
           <div className="loading" />

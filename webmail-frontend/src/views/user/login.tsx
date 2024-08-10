@@ -479,9 +479,13 @@ const Login = () => {
           </div>
 
           <h4 className="mb-2 text-align-center lines-around">OU</h4>
-          <button type="button" className="btn btn-google" onClick={authGoogle}>
+          <button
+            type="button"
+            className="btn btn-google d-flex align-items-center gap-0-5"
+            onClick={authGoogle}
+          >
             <FontAwesomeIcon icon={faGoogle} />
-            &nbsp;Autenticar com Google
+            <span className="color-white">Autenticar com Google</span>
           </button>
         </form>
       </div>

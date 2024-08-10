@@ -41,14 +41,30 @@
   cursor: pointer;
 }
 
+.template-list {
+  max-height: 400px;
+  overflow: auto;
+  padding: 0 1rem;
+  width: 100%;
+}
+
 .template-list li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   margin-top: 1rem;
-  border: 1px solid var(--primary-color);
+}
+
+.template-list li .title {
   padding: 0.3rem 0.6em;
   cursor: pointer;
   border-radius: 0.2rem;
+  background-color: var(--primary-color);
+  color: #fff;
+  flex: 1;
+  transition: all ease-in-out 0.3s;
 }
 
-.template-list li:hover {
-  background-color: var(--primary-color);
+.template-list li .title:hover {
+  background-color: var(--primary-color-darker);
 }

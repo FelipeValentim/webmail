@@ -34,11 +34,13 @@ const UserTemplates: React.FC<UserTemplatesProps> = ({ generateText }) => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {templates.map(({ guid, title, text }) => (
-            <li key={guid} onClick={() => generateText(text)}>
-              {title}
-            </li>
-          ))}
+          {templates
+            .filter((x) => x.favorite)
+            .map(({ guid, title, text }) => (
+              <li key={guid} onClick={() => generateText(text)}>
+                {title}
+              </li>
+            ))}
         </ul>
       )}
 

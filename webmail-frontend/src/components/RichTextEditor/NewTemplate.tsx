@@ -17,7 +17,12 @@ const NewTemplate: React.FC<NewTemplateProps> = ({
   templates,
   setTemplates,
 }) => {
-  const defaultTemplate: Template = { guid: uuidv4(), title: "", text: "" };
+  const defaultTemplate: Template = {
+    guid: uuidv4(),
+    title: "",
+    text: "",
+    favorite: false,
+  };
 
   const [modal, setModal] = React.useState(false);
   const [template, setTemplate] = React.useState<Template>({

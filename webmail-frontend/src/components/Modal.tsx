@@ -5,6 +5,7 @@ interface ModalProps {
   toggleModal: () => void;
   modal: boolean;
   nested?: boolean;
+  classWrapper: string;
 }
 
 interface ModalGenericProps {
@@ -16,6 +17,7 @@ const Modal: React.FC<ModalProps> = ({
   toggleModal,
   modal,
   nested = false,
+  classWrapper = "",
 }) => {
   const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {
     if (
@@ -32,7 +34,13 @@ const Modal: React.FC<ModalProps> = ({
         className={nested ? "modal nested" : "modal"}
         onClick={handleClickOutside}
       >
-        <div className="modal-wrapper">{children}</div>
+        <div
+          className={
+            classWrapper ? `modal-wrapper ${classWrapper}` : "modal-wrapper"
+          }
+        >
+          {children}
+        </div>
       </div>
     )
   );
