@@ -26,3 +26,11 @@ devcert.pfx
 # Node.js / npm
 node_modules/
 package-lock.json
+
+# Environment variables and secrets
+.env
+.env.*
+*.env
+!.env.example
+appsettings.local.json
+appsettings.*.local.json

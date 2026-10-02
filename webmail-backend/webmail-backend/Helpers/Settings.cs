@@ -1,9 +1,9 @@
-﻿using Org.BouncyCastle.Bcpg;
+using Org.BouncyCastle.Bcpg;
 
 namespace webmail_backend.Helpers
 {
     public class Settings
     {
-        public static string SecretKey => "PLACEHOLDER_JWT_SECRET_KEY_MIN_32_CHARS=";
+        public static string SecretKey => Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? "PLACEHOLDER_JWT_SECRET_KEY_MIN_32_CHARS=";
     }
 }

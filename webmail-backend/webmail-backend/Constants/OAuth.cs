@@ -1,9 +1,8 @@
-﻿namespace webmail_backend.Constants
+namespace webmail_backend.Constants
 {
     public class OAuth
     {
-        public const string CLIENTID_GOOGLE = "PLACEHOLDER_GOOGLE_CLIENT_ID_2.apps.googleusercontent.com";
-        public const string CLIENTSECRET_GOOGLE = "PLACEHOLDER_GOOGLE_CLIENT_SECRET_2";
-
+        public static string CLIENTID_GOOGLE => Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID") ?? "PLACEHOLDER_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+        public static string CLIENTSECRET_GOOGLE => Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET") ?? "PLACEHOLDER_GOOGLE_CLIENT_SECRET";
     }
 }
